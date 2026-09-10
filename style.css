@@ -1460,6 +1460,114 @@ body {
   color: #166534;
 }
 
+/* --------------------------------------------------------------------------
+   BẢNG ĐIỀU KHIỂN QUẢN TRỊ VIÊN (ADMIN DASHBOARD PANEL)
+   -------------------------------------------------------------------------- */
+.admin-tools-panel {
+  background: linear-gradient(135deg, #fef2f2 0%, #fff1f2 100%);
+  border: 2px solid #fecdd3;
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 22px;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.08);
+  animation: fadeInViolation 0.3s ease;
+}
+
+.admin-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.admin-badge-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #be123c;
+  letter-spacing: -0.01em;
+}
+
+.admin-status-pill {
+  font-size: 0.75rem;
+  font-weight: 800;
+  background: #ffe4e6;
+  color: #e11d48;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid #fecdd3;
+}
+
+.admin-panel-desc {
+  font-size: 0.84rem;
+  color: #9f1239;
+  line-height: 1.4;
+  margin-bottom: 14px;
+}
+
+.admin-buttons-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #ffffff;
+  border: 1.5px solid #f43f5e;
+  color: #be123c;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-btn:hover {
+  background: #e11d48;
+  color: #ffffff;
+  border-color: #e11d48;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(225, 29, 72, 0.25);
+}
+
+.admin-btn.danger {
+  border-color: #cbd5e1;
+  color: #64748b;
+}
+
+.admin-btn.danger:hover {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+}
+
+/* User Profile Chip khi đăng nhập bằng tài khoản Admin */
+.user-profile-chip.is-admin {
+  background: #fff1f2;
+  border-color: #fecdd3;
+}
+
+.user-profile-chip.is-admin .user-avatar {
+  background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);
+  box-shadow: 0 2px 6px rgba(225, 29, 72, 0.4);
+}
+
+.user-profile-chip.is-admin .user-class-badge {
+  color: #e11d48;
+  font-weight: 800;
+}
+
 .auth-hint-banner.warning-login {
   background: #fff7ed;
   border: 1px solid #fed7aa;

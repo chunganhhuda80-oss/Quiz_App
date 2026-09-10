@@ -205,6 +205,21 @@ const CONFIG = {
 
     // Phát âm thanh còi cảnh báo khi học sinh vi phạm
     enableSoundAlert: true
+  },
+
+  // ---------------------------------------------------------------------------
+  // 5. CẤU HÌNH TÀI KHOẢN QUẢN TRỊ VIÊN (ADMINISTRATOR)
+  // ---------------------------------------------------------------------------
+  ADMIN: {
+    username: "rappergaming",
+    displayName: "Quản Trị Viên",
+    role: "admin",
+    // Mã băm SHA-256 của mật khẩu '123@Ngocanh' (bảo mật tuyệt đối, chống xem trộm F12)
+    passwordHash: "c337fbed9cf219942cd5b874f33e7ebd7ad35c27f87e45db3d168e554be444c1",
+    // Cho phép Admin xem trước toàn bộ 15 tuần làm bài
+    unlockAllWeeks: true,
+    // Miễn trừ cảnh báo chuyển tab khi Admin kiểm tra đề thi
+    bypassAntiCheat: true
   }
 };
 
@@ -212,3 +227,4 @@ const CONFIG = {
 Object.freeze(CONFIG);
 Object.freeze(CONFIG.QUIZ);
 Object.freeze(CONFIG.ANTI_CHEAT);
+Object.freeze(CONFIG.ADMIN);

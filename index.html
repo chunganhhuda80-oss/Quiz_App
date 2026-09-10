@@ -224,6 +224,42 @@
         </div>
       </div>
 
+      <!-- BẢNG ĐIỀU KHIỂN DÀNH CHO QUẢN TRỊ VIÊN (ADMIN DASHBOARD PANEL) -->
+      <div id="admin-tools-panel" class="admin-tools-panel" style="display: none;">
+        <div class="admin-panel-header">
+          <div class="admin-badge-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>BẢNG ĐIỀU KHIỂN QUẢN TRỊ VIÊN (ADMIN)</span>
+          </div>
+          <span class="admin-status-pill">Toàn quyền hệ thống</span>
+        </div>
+        <p class="admin-panel-desc">
+          Bạn đang đăng nhập với tư cách Quản Trị Viên (<strong>rappergaming</strong>). Bạn có thể mở khóa toàn bộ 15 tuần đề thi và kiểm tra không giới hạn số lần.
+        </p>
+        <div class="admin-buttons-grid">
+          <button type="button" id="btn-admin-unlock-all" class="admin-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+            </svg>
+            <span id="txt-unlock-all">Mở khóa toàn bộ 15 tuần</span>
+          </button>
+          <a href="https://docs.google.com/spreadsheets/d/1Xn6oM14eK-83PffR2n_Z77F7R9jQW2T3j93YqVzI3vA/edit" target="_blank" rel="noopener noreferrer" id="link-open-sheet" class="admin-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <span>Mở Google Sheet Điểm</span>
+          </a>
+          <button type="button" id="btn-admin-reset-local" class="admin-btn danger">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+            <span>Xóa dữ liệu thi thử nghiệm</span>
+          </button>
+        </div>
+      </div>
+
       <!-- Form nhập thông tin học sinh & Chọn tuần làm bài -->
       <form id="start-form" onsubmit="return false;">
         <div class="form-row-2col">

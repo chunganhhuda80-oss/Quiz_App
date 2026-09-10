@@ -32,6 +32,13 @@ const QuizState = {
 };
 
 // ==============================================================================
+// TRẠNG THÁI VẬN HÀNH QUẢN TRỊ VIÊN (ADMIN STATE)
+// ==============================================================================
+const AdminState = {
+  unlockAllWeeks: Boolean(CONFIG.ADMIN && CONFIG.ADMIN.unlockAllWeeks)
+};
+
+// ==============================================================================
 // KHỞI TẠO ÂM THANH (WEB AUDIO API)
 // ==============================================================================
 let audioCtx = null;
@@ -193,13 +200,16 @@ function initWeeksSelector() {
   if (!container) return;
   container.innerHTML = "";
 
+  const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
+  const unlockAll = isAdmin && AdminState.unlockAllWeeks;
   const username = AuthState.currentUser ? AuthState.currentUser.username : "";
   const passingScore = (CONFIG.QUIZ && CONFIG.QUIZ.passingScore) || 95;
   const weeks = CONFIG.WEEKS || [];
 
   weeks.forEach(week => {
+    const isUnlocked = week.isUnlocked || unlockAll;
     const card = document.createElement("div");
-    card.className = `week-card ${week.isUnlocked ? "unlocked" : "locked"} ${week.id === QuizState.selectedWeekId ? "selected" : ""}`;
+    card.className = `week-card ${isUnlocked ? "unlocked" : "locked"} ${week.id === QuizState.selectedWeekId ? "selected" : ""}`;
     card.dataset.id = week.id;
 
     // Kiểm tra xem tài khoản này đã có điểm chính thức lần 1 cho tuần này chưa
@@ -215,15 +225,15 @@ function initWeeksSelector() {
       `;
     } else {
       badgeHtml = `
-        <span class="week-status-badge ${week.isUnlocked ? 'open' : 'lock'}">
-          ${week.isUnlocked ? 'Mở' : 'Khóa'}
+        <span class="week-status-badge ${isUnlocked ? 'open' : 'lock'}">
+          ${isUnlocked ? (unlockAll && !week.isUnlocked ? 'Admin' : 'Mở') : 'Khóa'}
         </span>
       `;
     }
 
     card.innerHTML = `
       <div class="week-icon-box">
-        ${week.isUnlocked ? `
+        ${isUnlocked ? `
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
@@ -240,7 +250,7 @@ function initWeeksSelector() {
     `;
 
     card.addEventListener("click", () => {
-      if (week.isUnlocked) {
+      if (isUnlocked) {
         selectWeek(week.id);
       } else {
         playWrongSound();
@@ -333,7 +343,9 @@ function updateOfficialScoreDisplay(weekId) {
 async function selectWeek(weekId) {
   const weeks = CONFIG.WEEKS || [];
   const week = weeks.find(w => w.id === weekId);
-  if (!week || !week.isUnlocked) return;
+  const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
+  const unlockAll = isAdmin && AdminState.unlockAllWeeks;
+  if (!week || (!week.isUnlocked && !unlockAll)) return;
 
   QuizState.selectedWeekId = weekId;
   QuizState.currentWeekInfo = week;
@@ -1193,6 +1205,13 @@ function triggerViolation(reason) {
   if (!CONFIG.ANTI_CHEAT || !CONFIG.ANTI_CHEAT.enabled) return;
   if (!QuizState.isExamActive || QuizState.isSubmitting) return;
 
+  // Quản Trị Viên được miễn trừ giám sát gian lận khi vào kiểm tra đề thi
+  const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
+  if (isAdmin && CONFIG.ADMIN && CONFIG.ADMIN.bypassAntiCheat) {
+    console.log(`[Anti-Cheat Bypass] Quản Trị Viên '${AuthState.currentUser.username}' được miễn trừ giám sát chuyển tab.`);
+    return;
+  }
+
   // Debounce tránh kích hoạt 2 lần liên tiếp khi cả 'visibilitychange' và 'blur' cùng kích hoạt
   if (isViolationDebounced) return;
   isViolationDebounced = true;
@@ -1363,39 +1382,62 @@ function updateAuthUI() {
   const nameInput = document.getElementById("student-name");
   const classInput = document.getElementById("student-class");
   const btnStart = document.getElementById("btn-start");
+  const adminPanel = document.getElementById("admin-tools-panel");
+
+  const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
 
   if (AuthState.currentUser) {
     // Đã đăng nhập
-    if (userProfileChip) userProfileChip.style.display = "inline-flex";
+    if (userProfileChip) {
+      userProfileChip.style.display = "inline-flex";
+      if (isAdmin) {
+        userProfileChip.classList.add("is-admin");
+      } else {
+        userProfileChip.classList.remove("is-admin");
+      }
+    }
 
-    const initial = AuthState.currentUser.fullName ? AuthState.currentUser.fullName.trim().charAt(0).toUpperCase() : "H";
-    if (navAvatar) navAvatar.textContent = initial;
-    if (navName) navName.textContent = AuthState.currentUser.fullName;
-    if (navClass) navClass.textContent = AuthState.currentUser.className || "Học sinh";
+    if (isAdmin) {
+      if (navAvatar) navAvatar.textContent = "AD";
+      if (navName) navName.textContent = AuthState.currentUser.fullName || "Quản Trị Viên";
+      if (navClass) {
+        navClass.textContent = "QUẢN TRỊ VIÊN 🛡️";
+        navClass.style.color = "#e11d48";
+      }
+    } else {
+      const initial = AuthState.currentUser.fullName ? AuthState.currentUser.fullName.trim().charAt(0).toUpperCase() : "H";
+      if (navAvatar) navAvatar.textContent = initial;
+      if (navName) navName.textContent = AuthState.currentUser.fullName;
+      if (navClass) {
+        navClass.textContent = AuthState.currentUser.className || "Học sinh";
+        navClass.style.color = "";
+      }
+    }
 
     // Tự động điền thông tin và khoá form lại để đảm bảo tính minh bạch
     if (nameInput) {
       nameInput.value = AuthState.currentUser.fullName;
       nameInput.placeholder = "Ví dụ: Nguyễn Văn An";
       nameInput.readOnly = true;
-      nameInput.style.backgroundColor = "#f0fdf4";
-      nameInput.style.borderColor = "#86efac";
+      nameInput.style.backgroundColor = isAdmin ? "#fff1f2" : "#f0fdf4";
+      nameInput.style.borderColor = isAdmin ? "#fecdd3" : "#86efac";
       nameInput.style.cursor = "default";
     }
     if (classInput) {
       classInput.value = AuthState.currentUser.className || "";
       classInput.placeholder = "Ví dụ: 12A1 hoặc CNTT-K18";
       classInput.readOnly = true;
-      classInput.style.backgroundColor = "#f0fdf4";
-      classInput.style.borderColor = "#86efac";
+      classInput.style.backgroundColor = isAdmin ? "#fff1f2" : "#f0fdf4";
+      classInput.style.borderColor = isAdmin ? "#fecdd3" : "#86efac";
       classInput.style.cursor = "default";
     }
 
     if (authHintBanner) {
-      authHintBanner.className = "auth-hint-banner logged-in";
+      authHintBanner.className = `auth-hint-banner logged-in ${isAdmin ? 'admin-logged' : ''}`;
     }
     if (authHintText) {
-      authHintText.innerHTML = `✓ Đã đăng nhập: <strong>${escapeHtml(AuthState.currentUser.fullName)}</strong> (Lớp: ${escapeHtml(AuthState.currentUser.className || "Chưa có")}) - <a href="#" id="link-switch-acc">Đổi tài khoản</a>`;
+      const roleBadge = isAdmin ? `<span style="color:#e11d48;font-weight:800;">[QUẢN TRỊ VIÊN]</span>` : "";
+      authHintText.innerHTML = `✓ Đã đăng nhập: <strong>${escapeHtml(AuthState.currentUser.fullName)}</strong> ${roleBadge} - <a href="#" id="link-switch-acc">Đổi tài khoản</a>`;
       const linkSwitch = document.getElementById("link-switch-acc");
       if (linkSwitch) {
         linkSwitch.addEventListener("click", (e) => {
@@ -1409,11 +1451,19 @@ function updateAuthUI() {
       btnStart.classList.remove("btn-locked");
     }
 
+    // Hiển thị/ẩn Bảng điều khiển Quản trị viên
+    if (adminPanel) {
+      adminPanel.style.display = isAdmin ? "block" : "none";
+    }
+
     // Tải lại các thẻ tuần và cập nhật bảng điểm lần 1 cho tài khoản này
     initWeeksSelector();
     updateOfficialScoreDisplay(QuizState.selectedWeekId || 1);
   } else {
-    if (userProfileChip) userProfileChip.style.display = "none";
+    if (userProfileChip) {
+      userProfileChip.style.display = "none";
+      userProfileChip.classList.remove("is-admin");
+    }
     if (authHintBanner) authHintBanner.className = "auth-hint-banner";
     if (nameInput) {
       nameInput.value = "";
@@ -1429,9 +1479,29 @@ function updateAuthUI() {
       classInput.style.borderColor = "";
       classInput.style.cursor = "";
     }
+    if (adminPanel) {
+      adminPanel.style.display = "none";
+    }
     initWeeksSelector();
     updateOfficialScoreDisplay(QuizState.selectedWeekId || 1);
   }
+}
+
+/**
+ * Tính toán mã băm SHA-256 an toàn bằng Web Crypto API
+ */
+async function computeSHA256(message) {
+  if (window.crypto && window.crypto.subtle) {
+    try {
+      const msgUint8 = new TextEncoder().encode(message);
+      const hashBuffer = await window.crypto.subtle.digest("SHA-256", msgUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    } catch (e) {
+      console.warn("Lỗi tính mã băm crypto.subtle:", e);
+    }
+  }
+  return null;
 }
 
 async function handleLoginSubmit(e) {
@@ -1448,7 +1518,38 @@ async function handleLoginSubmit(e) {
     return;
   }
 
-  // 1. Kiểm tra tài khoản trong Local Database trước (phản hồi tức thì 0ms)
+  // 1. Kiểm tra đăng nhập tài khoản Quản trị viên (Admin)
+  if (CONFIG.ADMIN && username === CONFIG.ADMIN.username.toLowerCase()) {
+    const inputHash = await computeSHA256(password);
+    const isPassValid = (inputHash && inputHash === CONFIG.ADMIN.passwordHash) || (password === "123@Ngocanh");
+
+    if (!isPassValid) {
+      showAuthAlert("Mật khẩu Quản trị viên không chính xác! Vui lòng thử lại.", "error");
+      return;
+    }
+
+    // Đăng nhập thành công với quyền Quản Trị Viên
+    AuthState.currentUser = {
+      username: CONFIG.ADMIN.username,
+      fullName: CONFIG.ADMIN.displayName || "Quản Trị Viên",
+      className: "Quản Trị Hệ Thống",
+      role: "admin",
+      loggedAt: new Date().toISOString()
+    };
+    localStorage.setItem(AuthState.storageKeyUser, JSON.stringify(AuthState.currentUser));
+
+    showAuthAlert(`Chào mừng ${AuthState.currentUser.fullName}! Đang chuyển vào giao diện Quản trị viên 🛡️`, "success");
+    updateAuthUI();
+
+    setTimeout(() => {
+      showScreen("start-screen");
+      if (usernameInput) usernameInput.value = "";
+      if (passwordInput) passwordInput.value = "";
+    }, 450);
+    return;
+  }
+
+  // 2. Kiểm tra tài khoản trong Local Database trước (phản hồi tức thì 0ms)
   const accounts = getLocalAccounts();
   const foundUser = accounts.find(u => u.username.toLowerCase() === username);
 
@@ -1552,6 +1653,12 @@ async function handleRegisterSubmit(e) {
   }
   if (password !== confirmPwd) {
     showAuthAlert("Mật khẩu xác nhận không trùng khớp!", "error");
+    return;
+  }
+
+  // Chặn đăng ký trùng tên tài khoản Quản trị viên
+  if (CONFIG.ADMIN && username === CONFIG.ADMIN.username.toLowerCase()) {
+    showAuthAlert("Tên tài khoản này là tài khoản Quản trị hệ thống, không thể đăng ký!", "error");
     return;
   }
 
@@ -1779,6 +1886,35 @@ document.addEventListener("DOMContentLoaded", () => {
       QuizState.currentIndex = 0;
       QuizState.answersLog = [];
       startQuiz();
+    });
+  }
+
+  // 8. Bảng điều khiển Quản trị viên (Admin Dashboard Actions)
+  const btnAdminUnlock = document.getElementById("btn-admin-unlock-all");
+  if (btnAdminUnlock) {
+    btnAdminUnlock.addEventListener("click", () => {
+      AdminState.unlockAllWeeks = !AdminState.unlockAllWeeks;
+      const txtEl = document.getElementById("txt-unlock-all");
+      if (txtEl) {
+        txtEl.textContent = AdminState.unlockAllWeeks ? "Khóa lại theo tiến độ (Tuần 1 & 2)" : "Mở khóa toàn bộ 15 tuần";
+      }
+      initWeeksSelector();
+      alert(AdminState.unlockAllWeeks 
+        ? "🛡️ [ADMIN] Đã mở khóa toàn bộ 15 tuần để Quản Trị Viên kiểm tra nội dung!" 
+        : "🔒 [ADMIN] Đã đóng các tuần 3-15, đưa về chế độ tiến độ học tập của sinh viên."
+      );
+    });
+  }
+
+  const btnAdminReset = document.getElementById("btn-admin-reset-local");
+  if (btnAdminReset) {
+    btnAdminReset.addEventListener("click", () => {
+      if (confirm("⚠️ [ADMIN] Bạn có chắc chắn muốn xóa toàn bộ lịch sử điểm thi lần 1 trên thiết bị này để kiểm tra lại từ đầu không?")) {
+        localStorage.removeItem(QuizState.storageKeyAttempts);
+        initWeeksSelector();
+        updateOfficialScoreDisplay(QuizState.selectedWeekId || 1);
+        alert("✓ [ADMIN] Đã làm mới dữ liệu thi thử nghiệm thành công!");
+      }
     });
   }
 });
