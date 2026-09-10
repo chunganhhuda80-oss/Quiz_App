@@ -1289,28 +1289,41 @@ body {
   color: var(--success-dark);
 }
 
-/* Nút Làm lại bài */
-.btn-outline {
+/* Nút Thao tác sau khi có kết quả */
+.result-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.result-actions .btn-primary,
+.result-actions .btn-outline {
+  flex: 1;
+  width: auto;
+  margin: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 13px 20px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-outline {
   background: transparent;
   color: var(--text-main);
   border: 1.5px solid var(--border-color);
-  border-radius: var(--radius-md);
   font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 700;
-  padding: 13px 24px;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  width: 100%;
 }
 
 .btn-outline:hover {
   background: #f8fafc;
   border-color: #cbd5e1;
+  transform: translateY(-2px);
 }
 
 /* --------------------------------------------------------------------------
@@ -2133,5 +2146,15 @@ body {
 
   .banner-content {
     text-align: center;
+  }
+
+  .result-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .result-actions .btn-primary,
+  .result-actions .btn-outline {
+    width: 100%;
   }
 }

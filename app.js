@@ -1757,10 +1757,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 6. Nút làm lại bài
-  const btnRestart = document.getElementById("btn-restart");
-  if (btnRestart) {
-    btnRestart.addEventListener("click", () => {
+  // 6. Nút Trở về trang chủ
+  const btnBackHome = document.getElementById("btn-back-home");
+  if (btnBackHome) {
+    btnBackHome.addEventListener("click", () => {
       QuizState.isSubmitting = false;
       QuizState.currentIndex = 0;
       QuizState.answersLog = [];
@@ -1768,6 +1768,17 @@ document.addEventListener("DOMContentLoaded", () => {
       initWeeksSelector();
       updateOfficialScoreDisplay(QuizState.selectedWeekId || 1);
       showScreen("start-screen");
+    });
+  }
+
+  // 7. Nút Làm lại bài thi (Ôn tập)
+  const btnRestart = document.getElementById("btn-restart");
+  if (btnRestart) {
+    btnRestart.addEventListener("click", () => {
+      QuizState.isSubmitting = false;
+      QuizState.currentIndex = 0;
+      QuizState.answersLog = [];
+      startQuiz();
     });
   }
 });
