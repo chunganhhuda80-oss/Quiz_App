@@ -193,6 +193,76 @@ function saveOfficialAttempt(username, weekId, data) {
 }
 
 // ==============================================================================
+// QUẢN LÝ ĐÓNG / MỞ TỪNG TUẦN HỌC (WEEKS ACCESS CONTROL)
+// ==============================================================================
+const WEEKS_STORAGE_KEY = "quiz_custom_weeks_status";
+
+function getCustomWeeksStatus() {
+  try {
+    const raw = localStorage.getItem(WEEKS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function isWeekUnlocked(week) {
+  if (!week) return false;
+  const custom = getCustomWeeksStatus();
+  if (custom && typeof custom[week.id] === "boolean") {
+    return custom[week.id];
+  }
+  return Boolean(week.isUnlocked);
+}
+
+function setWeekUnlockedStatus(weekId, status) {
+  const custom = getCustomWeeksStatus() || {};
+  custom[weekId] = Boolean(status);
+  localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(custom));
+}
+
+function unlockAllWeeksGlobal() {
+  const custom = {};
+  (CONFIG.WEEKS || []).forEach(w => {
+    custom[w.id] = true;
+  });
+  localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(custom));
+}
+
+function lockAllWeeksGlobal() {
+  const custom = {};
+  (CONFIG.WEEKS || []).forEach(w => {
+    custom[w.id] = false;
+  });
+  localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(custom));
+}
+
+function resetWeeksStatusToDefault() {
+  const custom = {};
+  (CONFIG.WEEKS || []).forEach(w => {
+    custom[w.id] = Boolean(w.isUnlocked);
+  });
+  localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(custom));
+}
+
+let adminToastTimeout = null;
+function showAdminToast(msg, type = "success") {
+  const toast = document.getElementById("admin-toast");
+  if (!toast) return;
+  toast.className = `admin-toast ${type} show`;
+  toast.innerHTML = `<span>${msg}</span>`;
+  toast.style.display = "flex";
+
+  if (adminToastTimeout) clearTimeout(adminToastTimeout);
+  adminToastTimeout = setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => {
+      toast.style.display = "none";
+    }, 300);
+  }, 2400);
+}
+
+// ==============================================================================
 // KHỞI TẠO BỘ CHỌN 15 TUẦN HỌC (WEEKS SELECTOR) & HIỂN THỊ ĐIỂM LẦN 1
 // ==============================================================================
 function initWeeksSelector() {
@@ -201,15 +271,15 @@ function initWeeksSelector() {
   container.innerHTML = "";
 
   const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
-  const unlockAll = isAdmin && AdminState.unlockAllWeeks;
   const username = AuthState.currentUser ? AuthState.currentUser.username : "";
   const passingScore = (CONFIG.QUIZ && CONFIG.QUIZ.passingScore) || 95;
   const weeks = CONFIG.WEEKS || [];
 
   weeks.forEach(week => {
-    const isUnlocked = week.isUnlocked || unlockAll;
+    // Trạng thái mở/khóa thực tế của tuần
+    const unlocked = isWeekUnlocked(week);
     const card = document.createElement("div");
-    card.className = `week-card ${isUnlocked ? "unlocked" : "locked"} ${week.id === QuizState.selectedWeekId ? "selected" : ""}`;
+    card.className = `week-card ${unlocked ? "unlocked" : "locked"} ${week.id === QuizState.selectedWeekId ? "selected" : ""}`;
     card.dataset.id = week.id;
 
     // Kiểm tra xem tài khoản này đã có điểm chính thức lần 1 cho tuần này chưa
@@ -225,15 +295,24 @@ function initWeeksSelector() {
       `;
     } else {
       badgeHtml = `
-        <span class="week-status-badge ${isUnlocked ? 'open' : 'lock'}">
-          ${isUnlocked ? (unlockAll && !week.isUnlocked ? 'Admin' : 'Mở') : 'Khóa'}
+        <span class="week-status-badge ${unlocked ? 'open' : 'lock'}">
+          ${unlocked ? 'Mở' : 'Khóa'}
         </span>
       `;
     }
 
+    // Nút chuyển đổi nhanh Mở/Khóa trên góc thẻ (dành riêng cho Quản Trị Viên)
+    const adminToggleHtml = isAdmin ? `
+      <button type="button" class="week-card-admin-toggle ${unlocked ? 'is-open' : 'is-closed'}"
+              title="Quản Trị Viên: Nhấp để ${unlocked ? 'KHÓA' : 'MỞ'} riêng ${week.name}">
+        ${unlocked ? '🔓' : '🔒'}
+      </button>
+    ` : '';
+
     card.innerHTML = `
+      ${adminToggleHtml}
       <div class="week-icon-box">
-        ${isUnlocked ? `
+        ${unlocked ? `
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
@@ -249,12 +328,29 @@ function initWeeksSelector() {
       ${badgeHtml}
     `;
 
+    // Gắn sự kiện nút toggle nhanh cho Admin
+    if (isAdmin) {
+      const toggleBtn = card.querySelector(".week-card-admin-toggle");
+      if (toggleBtn) {
+        toggleBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const newStatus = !unlocked;
+          setWeekUnlockedStatus(week.id, newStatus);
+          initWeeksSelector();
+          if (QuizState.selectedWeekId === week.id) {
+            selectWeek(week.id);
+          }
+          showAdminToast(`🛡️ [ADMIN] ${newStatus ? 'ĐÃ MỞ KHÓA' : 'ĐÃ KHÓA LẠI'} ${week.name} (${week.title})!`, newStatus ? 'success' : 'warn');
+        });
+      }
+    }
+
     card.addEventListener("click", () => {
-      if (isUnlocked) {
+      if (unlocked || isAdmin) {
         selectWeek(week.id);
       } else {
         playWrongSound();
-        alert(`🔒 ${week.name} (${week.title}) hiện chưa được mở khóa!\nHiện tại giáo viên mới mở khóa Tuần 1 và Tuần 2.`);
+        alert(`🔒 ${week.name} (${week.title}) hiện đang đóng!\nHiện tại giáo viên chưa mở khóa tuần này.`);
       }
     });
 
@@ -344,8 +440,8 @@ async function selectWeek(weekId) {
   const weeks = CONFIG.WEEKS || [];
   const week = weeks.find(w => w.id === weekId);
   const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
-  const unlockAll = isAdmin && AdminState.unlockAllWeeks;
-  if (!week || (!week.isUnlocked && !unlockAll)) return;
+  const unlocked = isWeekUnlocked(week);
+  if (!week || (!unlocked && !isAdmin)) return;
 
   QuizState.selectedWeekId = weekId;
   QuizState.currentWeekInfo = week;
@@ -1890,19 +1986,71 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // 8. Bảng điều khiển Quản trị viên (Admin Dashboard Actions)
+  const btnAdminManage = document.getElementById("btn-admin-manage-weeks");
+  if (btnAdminManage) {
+    btnAdminManage.addEventListener("click", openAdminWeeksModal);
+  }
+
+  const btnCloseAdminModal = document.getElementById("btn-close-admin-weeks-modal");
+  if (btnCloseAdminModal) {
+    btnCloseAdminModal.addEventListener("click", closeAdminWeeksModal);
+  }
+
+  const backdropAdminModal = document.getElementById("admin-weeks-modal-backdrop");
+  if (backdropAdminModal) {
+    backdropAdminModal.addEventListener("click", closeAdminWeeksModal);
+  }
+
+  const btnDoneAdminModal = document.getElementById("btn-done-admin-weeks");
+  if (btnDoneAdminModal) {
+    btnDoneAdminModal.addEventListener("click", closeAdminWeeksModal);
+  }
+
+  // Presets thao tác nhanh trong Modal
+  const presetOpenAll = document.getElementById("preset-open-all");
+  if (presetOpenAll) {
+    presetOpenAll.addEventListener("click", () => {
+      unlockAllWeeksGlobal();
+      renderAdminWeeksModalList();
+      initWeeksSelector();
+      showAdminToast("🛡️ Đã mở khóa toàn bộ 15 tuần học!", "success");
+    });
+  }
+
+  const presetDefault = document.getElementById("preset-default");
+  if (presetDefault) {
+    presetDefault.addEventListener("click", () => {
+      resetWeeksStatusToDefault();
+      renderAdminWeeksModalList();
+      initWeeksSelector();
+      showAdminToast("⚡ Đã đưa về chuẩn mặc định: Chỉ mở Tuần 1 & Tuần 2!", "success");
+    });
+  }
+
+  const presetLockAll = document.getElementById("preset-lock-all");
+  if (presetLockAll) {
+    presetLockAll.addEventListener("click", () => {
+      lockAllWeeksGlobal();
+      renderAdminWeeksModalList();
+      initWeeksSelector();
+      showAdminToast("🔒 Đã khóa tất cả 15 tuần thi!", "warn");
+    });
+  }
+
+  // Nút Mở khóa toàn bộ 15 tuần ở Dashboard ngoài
   const btnAdminUnlock = document.getElementById("btn-admin-unlock-all");
   if (btnAdminUnlock) {
     btnAdminUnlock.addEventListener("click", () => {
-      AdminState.unlockAllWeeks = !AdminState.unlockAllWeeks;
-      const txtEl = document.getElementById("txt-unlock-all");
-      if (txtEl) {
-        txtEl.textContent = AdminState.unlockAllWeeks ? "Khóa lại theo tiến độ (Tuần 1 & 2)" : "Mở khóa toàn bộ 15 tuần";
+      const allOpen = (CONFIG.WEEKS || []).every(w => isWeekUnlocked(w));
+      if (allOpen) {
+        resetWeeksStatusToDefault();
+        initWeeksSelector();
+        showAdminToast("🔒 Đã đưa về chuẩn tiến độ học tập (chỉ mở Tuần 1 & 2)", "warn");
+      } else {
+        unlockAllWeeksGlobal();
+        initWeeksSelector();
+        showAdminToast("🛡️ Đã mở khóa toàn bộ 15 tuần học!", "success");
       }
-      initWeeksSelector();
-      alert(AdminState.unlockAllWeeks 
-        ? "🛡️ [ADMIN] Đã mở khóa toàn bộ 15 tuần để Quản Trị Viên kiểm tra nội dung!" 
-        : "🔒 [ADMIN] Đã đóng các tuần 3-15, đưa về chế độ tiến độ học tập của sinh viên."
-      );
     });
   }
 
@@ -1913,8 +2061,69 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem(QuizState.storageKeyAttempts);
         initWeeksSelector();
         updateOfficialScoreDisplay(QuizState.selectedWeekId || 1);
-        alert("✓ [ADMIN] Đã làm mới dữ liệu thi thử nghiệm thành công!");
+        showAdminToast("✓ Đã làm mới dữ liệu thi thử nghiệm thành công!", "success");
       }
     });
   }
 });
+
+// ==============================================================================
+// LOGIC MODAL QUẢN LÝ 15 TUẦN HỌC (ADMIN WEEKS MODAL)
+// ==============================================================================
+function openAdminWeeksModal() {
+  const modal = document.getElementById("admin-weeks-modal");
+  if (!modal) return;
+  renderAdminWeeksModalList();
+  modal.style.display = "flex";
+}
+
+function closeAdminWeeksModal() {
+  const modal = document.getElementById("admin-weeks-modal");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+function renderAdminWeeksModalList() {
+  const container = document.getElementById("admin-weeks-manager-list");
+  if (!container) return;
+  container.innerHTML = "";
+
+  const weeks = CONFIG.WEEKS || [];
+
+  weeks.forEach(week => {
+    const unlocked = isWeekUnlocked(week);
+    const row = document.createElement("div");
+    row.className = `admin-week-item-row ${unlocked ? "is-open" : "is-closed"}`;
+    row.dataset.weekId = week.id;
+
+    row.innerHTML = `
+      <div class="admin-week-item-left">
+        <span class="admin-week-item-badge">${week.name}</span>
+        <div class="admin-week-item-details">
+          <div class="admin-week-item-title">${escapeHtml(week.title || week.name)}</div>
+          <div class="admin-week-item-meta">${week.durationMinutes || 30} phút • ${week.totalQuestions || 0} câu trắc nghiệm</div>
+        </div>
+      </div>
+      <div class="admin-week-item-right">
+        <button type="button" class="admin-toggle-switch ${unlocked ? 'active' : ''}" data-week-id="${week.id}">
+          <span class="switch-dot"></span>
+          <span class="switch-text">${unlocked ? 'MỞ' : 'KHÓA'}</span>
+        </button>
+      </div>
+    `;
+
+    const switchBtn = row.querySelector(".admin-toggle-switch");
+    if (switchBtn) {
+      switchBtn.addEventListener("click", () => {
+        const nextState = !isWeekUnlocked(week);
+        setWeekUnlockedStatus(week.id, nextState);
+        renderAdminWeeksModalList();
+        initWeeksSelector();
+        showAdminToast(`🛡️ ${nextState ? 'Đã MỞ KHÓA' : 'Đã KHÓA LẠI'} ${week.name}!`, nextState ? 'success' : 'warn');
+      });
+    }
+
+    container.appendChild(row);
+  });
+}
