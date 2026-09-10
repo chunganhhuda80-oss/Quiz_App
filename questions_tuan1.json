@@ -1,0 +1,502 @@
+[
+  {
+    "id": 1,
+    "question": "Thiết bị nào sau đây hoạt động chủ yếu ở Layer 3 và có chức năng định tuyến giữa các mạng khác nhau?",
+    "optionA": "Switch Layer 2",
+    "optionB": "Router",
+    "optionC": "Access Point",
+    "optionD": "Hub",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 2,
+    "question": "Switch học và lưu địa chỉ MAC vào bảng nào để chuyển mạch trong cùng 1 mạng LAN?",
+    "optionA": "Routing Table",
+    "optionB": "ARP Table",
+    "optionC": "MAC Address Table (CAM Table)",
+    "optionD": "NAT Table",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 3,
+    "question": "Thiết bị nào vừa có khả năng switch vừa có khả năng routing, thường dùng ở tầng Distribution/Core?",
+    "optionA": "Hub",
+    "optionB": "Multilayer Switch (Layer 3 Switch)",
+    "optionC": "Access Point",
+    "optionD": "Modem",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 4,
+    "question": "Access Point (AP) hoạt động chủ yếu ở tầng nào trong mô hình OSI?",
+    "optionA": "Layer 1",
+    "optionB": "Layer 2",
+    "optionC": "Layer 3",
+    "optionD": "Layer 4",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 5,
+    "question": "Firewall thường được đặt ở vị trí nào trong kiến trúc mạng doanh nghiệp?",
+    "optionA": "Access Layer",
+    "optionB": "Biên mạng (Edge)",
+    "optionC": "Bên trong VLAN nội bộ",
+    "optionD": "Không cần đặt cố định",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 6,
+    "question": "Trong mô hình Star Topology, tất cả thiết bị được kết nối về đâu?",
+    "optionA": "Nối trực tiếp với nhau theo vòng",
+    "optionB": "1 điểm trung tâm (switch)",
+    "optionC": "Kết nối ngẫu nhiên",
+    "optionD": "Không có điểm trung tâm",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 7,
+    "question": "Full Mesh Topology có đặc điểm gì?",
+    "optionA": "Chỉ 2 thiết bị nối với nhau",
+    "optionB": "Mỗi thiết bị chỉ nối với 1 thiết bị khác",
+    "optionC": "Mỗi thiết bị nối trực tiếp với TẤT CẢ thiết bị còn lại",
+    "optionD": "Không có kết nối dự phòng",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 8,
+    "question": "Trong mô hình phân cấp 3-tier, tầng nào chịu trách nhiệm nơi end device kết nối vào và thực hiện VLAN, Port Security?",
+    "optionA": "Core Layer",
+    "optionB": "Distribution Layer",
+    "optionC": "Access Layer",
+    "optionD": "Backbone Layer",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 9,
+    "question": "Tầng nào trong mô hình 3-tier chỉ tập trung chuyển tiếp traffic tốc độ cao, không xử lý policy phức tạp?",
+    "optionA": "Access Layer",
+    "optionB": "Distribution Layer",
+    "optionC": "Core Layer",
+    "optionD": "Edge Layer",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 10,
+    "question": "Mô hình 2-tier (Collapsed Core) là gì?",
+    "optionA": "Gộp Access và Distribution làm 1",
+    "optionB": "Gộp Distribution và Core làm 1",
+    "optionC": "Bỏ hẳn tầng Access",
+    "optionD": "Thêm 1 tầng mới giữa Access và Core",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 11,
+    "question": "Sự khác biệt giữa Physical Topology và Logical Topology là gì?",
+    "optionA": "Không có sự khác biệt",
+    "optionB": "Physical là cách dây nối vật lý, Logical là cách dữ liệu thực sự di chuyển",
+    "optionC": "Logical chỉ áp dụng cho mạng không dây",
+    "optionD": "Physical chỉ áp dụng cho router",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 12,
+    "question": "Cáp Cat6a hỗ trợ tốc độ 10Gbps ở khoảng cách tối đa bao nhiêu mét theo chuẩn?",
+    "optionA": "55m",
+    "optionB": "100m",
+    "optionC": "500m",
+    "optionD": "1000m",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 13,
+    "question": "Loại cáp quang nào dùng laser và có khả năng truyền xa hàng chục km, thường dùng cho kết nối liên tòa nhà/ISP?",
+    "optionA": "Multi-mode Fiber",
+    "optionB": "UTP Cat6",
+    "optionC": "Single-mode Fiber",
+    "optionD": "Coaxial cable",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 14,
+    "question": "Đầu nối nào phổ biến và nhỏ gọn nhất hiện nay cho cáp quang?",
+    "optionA": "RJ45",
+    "optionB": "LC",
+    "optionC": "RJ11",
+    "optionD": "BNC",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 15,
+    "question": "Cáp chéo (Crossover) thường được dùng để nối 2 thiết bị nào với nhau (trước khi có Auto-MDIX)?",
+    "optionA": "PC và Switch",
+    "optionB": "Switch và Router",
+    "optionC": "Switch và Switch (cùng loại)",
+    "optionD": "PC và Access Point",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 16,
+    "question": "Mô hình OSI có bao nhiêu tầng?",
+    "optionA": "4",
+    "optionB": "5",
+    "optionC": "7",
+    "optionD": "8",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 17,
+    "question": "Tầng nào trong OSI là tầng cao nhất, nơi ứng dụng người dùng tương tác với mạng?",
+    "optionA": "Layer 4 - Transport",
+    "optionB": "Layer 7 - Application",
+    "optionC": "Layer 1 - Physical",
+    "optionD": "Layer 6 - Presentation",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 18,
+    "question": "Tầng nào chịu trách nhiệm mã hóa, nén dữ liệu (VD SSL/TLS encryption, định dạng JPEG)?",
+    "optionA": "Layer 5 - Session",
+    "optionB": "Layer 6 - Presentation",
+    "optionC": "Layer 4 - Transport",
+    "optionD": "Layer 3 - Network",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 19,
+    "question": "Tầng Session (Layer 5) có chức năng chính là gì?",
+    "optionA": "Đánh địa chỉ IP",
+    "optionB": "Đóng gói thành frame",
+    "optionC": "Thiết lập, duy trì, kết thúc phiên làm việc giữa 2 ứng dụng",
+    "optionD": "Truyền bit thô",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 20,
+    "question": "Tầng Transport (Layer 4) có nhiệm vụ chính nào sau đây?",
+    "optionA": "Đánh địa chỉ MAC",
+    "optionB": "Phân đoạn dữ liệu, đảm bảo truyền tin cậy (TCP/UDP), quản lý port",
+    "optionC": "Truyền tín hiệu điện áp",
+    "optionD": "Định tuyến gói tin",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 21,
+    "question": "Tầng nào chịu trách nhiệm định tuyến (routing) và đánh địa chỉ logic (IP address)?",
+    "optionA": "Layer 2 - Data Link",
+    "optionB": "Layer 3 - Network",
+    "optionC": "Layer 4 - Transport",
+    "optionD": "Layer 1 - Physical",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 22,
+    "question": "Tầng Data Link (Layer 2) có chức năng nào sau đây?",
+    "optionA": "Định tuyến giữa các mạng",
+    "optionB": "Đóng gói thành frame, đánh địa chỉ MAC, kiểm soát lỗi cơ bản (FCS)",
+    "optionC": "Mã hóa dữ liệu",
+    "optionD": "Quản lý phiên làm việc",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 23,
+    "question": "Tầng thấp nhất trong mô hình OSI, chịu trách nhiệm truyền bit thô qua môi trường vật lý là tầng nào?",
+    "optionA": "Layer 1 - Physical",
+    "optionB": "Layer 2 - Data Link",
+    "optionC": "Layer 3 - Network",
+    "optionD": "Layer 7 - Application",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 24,
+    "question": "Câu mẹo nhớ 'All People Seem To Need Data Processing' dùng để nhớ thứ tự tầng nào theo chiều nào?",
+    "optionA": "7 tầng OSI từ Layer 1 lên Layer 7",
+    "optionB": "7 tầng OSI từ Layer 7 xuống Layer 1",
+    "optionC": "4 tầng TCP/IP",
+    "optionD": "Thứ tự các loại cáp mạng",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 25,
+    "question": "HTTP, FTP, SMTP, DNS là các giao thức hoạt động ở tầng nào của OSI?",
+    "optionA": "Layer 4",
+    "optionB": "Layer 5",
+    "optionC": "Layer 7",
+    "optionD": "Layer 2",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 26,
+    "question": "Mô hình TCP/IP có bao nhiêu tầng?",
+    "optionA": "3",
+    "optionB": "4",
+    "optionC": "5",
+    "optionD": "7",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 27,
+    "question": "Tầng Application của mô hình TCP/IP tương ứng gộp với những tầng nào trong OSI?",
+    "optionA": "Layer 1, 2, 3",
+    "optionB": "Layer 4 duy nhất",
+    "optionC": "Layer 5, 6, 7",
+    "optionD": "Layer 2, 3, 4",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 28,
+    "question": "Tầng Network Access trong TCP/IP tương ứng gộp với tầng nào trong OSI?",
+    "optionA": "Layer 1 và 2",
+    "optionB": "Layer 3 và 4",
+    "optionC": "Layer 6 và 7",
+    "optionD": "Chỉ Layer 1",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 29,
+    "question": "Tầng Internet trong mô hình TCP/IP tương ứng với tầng nào trong OSI?",
+    "optionA": "Layer 2 - Data Link",
+    "optionB": "Layer 3 - Network",
+    "optionC": "Layer 4 - Transport",
+    "optionD": "Layer 5 - Session",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 30,
+    "question": "Encapsulation là quá trình gì?",
+    "optionA": "Giải mã dữ liệu nhận được",
+    "optionB": "Đóng gói dữ liệu qua từng tầng khi gửi đi, mỗi tầng thêm header riêng",
+    "optionC": "Nén dữ liệu để tiết kiệm băng thông",
+    "optionD": "Xóa dữ liệu không cần thiết",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 31,
+    "question": "Thứ tự đúng của quá trình Encapsulation từ trên xuống là gì?",
+    "optionA": "Bits → Frame → Packet → Segment → Data",
+    "optionB": "Data → Segment → Packet → Frame → Bits",
+    "optionC": "Data → Packet → Segment → Frame → Bits",
+    "optionD": "Segment → Data → Frame → Packet → Bits",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 32,
+    "question": "De-encapsulation là quá trình gì?",
+    "optionA": "Giống hệt Encapsulation",
+    "optionB": "Quá trình ngược lại, bóc từng lớp header ra để lấy dữ liệu gốc ở thiết bị nhận",
+    "optionC": "Chỉ áp dụng cho tầng Physical",
+    "optionD": "Không tồn tại trong thực tế",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 33,
+    "question": "Tại tầng Transport (Layer 4), Router/Switch thêm loại header nào khi đóng gói dữ liệu?",
+    "optionA": "IP header",
+    "optionB": "Ethernet header",
+    "optionC": "TCP/UDP header",
+    "optionD": "Không thêm header nào",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 34,
+    "question": "PDU (Protocol Data Unit) ở tầng Transport (Layer 4) được gọi là gì?",
+    "optionA": "Frame",
+    "optionB": "Packet",
+    "optionC": "Segment (TCP) / Datagram (UDP)",
+    "optionD": "Bits",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 35,
+    "question": "PDU ở tầng Network (Layer 3) được gọi là gì?",
+    "optionA": "Segment",
+    "optionB": "Packet",
+    "optionC": "Frame",
+    "optionD": "Bits",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 36,
+    "question": "PDU ở tầng Data Link (Layer 2) được gọi là gì?",
+    "optionA": "Packet",
+    "optionB": "Segment",
+    "optionC": "Frame",
+    "optionD": "Datagram",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 37,
+    "question": "PDU ở tầng Physical (Layer 1) được gọi là gì?",
+    "optionA": "Frame",
+    "optionB": "Bits",
+    "optionC": "Packet",
+    "optionD": "Segment",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 38,
+    "question": "Nguyên tắc Peer-to-peer Communication trong mô hình OSI có nghĩa là gì?",
+    "optionA": "Mỗi tầng trên máy gửi chỉ 'nói chuyện' logic với đúng tầng tương ứng trên máy nhận",
+    "optionB": "Chỉ có tầng Application mới giao tiếp được với nhau",
+    "optionC": "Dữ liệu chỉ đi qua tầng Physical",
+    "optionD": "Các tầng không liên quan gì đến nhau",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 39,
+    "question": "Khi 1 gói tin đi qua switch trung gian, switch có cần xử lý tới Layer 3 (IP header) không?",
+    "optionA": "Có, switch luôn phải đọc IP header",
+    "optionB": "Không, switch Layer 2 thông thường chỉ cần đọc tới Layer 2 (MAC) để forward",
+    "optionC": "Switch xử lý tới tận Layer 7",
+    "optionD": "Switch không xử lý tầng nào cả",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 40,
+    "question": "FCS (Frame Check Sequence) nằm ở phần nào của Frame và có chức năng gì?",
+    "optionA": "Nằm ở header, dùng để định tuyến",
+    "optionB": "Nằm ở trailer, dùng để kiểm tra lỗi (CRC) của frame",
+    "optionC": "Nằm ở giữa frame, chứa địa chỉ IP",
+    "optionD": "Không tồn tại trong Frame",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 41,
+    "question": "Khi 1 tầng thêm thông tin của riêng nó vào dữ liệu trong quá trình Encapsulation, thông tin này được gọi là gì (ở hầu hết các tầng)?",
+    "optionA": "Footer bắt buộc",
+    "optionB": "Header (và trailer ở Layer 2)",
+    "optionC": "Payload gốc",
+    "optionD": "Checksum duy nhất",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 42,
+    "question": "Vì sao Frame ở Layer 2 có cả Header VÀ Trailer, trong khi Packet ở Layer 3 chỉ có Header?",
+    "optionA": "Đây là quy ước ngẫu nhiên không có lý do",
+    "optionB": "Vì Layer 2 cần FCS ở cuối frame để kiểm tra lỗi truyền vật lý",
+    "optionC": "Vì Layer 3 không cần kiểm tra lỗi",
+    "optionD": "Vì Layer 2 không dùng địa chỉ",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 43,
+    "question": "Mô hình SOHO (Small Office/Home Office) có đặc điểm gì khác biệt so với mạng doanh nghiệp lớn?",
+    "optionA": "Luôn có đầy đủ 3 tầng Access-Distribution-Core",
+    "optionB": "Quy mô nhỏ, thường dùng 1 thiết bị tích hợp (router+switch+AP+modem)",
+    "optionC": "Yêu cầu dự phòng cao hơn doanh nghiệp",
+    "optionD": "Không bao giờ dùng Wifi",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 44,
+    "question": "Một gói tin HTTP khi đi từ trình duyệt xuống card mạng sẽ được đóng gói theo thứ tự nào?",
+    "optionA": "HTTP data → Frame → Segment → Packet → Bits",
+    "optionB": "HTTP data → Segment (TCP) → Packet (IP) → Frame (Ethernet) → Bits",
+    "optionC": "HTTP data → Packet → Frame → Segment → Bits",
+    "optionD": "HTTP data → Bits → Frame → Packet → Segment",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 45,
+    "question": "Nếu 1 switch nhận được frame với FCS không khớp (lỗi CRC), switch (chế độ Store-and-forward) sẽ làm gì?",
+    "optionA": "Forward frame đó đi bình thường",
+    "optionB": "Loại bỏ (drop) frame lỗi",
+    "optionC": "Sửa lỗi tự động rồi forward",
+    "optionD": "Gửi lại cho máy gửi để sửa",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 46,
+    "question": "Trong quá trình De-encapsulation tại máy nhận, tầng nào sẽ bóc header đầu tiên?",
+    "optionA": "Application layer",
+    "optionB": "Transport layer",
+    "optionC": "Physical/Data Link layer (nhận Bits/Frame trước)",
+    "optionD": "Network layer",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 47,
+    "question": "Tại sao mô hình OSI có 7 tầng riêng biệt thay vì gộp chung thành 1-2 tầng?",
+    "optionA": "Để mỗi tầng đảm nhiệm 1 chức năng riêng biệt, dễ thiết kế/gỡ lỗi/thay thế độc lập",
+    "optionB": "Không có lý do kỹ thuật cụ thể",
+    "optionC": "Chỉ để phù hợp với marketing",
+    "optionD": "Vì giới hạn phần cứng thời đó",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 48,
+    "question": "Access Point khi hoạt động cầu nối giữa mạng không dây và mạng có dây, về bản chất đóng vai trò gần giống thiết bị nào ở Layer 2?",
+    "optionA": "Router",
+    "optionB": "Switch/Bridge không dây",
+    "optionC": "Firewall",
+    "optionD": "Modem",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 49,
+    "question": "Trong mô hình 3-tier, nếu 1 công ty nhỏ muốn tiết kiệm chi phí thiết bị, họ có thể gộp 2 tầng nào lại với nhau?",
+    "optionA": "Access và Core",
+    "optionB": "Distribution và Core (Collapsed Core)",
+    "optionC": "Access và Distribution",
+    "optionD": "Không thể gộp tầng nào",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 50,
+    "question": "Điều nào sau đây SAI về mối quan hệ giữa mô hình OSI và TCP/IP?",
+    "optionA": "TCP/IP có ít tầng hơn OSI",
+    "optionB": "TCP/IP là mô hình được dùng thực tế nhiều hơn trong triển khai Internet",
+    "optionC": "OSI và TCP/IP là 2 mô hình hoàn toàn không liên quan, không thể ánh xạ với nhau",
+    "optionD": "Tầng Application của TCP/IP gộp 3 tầng trên cùng của OSI",
+    "correctAnswer": "C",
+    "points": 2
+  }
+]

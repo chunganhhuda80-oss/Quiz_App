@@ -1,0 +1,702 @@
+[
+  {
+    "id": 1,
+    "question": "Trong môi trường mạng có tỷ lệ lỗi đường truyền cao (nhiều nhiễu), phương pháp Switching nào sẽ hoạt động hiệu quả hơn xét về việc TRÁNH LAN TRUYỀN frame lỗi, dù có độ trễ cao hơn?",
+    "optionA": "Cut-through",
+    "optionB": "Store-and-forward",
+    "optionC": "Fragment-free",
+    "optionD": "Không có sự khác biệt giữa 2 phương pháp",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 2,
+    "question": "Địa chỉ nào sau đây KHÔNG thuộc dải Private IP theo RFC 1918?",
+    "optionA": "10.5.5.5",
+    "optionB": "172.20.1.1",
+    "optionC": "192.168.50.1",
+    "optionD": "172.32.0.1",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 3,
+    "question": "Thiết bị nào dùng để mở rộng vùng phủ sóng mạng không dây và kết nối vào mạng có dây?",
+    "optionA": "Router",
+    "optionB": "Access Point",
+    "optionC": "Firewall",
+    "optionD": "Hub",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 4,
+    "question": "Wildcard mask tương ứng với subnet mask 255.255.255.0 là gì?",
+    "optionA": "255.255.255.0",
+    "optionB": "0.0.0.0",
+    "optionC": "0.0.0.255",
+    "optionD": "0.0.255.255",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 5,
+    "question": "24-bit đầu tiên của địa chỉ MAC được gọi là gì, do IEEE cấp cho hãng sản xuất?",
+    "optionA": "OUI (Organizationally Unique Identifier)",
+    "optionB": "TTL",
+    "optionC": "CRC",
+    "optionD": "FCS",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 6,
+    "question": "Một công ty được cấp mạng 192.168.100.0/24. Họ cần tạo TỐI THIỂU 30 subnet, mỗi subnet có TỐI THIỂU 5 host khả dụng. Subnet mask nào sau đây PHÙ HỢP NHẤT (tiết kiệm địa chỉ nhất mà vẫn đáp ứng đủ cả 2 yêu cầu)?",
+    "optionA": "/27 (32 subnet, 30 host/subnet)",
+    "optionB": "/28 (16 subnet, 14 host/subnet)",
+    "optionC": "/29 (32 subnet, 6 host/subnet)",
+    "optionD": "/30 (64 subnet, 2 host/subnet)",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 7,
+    "question": "Khi bạn có thể ping thành công tới địa chỉ IP của 1 server nhưng không thể truy cập được website (HTTP) trên server đó, vấn đề nhiều khả năng nằm ở tầng nào trong mô hình OSI?",
+    "optionA": "Physical (Layer 1)",
+    "optionB": "Data Link (Layer 2)",
+    "optionC": "Network (Layer 3)",
+    "optionD": "Transport hoặc Application (Layer 4/7)",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 8,
+    "question": "Một kỹ thuật viên cấu hình 2 subnet: Subnet 1 là 192.168.5.0/25 và Subnet 2 là 192.168.5.128/26. Nhận định nào sau đây là ĐÚNG?",
+    "optionA": "2 subnet bị trùng lặp (overlap) dải địa chỉ, gây xung đột",
+    "optionB": "2 subnet không bị trùng lặp, nhưng vẫn còn dư 1 khoảng địa chỉ (192.168.5.192 - .255) chưa được sử dụng",
+    "optionC": "Subnet 2 sai vì /26 không thể bắt đầu tại địa chỉ .128",
+    "optionD": "Cả 2 subnet đều có mask sai hoàn toàn",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 9,
+    "question": "Full-duplex nghĩa là gì?",
+    "optionA": "Chỉ gửi được, không nhận được",
+    "optionB": "Gửi và nhận dữ liệu đồng thời trên cùng 1 kết nối",
+    "optionC": "Chỉ hoạt động ở tốc độ thấp",
+    "optionD": "Giống hệt Half-duplex",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 10,
+    "question": "Việc mã hóa dữ liệu bằng SSL/TLS trước khi truyền HTTPS, theo đúng lý thuyết phân tầng của mô hình OSI, được xem là chức năng thuộc tầng nào?",
+    "optionA": "Application (Layer 7)",
+    "optionB": "Presentation (Layer 6)",
+    "optionC": "Session (Layer 5)",
+    "optionD": "Transport (Layer 4)",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 11,
+    "question": "Cho địa chỉ 10.10.10.75/28, Network Address của subnet chứa địa chỉ này là gì?",
+    "optionA": "10.10.10.48",
+    "optionB": "10.10.10.64",
+    "optionC": "10.10.10.72",
+    "optionD": "10.10.10.32",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 12,
+    "question": "Nguyên tắc Peer-to-peer Communication trong OSI có nghĩa là gì?",
+    "optionA": "Mỗi tầng trên máy gửi chỉ 'nói chuyện' logic với đúng tầng tương ứng trên máy nhận",
+    "optionB": "Chỉ tầng Application mới giao tiếp được với nhau",
+    "optionC": "Dữ liệu luôn đi thẳng từ Layer 7 sang Layer 1 của máy nhận",
+    "optionD": "Các tầng hoàn toàn độc lập, không có quan hệ gì",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 13,
+    "question": "Nếu 1 tổ chức được cấp khối địa chỉ 192.168.0.0/22 và chia thành các subnet /26, họ tạo ra được bao nhiêu subnet /26 và mỗi subnet có bao nhiêu host khả dụng?",
+    "optionA": "8 subnet, 30 host/subnet",
+    "optionB": "16 subnet, 62 host/subnet",
+    "optionC": "32 subnet, 30 host/subnet",
+    "optionD": "4 subnet, 126 host/subnet",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 14,
+    "question": "Một switch Layer 2 đang hoạt động ở chế độ Cut-through nhận được 1 Frame có lỗi FCS (không khớp CRC). Điều gì nhiều khả năng xảy ra?",
+    "optionA": "Switch phát hiện lỗi ngay và drop frame trước khi forward",
+    "optionB": "Switch vẫn forward frame lỗi ra cổng đích, vì Cut-through chưa kiểm tra FCS trước khi quyết định forward",
+    "optionC": "Switch tự động chuyển sang chế độ Store-and-forward",
+    "optionD": "Switch khóa cổng nhận frame lỗi",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 15,
+    "question": "Route Summarization (Supernetting) được sử dụng nhằm mục đích gì?",
+    "optionA": "Chia 1 mạng lớn thành nhiều subnet nhỏ hơn",
+    "optionB": "Gộp nhiều subnet nhỏ liền kề thành 1 route lớn hơn để giảm số dòng trong Routing Table",
+    "optionC": "Tăng số lượng Broadcast Domain",
+    "optionD": "Mã hóa địa chỉ IP",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 16,
+    "question": "Ưu điểm chính của Star Topology là gì?",
+    "optionA": "Không cần switch trung tâm",
+    "optionB": "Dễ quản lý, dễ cô lập lỗi khi 1 nhánh hỏng",
+    "optionC": "Chi phí luôn thấp nhất",
+    "optionD": "Không có single point of failure",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 17,
+    "question": "Cho địa chỉ 192.168.1.0/24 được chia thành các subnet /29. Hỏi subnet THỨ 5 (đếm từ subnet đầu tiên là subnet số 1, bắt đầu từ 192.168.1.0) có Network Address là gì?",
+    "optionA": "192.168.1.24",
+    "optionB": "192.168.1.32",
+    "optionC": "192.168.1.40",
+    "optionD": "192.168.1.16",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 18,
+    "question": "Thời gian timeout mặc định để 1 mục trong MAC Address Table bị xóa nếu không có traffic mới là khoảng bao lâu?",
+    "optionA": "30 giây",
+    "optionB": "300 giây (5 phút)",
+    "optionC": "24 giờ",
+    "optionD": "Không bao giờ bị xóa",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 19,
+    "question": "Vì sao mô hình mạng cần chia thành nhiều tầng (như OSI) thay vì gộp chung 1-2 tầng?",
+    "optionA": "Để mỗi tầng đảm nhiệm 1 chức năng riêng, dễ thiết kế/gỡ lỗi/thay thế độc lập",
+    "optionB": "Không có lý do kỹ thuật, chỉ là quy ước lịch sử",
+    "optionC": "Để tăng số lượng thiết bị cần mua",
+    "optionD": "Để giảm tốc độ truyền dữ liệu",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 20,
+    "question": "Trong quá trình 1 gói tin di chuyển từ Router A sang Router B qua 1 đường truyền Ethernet, tại thời điểm gói tin đang di chuyển trên dây cáp vật lý, nó nên được gọi chính xác là gì theo thuật ngữ PDU?",
+    "optionA": "Packet",
+    "optionB": "Frame",
+    "optionC": "Bits",
+    "optionD": "Segment",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 21,
+    "question": "Trong Ethernet II Frame, giá trị Type/Length = 0x0806 biểu thị giao thức nào?",
+    "optionA": "IPv4",
+    "optionB": "ARP",
+    "optionC": "IPv6",
+    "optionD": "ICMP",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 22,
+    "question": "Bảng nơi Switch lưu địa chỉ MAC đã học còn được gọi là gì?",
+    "optionA": "Routing Table",
+    "optionB": "ARP Table",
+    "optionC": "CAM Table (Content Addressable Memory)",
+    "optionD": "NAT Table",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 23,
+    "question": "Switching method nào chỉ đọc 12 byte đầu tiên (chứa Dest MAC) rồi forward ngay để giảm độ trễ?",
+    "optionA": "Store-and-forward",
+    "optionB": "Cut-through",
+    "optionC": "Store-and-drop",
+    "optionD": "Full-check",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 24,
+    "question": "Mỗi cổng trên 1 switch hiện đại (full-duplex) tương ứng với bao nhiêu Collision Domain?",
+    "optionA": "0",
+    "optionB": "1 (riêng biệt cho mỗi cổng)",
+    "optionC": "Toàn bộ switch chỉ có 1 collision domain chung",
+    "optionD": "Không xác định được",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 25,
+    "question": "Điều gì sau đây thể hiện ĐÚNG NHẤT sự khác biệt giữa Segment (Layer 4) và Packet (Layer 3)?",
+    "optionA": "Segment chứa thông tin port nguồn/đích để phân biệt ứng dụng, Packet chứa địa chỉ IP nguồn/đích để định tuyến",
+    "optionB": "Segment và Packet là 2 tên gọi khác nhau của cùng 1 khái niệm",
+    "optionC": "Packet luôn lớn hơn Segment về kích thước",
+    "optionD": "Segment chỉ tồn tại khi dùng UDP, Packet chỉ tồn tại khi dùng TCP",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 26,
+    "question": "Trường Data trong Ethernet Frame có kích thước nằm trong khoảng nào?",
+    "optionA": "0-64 byte",
+    "optionB": "46-1500 byte",
+    "optionC": "1500-9000 byte",
+    "optionD": "Không giới hạn",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 27,
+    "question": "Subnet mask tương ứng với /26 là gì?",
+    "optionA": "255.255.255.128",
+    "optionB": "255.255.255.192",
+    "optionC": "255.255.255.224",
+    "optionD": "255.255.255.240",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 28,
+    "question": "Với subnet mask 255.255.255.224, số bit dùng cho phần host là bao nhiêu?",
+    "optionA": "3 bit",
+    "optionB": "4 bit",
+    "optionC": "5 bit",
+    "optionD": "6 bit",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 29,
+    "question": "Cho địa chỉ 172.16.5.130/25, Network Address của subnet chứa địa chỉ này là gì?",
+    "optionA": "172.16.5.0",
+    "optionB": "172.16.5.128",
+    "optionC": "172.16.5.64",
+    "optionD": "172.16.5.126",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 30,
+    "question": "Subnet /30 thường được sử dụng phổ biến nhất cho mục đích gì trong thiết kế mạng thực tế?",
+    "optionA": "Mạng LAN lớn cho phòng ban",
+    "optionB": "Kết nối point-to-point giữa 2 router (chỉ cần 2 host)",
+    "optionC": "Mạng dành cho DHCP pool lớn",
+    "optionD": "Mạng Wifi công cộng",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 31,
+    "question": "Switching method nào kiểm tra toàn bộ FCS trước khi quyết định forward frame?",
+    "optionA": "Cut-through",
+    "optionB": "Store-and-forward",
+    "optionC": "Fragment-free",
+    "optionD": "Flood-forward",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 32,
+    "question": "Mạng 172.16.0.0/16 cần chia VLSM cho chi nhánh X cần 1000 host. Subnet mask nào sau đây là PHÙ HỢP NHẤT (tiết kiệm địa chỉ nhất mà vẫn đủ đáp ứng)?",
+    "optionA": "/21 (2046 host, dư nhiều)",
+    "optionB": "/22 (1022 host, vừa đủ)",
+    "optionC": "/23 (510 host, không đủ)",
+    "optionD": "/24 (254 host, không đủ)",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 33,
+    "question": "Khi PC A (trong cùng subnet với PC B) muốn gửi dữ liệu lần đầu tới PC B nhưng chưa biết địa chỉ MAC của B, PC A sẽ làm gì TRƯỚC KHI có thể tạo Ethernet Frame gửi đi?",
+    "optionA": "Gửi thẳng frame với Dest MAC toàn số 0",
+    "optionB": "Gửi ARP Request dạng broadcast để tìm địa chỉ MAC của B",
+    "optionC": "Gửi ICMP Echo Request trước để kiểm tra",
+    "optionD": "Không cần làm gì, switch sẽ tự tìm MAC giúp",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 34,
+    "question": "Broadcast Domain thường bị giới hạn bởi thiết bị nào (nếu không chia VLAN)?",
+    "optionA": "Switch",
+    "optionB": "Hub",
+    "optionC": "Router",
+    "optionD": "Access Point",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 35,
+    "question": "Encapsulation là quá trình gì?",
+    "optionA": "Giải mã dữ liệu ở máy nhận",
+    "optionB": "Đóng gói dữ liệu qua từng tầng khi gửi đi, mỗi tầng thêm header riêng",
+    "optionC": "Nén dữ liệu để tiết kiệm băng thông",
+    "optionD": "Xóa bớt dữ liệu dư thừa",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 36,
+    "question": "Khi 1 gói tin HTTP di chuyển qua TCP/IP rồi qua Ethernet, tổng cộng có bao nhiêu lớp header được THÊM VÀO dữ liệu HTTP gốc trước khi trở thành Frame hoàn chỉnh (không tính Trailer)?",
+    "optionA": "2",
+    "optionB": "3",
+    "optionC": "4",
+    "optionD": "5",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 37,
+    "question": "Trong 1 subnet, địa chỉ có toàn bộ bit phần host = 0 được gọi là gì?",
+    "optionA": "Broadcast Address",
+    "optionB": "Network Address",
+    "optionC": "Anycast Address",
+    "optionD": "Multicast Address",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 38,
+    "question": "Một Admin thiết kế subnet sao cho Increment (Block size) ở octet cuối = 16. Hỏi mask này tương ứng CIDR nào và tối đa bao nhiêu host khả dụng mỗi subnet?",
+    "optionA": "/27, tối đa 30 host",
+    "optionB": "/28, tối đa 14 host",
+    "optionC": "/29, tối đa 6 host",
+    "optionD": "/26, tối đa 62 host",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 39,
+    "question": "Địa chỉ MAC Multicast dùng cho IPv4 thường bắt đầu bằng prefix nào?",
+    "optionA": "FF:FF:FF:00:00:00",
+    "optionB": "01:00:5E",
+    "optionC": "00:00:00:00:00:01",
+    "optionD": "AA:BB:CC:DD:EE:FF",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 40,
+    "question": "Với yêu cầu chỉ 2 host (kết nối point-to-point giữa 2 router), subnet mask tối thiểu cần dùng là gì?",
+    "optionA": "/28",
+    "optionB": "/29",
+    "optionC": "/30",
+    "optionD": "/31",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 41,
+    "question": "Nếu 1 kỹ sư mạng mượn 3 bit từ phần host của mạng gốc /24 để chia subnet, họ sẽ tạo ra được bao nhiêu subnet mới, và mỗi subnet có bao nhiêu host khả dụng?",
+    "optionA": "4 subnet, 62 host/subnet",
+    "optionB": "8 subnet, 30 host/subnet",
+    "optionC": "6 subnet, 14 host/subnet",
+    "optionD": "16 subnet, 30 host/subnet",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 42,
+    "question": "Cho địa chỉ 192.168.20.50/27, Network Address của subnet chứa địa chỉ này là gì?",
+    "optionA": "192.168.20.0",
+    "optionB": "192.168.20.32",
+    "optionC": "192.168.20.48",
+    "optionD": "192.168.20.64",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 43,
+    "question": "Một subnet có địa chỉ Broadcast là 172.20.34.127 và có 30 host khả dụng. Địa chỉ Network của subnet này là gì?",
+    "optionA": "172.20.34.96",
+    "optionB": "172.20.34.64",
+    "optionC": "172.20.34.100",
+    "optionD": "172.20.34.0",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 44,
+    "question": "Trong 1 subnet, địa chỉ có toàn bộ bit phần host = 1 được gọi là gì?",
+    "optionA": "Network Address",
+    "optionB": "Broadcast Address",
+    "optionC": "Default Gateway",
+    "optionD": "Loopback Address",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 45,
+    "question": "Một công ty có mạng gốc 192.168.1.0/24, sau khi cấp subnet 192.168.1.0/25 cho phòng Sales (100 máy), subnet tiếp theo có thể bắt đầu từ địa chỉ nào?",
+    "optionA": "192.168.1.64",
+    "optionB": "192.168.1.100",
+    "optionC": "192.168.1.128",
+    "optionD": "192.168.1.126",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 46,
+    "question": "Mô hình 2-tier (Collapsed Core) là gì?",
+    "optionA": "Gộp Access và Distribution làm 1",
+    "optionB": "Gộp Distribution và Core làm 1",
+    "optionC": "Bỏ hẳn tầng Access",
+    "optionD": "Thêm 1 tầng mới giữa Access và Core",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 47,
+    "question": "Tầng nào trong OSI đảm nhiệm việc thiết lập, duy trì và kết thúc phiên làm việc giữa 2 ứng dụng?",
+    "optionA": "Transport (Layer 4)",
+    "optionB": "Session (Layer 5)",
+    "optionC": "Presentation (Layer 6)",
+    "optionD": "Network (Layer 3)",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 48,
+    "question": "Cho địa chỉ 10.10.10.75/28, Broadcast Address của subnet chứa địa chỉ này là gì?",
+    "optionA": "10.10.10.78",
+    "optionB": "10.10.10.79",
+    "optionC": "10.10.10.80",
+    "optionD": "10.10.10.95",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 49,
+    "question": "Mạng 10.0.0.0/22 cần chia VLSM cho chi nhánh A cần 500 host. Subnet mask nào sau đây KHÔNG ĐỦ để đáp ứng nhu cầu của chi nhánh A?",
+    "optionA": "/22 (1022 host)",
+    "optionB": "/23 (510 host)",
+    "optionC": "/24 (254 host)",
+    "optionD": "/21 (2046 host)",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 50,
+    "question": "Cho topology gồm 1 Router nối với 2 Switch (Switch A và Switch B) qua 2 interface riêng biệt, mỗi Switch nối với 5 PC. Không có VLAN nào được cấu hình. Hỏi có bao nhiêu Broadcast Domain trong toàn bộ topology này?",
+    "optionA": "1",
+    "optionB": "2",
+    "optionC": "10",
+    "optionD": "12",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 51,
+    "question": "Cho địa chỉ 10.10.10.75/28, địa chỉ Host khả dụng ĐẦU TIÊN của subnet chứa địa chỉ này là gì?",
+    "optionA": "10.10.10.64",
+    "optionB": "10.10.10.65",
+    "optionC": "10.10.10.66",
+    "optionD": "10.10.10.79",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 52,
+    "question": "Switch S nhận 1 frame tại cổng Fa0/1 với Source MAC = AA:AA:AA:AA:AA:AA. Vài giây sau, Switch S lại nhận 1 frame khác cũng với Source MAC đó nhưng đến từ cổng Fa0/5. Switch sẽ xử lý thế nào?",
+    "optionA": "Switch từ chối frame vì MAC đã tồn tại trong bảng",
+    "optionB": "Switch cập nhật lại bảng CAM, gán MAC đó với cổng Fa0/5 mới (ghi đè thông tin cũ)",
+    "optionC": "Switch tạo ra 2 mục riêng biệt cho cùng 1 MAC",
+    "optionD": "Switch tự động khóa (err-disable) cổng Fa0/5",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 53,
+    "question": "Địa chỉ MAC có kích thước bao nhiêu bit?",
+    "optionA": "24-bit",
+    "optionB": "32-bit",
+    "optionC": "48-bit",
+    "optionD": "64-bit",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 54,
+    "question": "Core Layer trong mô hình 3-tier ưu tiên yếu tố nào nhất?",
+    "optionA": "Bảo mật chi tiết từng gói tin",
+    "optionB": "Tốc độ và độ ổn định khi chuyển tiếp traffic",
+    "optionC": "Cấp phát VLAN cho end device",
+    "optionD": "Lọc ACL phức tạp",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 55,
+    "question": "Trường nào trong Ethernet Frame dùng để kiểm tra lỗi (dùng thuật toán CRC)?",
+    "optionA": "Preamble",
+    "optionB": "Type/Length",
+    "optionC": "FCS",
+    "optionD": "SFD",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 56,
+    "question": "Khi Switch nhận 1 frame có Destination MAC chưa từng xuất hiện trong bảng MAC Address Table, Switch sẽ xử lý thế nào?",
+    "optionA": "Loại bỏ (drop) frame ngay lập tức",
+    "optionB": "Flood (gửi) frame ra tất cả các cổng trừ cổng vừa nhận vào",
+    "optionC": "Gửi trả lại cho máy nguồn",
+    "optionD": "Giữ frame lại chờ 5 phút",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 57,
+    "question": "Cáp Cat5e hỗ trợ tốc độ tối đa bao nhiêu ở khoảng cách 100m?",
+    "optionA": "100Mbps",
+    "optionB": "1Gbps",
+    "optionC": "10Gbps",
+    "optionD": "100Gbps",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 58,
+    "question": "Nhược điểm chính của Full Mesh Topology là gì?",
+    "optionA": "Không có dự phòng",
+    "optionB": "Khó mở rộng vùng phủ sóng",
+    "optionC": "Tốn chi phí do số lượng kết nối rất lớn",
+    "optionD": "Không hỗ trợ cáp quang",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 59,
+    "question": "Đầu nối RJ45 thường dùng cho loại cáp nào?",
+    "optionA": "Cáp quang Single-mode",
+    "optionB": "Cáp quang Multi-mode",
+    "optionC": "Cáp đồng UTP",
+    "optionD": "Cáp đồng trục (Coaxial)",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 60,
+    "question": "Increment (block size) của subnet mask 255.255.255.192 là bao nhiêu?",
+    "optionA": "32",
+    "optionB": "64",
+    "optionC": "128",
+    "optionD": "16",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 61,
+    "question": "Nếu xảy ra Duplex Mismatch giữa PC và Switch (1 bên half-duplex, 1 bên full-duplex), hiện tượng nào sau đây có khả năng xảy ra NHẤT?",
+    "optionA": "PC không nhận được địa chỉ IP từ DHCP",
+    "optionB": "Tốc độ truyền giảm mạnh, xuất hiện nhiều lỗi CRC/Collision dù dây cáp vẫn tốt",
+    "optionC": "PC bị mất hoàn toàn kết nối vật lý (Link Down)",
+    "optionD": "VLAN trên PC tự động bị đổi",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 62,
+    "question": "Access Layer trong mô hình 3-tier chịu trách nhiệm chính nào?",
+    "optionA": "Định tuyến giữa các mạng lớn",
+    "optionB": "Nơi end device kết nối vào, thực hiện VLAN/Port Security",
+    "optionC": "Chuyển tiếp traffic tốc độ cao xuyên toàn mạng",
+    "optionD": "Kết nối ra Internet",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 63,
+    "question": "Địa chỉ nào sau đây thuộc dải Private IP theo RFC 1918?",
+    "optionA": "172.32.0.1",
+    "optionB": "172.16.0.1",
+    "optionC": "11.0.0.1",
+    "optionD": "192.169.0.1",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 64,
+    "question": "Địa chỉ IP 130.10.5.1 thuộc Class nào?",
+    "optionA": "Class A",
+    "optionB": "Class B",
+    "optionC": "Class C",
+    "optionD": "Class D",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 65,
+    "question": "Mô hình SOHO (Small Office/Home Office) có đặc trưng gì?",
+    "optionA": "Luôn có đủ 3 tầng Access-Distribution-Core",
+    "optionB": "Quy mô nhỏ, thường dùng 1 thiết bị tích hợp router+switch+AP+modem",
+    "optionC": "Bắt buộc phải có Core Layer riêng",
+    "optionD": "Không bao giờ dùng địa chỉ IP private",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 66,
+    "question": "De-encapsulation diễn ra ở đâu trong quá trình truyền dữ liệu?",
+    "optionA": "Ở thiết bị trung gian (switch)",
+    "optionB": "Ở thiết bị gửi trước khi truyền",
+    "optionC": "Ở thiết bị nhận, bóc dần từng lớp header",
+    "optionD": "Không tồn tại trong thực tế",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 67,
+    "question": "Mô hình OSI có bao nhiêu tầng và mô hình TCP/IP có bao nhiêu tầng?",
+    "optionA": "7 và 4",
+    "optionB": "4 và 7",
+    "optionC": "5 và 4",
+    "optionD": "7 và 5",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 68,
+    "question": "Nhận định nào sau đây về Switch Layer 2 là SAI?",
+    "optionA": "Switch học địa chỉ MAC dựa trên Source MAC của frame nhận được",
+    "optionB": "Switch dùng bảng CAM Table để quyết định forward frame",
+    "optionC": "Switch có thể đọc và dựa vào địa chỉ IP đích để định tuyến gói tin giữa các mạng khác nhau",
+    "optionD": "Mỗi cổng switch là 1 collision domain riêng biệt (ở chế độ full-duplex)",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 69,
+    "question": "Trong Ethernet II Frame, giá trị Type/Length = 0x0800 biểu thị dữ liệu bên trong thuộc giao thức nào?",
+    "optionA": "ARP",
+    "optionB": "IPv6",
+    "optionC": "IPv4",
+    "optionD": "STP",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 70,
+    "question": "Với yêu cầu 50 host cho 1 phòng ban, subnet mask tối thiểu cần dùng (để không lãng phí IP) là gì?",
+    "optionA": "/25",
+    "optionB": "/26",
+    "optionC": "/27",
+    "optionD": "/28",
+    "correctAnswer": "B",
+    "points": 1
+  }
+]

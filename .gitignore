@@ -1,0 +1,18 @@
+# Dependencies & Temp files
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE & Editor
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Python cache & temp
+__pycache__/
+*.pyc
+
+# Local backup / scratch
+scratch/
+*.tmp
