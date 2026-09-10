@@ -309,6 +309,17 @@
           </div>
         </div>
 
+        <!-- Khung hiển thị điểm số chính thức lần 1 (nếu học sinh đã làm bài) -->
+        <div id="official-score-banner" class="official-score-banner" style="display: none;"></div>
+
+        <!-- Dòng chú thích quy chế thi 1 lần -->
+        <p id="exam-attempt-notice" class="exam-attempt-notice">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          <span id="exam-attempt-notice-text">Mỗi học sinh chỉ có <strong>01 lần làm bài thi chính thức</strong> tính điểm.</span>
+        </p>
+
         <button type="button" id="btn-start" class="btn-primary btn-block">
           <span>Bắt đầu làm bài</span>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -341,6 +352,14 @@
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
             </svg>
             <span id="display-student-name">Học sinh</span>
+          </div>
+
+          <!-- Huy hiệu phân biệt lượt thi Ôn tập / Luyện tập -->
+          <div class="practice-pill" id="practice-pill" style="display: none;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+            <span>Ôn tập</span>
           </div>
 
           <!-- Huy hiệu cảnh báo vi phạm chuyển tab -->
@@ -401,6 +420,19 @@
     <!-- =================================================================== -->
     <section id="result-screen" class="screen-card">
       
+      <!-- Banner thông báo lượt làm bài ôn tập (nếu là lượt thi lại) -->
+      <div id="retake-notice-banner" class="retake-notice-banner" style="display: none;">
+        <div class="retake-notice-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <div class="retake-notice-body">
+          <strong id="retake-notice-title">LƯỢT LÀM BÀI ÔN TẬP KIẾN THỨC</strong>
+          <p id="retake-notice-desc">Điểm số lượt này dùng để rèn luyện. Điểm thi chính thức lần 1 của bạn được bảo lưu 100%.</p>
+        </div>
+      </div>
+
       <!-- Thông báo gửi kết quả tự động cho giáo viên (Theo yêu cầu học sinh yên tâm) -->
       <div class="auto-save-banner" id="cloud-status-banner">
         <div class="banner-icon-box">
@@ -530,7 +562,7 @@
   </div>
 
   <!-- Nạp cấu hình và script xử lý (có chống cache) -->
-  <script src="config.js?v=10"></script>
-  <script src="app.js?v=10"></script>
+  <script src="config.js?v=11"></script>
+  <script src="app.js?v=11"></script>
 </body>
 </html>

@@ -26,7 +26,9 @@ const QuizState = {
   endTime: null,           // Thời điểm kết thúc
   violationCount: 0,       // Số lần rời màn hình làm bài thi
   isExamActive: false,     // Đang trong thời gian làm bài thi
-  isAutoSubmitDueToCheat: false // Bị thu bài tự động do rời màn hình quá số lần quy định
+  isAutoSubmitDueToCheat: false, // Bị thu bài tự động do rời màn hình quá số lần quy định
+  isPracticeMode: false,   // Đang làm bài ở chế độ ôn tập kiến thức (lần 2 trở đi)
+  officialAttempt: null    // Thông tin kết quả thi chính thức lần 1 nếu đã từng thi
 };
 
 // ==============================================================================
@@ -144,18 +146,80 @@ function playAlarmSound() {
 }
 
 // ==============================================================================
-// KHỞI TẠO BỘ CHỌN 15 TUẦN HỌC (WEEKS SELECTOR)
+// HỆ THỐNG QUẢN LÝ LỊCH SỬ THI & BẢO LƯU ĐIỂM CHÍNH THỨC LẦN 1
+// ==============================================================================
+function getUserHistoryKey(username) {
+  const safeUser = (username || "guest").toLowerCase().trim();
+  return `quiz_history_${safeUser}`;
+}
+
+function getUserOfficialAttempts(username) {
+  try {
+    const raw = localStorage.getItem(getUserHistoryKey(username));
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function getOfficialAttempt(username, weekId) {
+  const attempts = getUserOfficialAttempts(username);
+  return attempts[weekId] || null;
+}
+
+function saveOfficialAttempt(username, weekId, data) {
+  try {
+    const key = getUserHistoryKey(username);
+    const attempts = getUserOfficialAttempts(username);
+    // QUY TẮC BẤT DI BẤT DỊCH: CHỈ GHI NHẬN LẦN ĐẦU TIÊN (KHÔNG GHI ĐÈ ĐIỂM SỐ CHÍNH THỨC)
+    if (!attempts[weekId]) {
+      attempts[weekId] = {
+        ...data,
+        firstRecordedAt: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })
+      };
+      localStorage.setItem(key, JSON.stringify(attempts));
+      console.log(`[Quiz History] Đã khóa điểm chính thức lần 1 cho tài khoản '${username}' - Tuần ${weekId}: ${data.score} điểm`);
+    }
+  } catch (e) {
+    console.error("Lỗi lưu lịch sử thi:", e);
+  }
+}
+
+// ==============================================================================
+// KHỞI TẠO BỘ CHỌN 15 TUẦN HỌC (WEEKS SELECTOR) & HIỂN THỊ ĐIỂM LẦN 1
 // ==============================================================================
 function initWeeksSelector() {
   const container = document.getElementById("weeks-grid");
   if (!container) return;
   container.innerHTML = "";
 
+  const username = AuthState.currentUser ? AuthState.currentUser.username : "";
+  const passingScore = (CONFIG.QUIZ && CONFIG.QUIZ.passingScore) || 95;
   const weeks = CONFIG.WEEKS || [];
+
   weeks.forEach(week => {
     const card = document.createElement("div");
     card.className = `week-card ${week.isUnlocked ? "unlocked" : "locked"} ${week.id === QuizState.selectedWeekId ? "selected" : ""}`;
     card.dataset.id = week.id;
+
+    // Kiểm tra xem tài khoản này đã có điểm chính thức lần 1 cho tuần này chưa
+    const officialAttempt = username ? getOfficialAttempt(username, week.id) : null;
+    let badgeHtml = "";
+
+    if (officialAttempt) {
+      const isPassed = officialAttempt.score >= passingScore;
+      badgeHtml = `
+        <span class="week-status-badge ${isPassed ? 'score-passed' : 'score-failed'}" title="Điểm thi chính thức lần 1: ${officialAttempt.score}/100đ">
+          ${officialAttempt.score}đ ${isPassed ? '✓' : ''}
+        </span>
+      `;
+    } else {
+      badgeHtml = `
+        <span class="week-status-badge ${week.isUnlocked ? 'open' : 'lock'}">
+          ${week.isUnlocked ? 'Mở' : 'Khóa'}
+        </span>
+      `;
+    }
 
     card.innerHTML = `
       <div class="week-icon-box">
@@ -172,9 +236,7 @@ function initWeeksSelector() {
         `}
       </div>
       <span class="week-name">${week.name}</span>
-      <span class="week-status-badge ${week.isUnlocked ? 'open' : 'lock'}">
-        ${week.isUnlocked ? 'Mở' : 'Khóa'}
-      </span>
+      ${badgeHtml}
     `;
 
     card.addEventListener("click", () => {
@@ -191,6 +253,78 @@ function initWeeksSelector() {
 
   // Chọn tuần mặc định ban đầu (Tuần 1)
   selectWeek(QuizState.selectedWeekId || 1);
+}
+
+/**
+ * Cập nhật khung hiển thị điểm thi chính thức lần 1 và nút bấm ở trang chủ
+ */
+function updateOfficialScoreDisplay(weekId) {
+  const username = AuthState.currentUser ? AuthState.currentUser.username : "";
+  const officialAttempt = username ? getOfficialAttempt(username, weekId) : null;
+  const banner = document.getElementById("official-score-banner");
+  const noticeText = document.getElementById("exam-attempt-notice-text");
+  const btnStart = document.getElementById("btn-start");
+  const week = (CONFIG.WEEKS || []).find(w => w.id === weekId);
+  const weekName = week ? week.name : `Tuần ${weekId}`;
+
+  if (officialAttempt && banner) {
+    const passingScore = (CONFIG.QUIZ && CONFIG.QUIZ.passingScore) || 95;
+    const isPassed = officialAttempt.score >= passingScore;
+    banner.className = `official-score-banner ${isPassed ? '' : 'score-failed'}`;
+    banner.style.display = "block";
+    banner.innerHTML = `
+      <div class="official-score-header">
+        <div class="official-score-title-box">
+          <span class="official-trophy-icon">${isPassed ? '🏆' : '💡'}</span>
+          <span class="official-score-heading">ĐIỂM THI CHÍNH THỨC LẦN 1 (${weekName.toUpperCase()})</span>
+        </div>
+        <span class="official-score-badge">${isPassed ? '✓ ĐÃ ĐẠT (≥ ' + passingScore + 'đ)' : 'CHƯA ĐẠT (YÊU CẦU ≥ ' + passingScore + 'đ)'}</span>
+      </div>
+      <div class="official-score-stats-row">
+        <span class="official-score-number">${officialAttempt.score}</span>
+        <span class="official-score-denom">/ 100 điểm</span>
+      </div>
+      <div class="official-score-details">
+        <span>• Trả lời đúng: <strong>${officialAttempt.correctCount}/${officialAttempt.totalQuestions} câu</strong></span> • 
+        <span>Thời gian: ${officialAttempt.timeSpent || 'Đã hoàn thành'}</span> • 
+        <span>Lúc: ${officialAttempt.completedAt || officialAttempt.firstRecordedAt}</span>
+      </div>
+      <div class="official-score-notice">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <span>Bạn đã hoàn thành bài thi tính điểm. Bạn có thể vào <strong>làm lại để ôn tập kiến thức</strong> (không cập nhật điểm mới).</span>
+      </div>
+    `;
+
+    if (noticeText) {
+      noticeText.innerHTML = `Chế độ hiện tại: <strong style="color:#7c3aed;">ÔN TẬP KIẾN THỨC</strong> (Điểm chính thức lần 1 là <strong>${officialAttempt.score}đ</strong> được bảo lưu vĩnh viễn trên danh sách giáo viên).`;
+    }
+
+    if (btnStart) {
+      btnStart.classList.add("practice-mode");
+      btnStart.innerHTML = `
+        <span>Làm lại bài thi (Ôn tập kiến thức)</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+        </svg>
+      `;
+    }
+  } else {
+    if (banner) banner.style.display = "none";
+    if (noticeText) {
+      noticeText.innerHTML = `Mỗi học sinh chỉ có <strong>01 lần làm bài thi chính thức</strong> tính điểm. Hãy chuẩn bị kỹ trước khi bắt đầu!`;
+    }
+    if (btnStart) {
+      btnStart.classList.remove("practice-mode");
+      btnStart.innerHTML = `
+        <span>Bắt đầu làm bài thi chính thức</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      `;
+    }
+  }
 }
 
 /**
@@ -222,6 +356,9 @@ async function selectWeek(weekId) {
 
   const titleEl = document.getElementById("quiz-title-display");
   if (titleEl) titleEl.textContent = `${CONFIG.QUIZ.title} - ${week.name.toUpperCase()}`;
+
+  // Cập nhật khung hiển thị điểm số chính thức lần 1 (nếu có)
+  updateOfficialScoreDisplay(weekId);
 
   // Nạp dữ liệu câu hỏi của tuần này
   await loadWeekQuestions(week);
@@ -327,6 +464,17 @@ function startQuiz() {
   // Hiển thị tên học sinh trên thanh trạng thái
   const displayName = document.getElementById("display-student-name");
   if (displayName) displayName.textContent = QuizState.studentName;
+
+  // Xác định đây là lượt thi chính thức lần 1 hay lượt làm lại ôn tập
+  const existingOfficialAttempt = getOfficialAttempt(QuizState.username, QuizState.selectedWeekId);
+  QuizState.isPracticeMode = Boolean(existingOfficialAttempt);
+  QuizState.officialAttempt = existingOfficialAttempt;
+
+  // Cập nhật huy hiệu chế độ ôn tập trên thanh trạng thái bài thi
+  const practicePill = document.getElementById("practice-pill");
+  if (practicePill) {
+    practicePill.style.display = QuizState.isPracticeMode ? "inline-flex" : "none";
+  }
 
   // Khởi tạo trạng thái giám sát chống gian lận (Anti-Cheat)
   QuizState.violationCount = 0;
@@ -607,6 +755,51 @@ function finishQuiz() {
     scoreOn100 = Math.round((QuizState.pointsEarned / QuizState.totalPossiblePoints) * 100);
   }
 
+  const passingScore = (CONFIG.QUIZ && CONFIG.QUIZ.passingScore) || 95;
+  const isPassed = (scoreOn100 >= passingScore);
+
+  // ============================================================================
+  // XỬ LÝ ĐIỂM SỐ: CHỈ GHI NHẬN LẦN ĐẦU TIÊN (LẦN 2 TRỞ ĐI LÀ ÔN TẬP BẢO LƯU ĐIỂM)
+  // ============================================================================
+  if (!QuizState.isPracticeMode) {
+    // 1. LƯỢT THI CHÍNH THỨC (LẦN 1): Khóa điểm và gửi báo cáo lên Google Sheet
+    saveOfficialAttempt(QuizState.username, QuizState.selectedWeekId, {
+      score: scoreOn100,
+      correctCount: correctCount,
+      totalQuestions: totalQuestions,
+      accuracyPct: accuracyPct,
+      timeSpent: timeSpentFormatted,
+      isPassed: isPassed,
+      completedAt: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" }),
+      violations: QuizState.violationCount
+    });
+
+    // Tự động đồng bộ kết quả chính thức lên Google Sheet
+    autoSaveResultsToCloud({
+      scoreOn100,
+      correctCount,
+      totalQuestions,
+      accuracyPct,
+      timeSpentFormatted,
+      totalSecondsSpent
+    });
+  } else {
+    // 2. LƯỢT LÀM LẠI (ÔN TẬP): Không gửi đè điểm mới lên Google Sheet, bảo lưu kết quả lần 1
+    console.log(`[Quiz Practice] Hoàn thành lượt ôn tập Tuần ${QuizState.selectedWeekId} (${scoreOn100}đ). Điểm chính thức lần 1 (${QuizState.officialAttempt ? QuizState.officialAttempt.score : 0}đ) được bảo lưu.`);
+    handlePracticeSubmissionSummary({
+      scoreOn100,
+      correctCount,
+      totalQuestions,
+      accuracyPct,
+      timeSpentFormatted,
+      totalSecondsSpent
+    });
+  }
+
+  // Cập nhật lại giao diện bộ chọn tuần và bảng điểm ở trang chủ
+  initWeeksSelector();
+  updateOfficialScoreDisplay(QuizState.selectedWeekId);
+
   // Hiển thị màn hình kết quả
   renderResultsScreen({
     scoreOn100,
@@ -616,17 +809,24 @@ function finishQuiz() {
     timeSpentFormatted
   });
 
-  // TỰ ĐỘNG LƯU KẾT QUẢ LÊN CLOUD (Firebase & Google Sheets)
-  autoSaveResultsToCloud({
-    scoreOn100,
-    correctCount,
-    totalQuestions,
-    accuracyPct,
-    timeSpentFormatted,
-    totalSecondsSpent
-  });
-
   showScreen("result-screen");
+}
+
+/**
+ * Xử lý giao diện thông báo khi hoàn thành lượt làm bài ôn tập (không cập nhật Cloud)
+ */
+function handlePracticeSubmissionSummary(summary) {
+  const statusTitle = document.getElementById("save-status-title");
+  const statusDesc = document.getElementById("save-status-desc");
+  const syncTarget = document.getElementById("sync-target-text");
+
+  const firstScore = QuizState.officialAttempt ? QuizState.officialAttempt.score : summary.scoreOn100;
+
+  if (statusTitle) statusTitle.textContent = "Điểm chính thức lần 1 được bảo lưu";
+  if (syncTarget) syncTarget.textContent = "Bảo lưu lần 1 ✓";
+  if (statusDesc) {
+    statusDesc.textContent = `Đây là lượt làm bài ôn tập rèn luyện. Điểm thi chính thức lần 1 (${firstScore} điểm) trên Google Sheet của giáo viên được giữ nguyên hoàn toàn.`;
+  }
 }
 
 // ==============================================================================
@@ -634,6 +834,23 @@ function finishQuiz() {
 // ==============================================================================
 function renderResultsScreen(stats) {
   const { scoreOn100, correctCount, totalQuestions, accuracyPct, timeSpentFormatted } = stats;
+
+  // Thông báo chế độ ôn tập nếu là lượt làm lại
+  const retakeBanner = document.getElementById("retake-notice-banner");
+  const retakeTitle = document.getElementById("retake-notice-title");
+  const retakeDesc = document.getElementById("retake-notice-desc");
+  if (retakeBanner) {
+    if (QuizState.isPracticeMode) {
+      retakeBanner.style.display = "flex";
+      const firstScore = QuizState.officialAttempt ? QuizState.officialAttempt.score : stats.scoreOn100;
+      if (retakeTitle) retakeTitle.textContent = "LƯỢT LÀM BÀI ÔN TẬP KIẾN THỨC";
+      if (retakeDesc) {
+        retakeDesc.innerHTML = `Điểm số lượt rèn luyện này là <strong>${stats.scoreOn100}/100</strong>. Điểm thi chính thức lần 1 của bạn là <strong>${firstScore}/100 điểm</strong> vẫn được bảo lưu 100%.`;
+      }
+    } else {
+      retakeBanner.style.display = "none";
+    }
+  }
 
   // 1. Họ tên và thời gian
   const studentEl = document.getElementById("result-student-name");
@@ -1190,13 +1407,30 @@ function updateAuthUI() {
 
     if (btnStart) {
       btnStart.classList.remove("btn-locked");
-      btnStart.innerHTML = `
-        <span>Bắt đầu làm bài thi</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-        </svg>
-      `;
     }
+
+    // Tải lại các thẻ tuần và cập nhật bảng điểm lần 1 cho tài khoản này
+    initWeeksSelector();
+    updateOfficialScoreDisplay(QuizState.selectedWeekId || 1);
+  } else {
+    if (userProfileChip) userProfileChip.style.display = "none";
+    if (authHintBanner) authHintBanner.className = "auth-hint-banner";
+    if (nameInput) {
+      nameInput.value = "";
+      nameInput.readOnly = false;
+      nameInput.style.backgroundColor = "";
+      nameInput.style.borderColor = "";
+      nameInput.style.cursor = "";
+    }
+    if (classInput) {
+      classInput.value = "";
+      classInput.readOnly = false;
+      classInput.style.backgroundColor = "";
+      classInput.style.borderColor = "";
+      classInput.style.cursor = "";
+    }
+    initWeeksSelector();
+    updateOfficialScoreDisplay(QuizState.selectedWeekId || 1);
   }
 }
 
@@ -1530,6 +1764,9 @@ document.addEventListener("DOMContentLoaded", () => {
       QuizState.isSubmitting = false;
       QuizState.currentIndex = 0;
       QuizState.answersLog = [];
+      QuizState.isPracticeMode = false;
+      initWeeksSelector();
+      updateOfficialScoreDisplay(QuizState.selectedWeekId || 1);
       showScreen("start-screen");
     });
   }

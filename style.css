@@ -1856,6 +1856,214 @@ body {
 }
 
 /* --------------------------------------------------------------------------
+   CHẾ ĐỘ THI 1 LẦN & KHUNG HIỂN THỊ ĐIỂM CHÍNH THỨC LẦN 1
+   -------------------------------------------------------------------------- */
+.official-score-banner {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border: 2px solid #86efac;
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  box-shadow: var(--shadow-sm);
+  animation: fadeInViolation 0.3s ease;
+}
+
+.official-score-banner.score-failed {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border-color: #fcd34d;
+}
+
+.official-score-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.official-score-title-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.official-trophy-icon {
+  font-size: 1.4rem;
+  display: inline-flex;
+}
+
+.official-score-heading {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #065f46;
+  letter-spacing: -0.01em;
+}
+
+.official-score-banner.score-failed .official-score-heading {
+  color: #92400e;
+}
+
+.official-score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.official-score-banner.score-failed .official-score-badge {
+  background: #fef3c7;
+  color: #b45309;
+  border-color: #fde68a;
+}
+
+.official-score-stats-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.official-score-number {
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: #047857;
+  line-height: 1;
+}
+
+.official-score-banner.score-failed .official-score-number {
+  color: #d97706;
+}
+
+.official-score-denom {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.official-score-details {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.official-score-notice {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(6, 95, 70, 0.2);
+  font-size: 0.82rem;
+  color: #047857;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.official-score-banner.score-failed .official-score-notice {
+  border-top-color: rgba(180, 83, 9, 0.2);
+  color: #92400e;
+}
+
+/* Huy hiệu điểm trên thẻ tuần */
+.week-status-badge.score-passed {
+  background: #dcfce7 !important;
+  color: #15803d !important;
+  border-color: #86efac !important;
+  font-weight: 800;
+}
+
+.week-status-badge.score-failed {
+  background: #fef3c7 !important;
+  color: #b45309 !important;
+  border-color: #fde68a !important;
+  font-weight: 800;
+}
+
+/* Chú thích thi 1 lần ở start screen */
+.exam-attempt-notice {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  margin-bottom: 12px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  background: #f8fafc;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+}
+
+/* Nút bắt đầu khi ở chế độ ôn tập */
+.btn-primary.practice-mode {
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%) !important;
+  box-shadow: 0 10px 20px -5px rgba(124, 58, 237, 0.4) !important;
+}
+
+.btn-primary.practice-mode:hover {
+  box-shadow: 0 14px 26px -5px rgba(124, 58, 237, 0.5) !important;
+}
+
+/* Huy hiệu Ôn tập trên thanh trạng thái lúc làm bài */
+.practice-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #ede9fe;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* Banner thông báo lượt ôn tập trên Result Screen */
+.retake-notice-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f5f3ff;
+  border: 2px solid #c4b5fd;
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+
+.retake-notice-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ede9fe;
+  color: #7c3aed;
+  flex-shrink: 0;
+}
+
+.retake-notice-body strong {
+  display: block;
+  font-size: 0.94rem;
+  color: #5b21b6;
+  margin-bottom: 2px;
+}
+
+.retake-notice-body p {
+  font-size: 0.84rem;
+  color: #6d28d9;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
    RESPONSIVE DESIGN (TỐI ƯU HÓA HOÀN TOÀN CHO ĐIỆN THOẠI)
    -------------------------------------------------------------------------- */
 @media (max-width: 640px) {
