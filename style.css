@@ -1347,6 +1347,14 @@ body {
   align-items: center;
 }
 
+.user-nav-area.logged-in .btn-auth-nav {
+  display: none !important;
+}
+
+.user-nav-area.logged-in .user-profile-chip {
+  display: inline-flex !important;
+}
+
 .btn-auth-nav {
   display: inline-flex;
   align-items: center;

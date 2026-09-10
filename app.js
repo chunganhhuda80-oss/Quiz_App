@@ -1719,6 +1719,8 @@ function switchAuthTab(tab) {
 }
 
 function updateAuthUI() {
+  const userNavArea = document.getElementById("user-nav-area");
+  const btnOpenAuth = document.getElementById("btn-open-auth");
   const userProfileChip = document.getElementById("user-profile-chip");
   const navAvatar = document.getElementById("nav-user-avatar");
   const navName = document.getElementById("nav-user-name");
@@ -1733,7 +1735,13 @@ function updateAuthUI() {
   const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
 
   if (AuthState.currentUser) {
-    // Đã đăng nhập
+    // Đã đăng nhập: Ẩn hoàn toàn nút "Đăng nhập / Đăng ký", chỉ hiện chip tên người dùng
+    if (userNavArea) {
+      userNavArea.classList.add("logged-in");
+    }
+    if (btnOpenAuth) {
+      btnOpenAuth.style.display = "none";
+    }
     if (userProfileChip) {
       userProfileChip.style.display = "inline-flex";
       if (isAdmin) {
@@ -1806,6 +1814,13 @@ function updateAuthUI() {
     initWeeksSelector();
     updateOfficialScoreDisplay(QuizState.selectedWeekId || 1);
   } else {
+    // Chưa đăng nhập: Hiện nút "Đăng nhập / Đăng ký", ẩn chip thông tin
+    if (userNavArea) {
+      userNavArea.classList.remove("logged-in");
+    }
+    if (btnOpenAuth) {
+      btnOpenAuth.style.display = "inline-flex";
+    }
     if (userProfileChip) {
       userProfileChip.style.display = "none";
       userProfileChip.classList.remove("is-admin");
@@ -2140,6 +2155,14 @@ function initAuth() {
   const btnLogout = document.getElementById("btn-logout");
   if (btnLogout) {
     btnLogout.addEventListener("click", handleLogout);
+  }
+
+  // 5b. Nút mở màn hình đăng nhập từ thanh điều hướng (khi chưa đăng nhập)
+  const btnOpenAuth = document.getElementById("btn-open-auth");
+  if (btnOpenAuth) {
+    btnOpenAuth.addEventListener("click", () => {
+      showScreen("auth-screen");
+    });
   }
 
   // 6. Nút ẩn/hiện mật khẩu (mắt)
