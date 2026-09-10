@@ -11,6 +11,7 @@ const CONFIG = {
   // ---------------------------------------------------------------------------
   GOOGLE_APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwbB2ajI_obZt98hsLRVdQE-6yki1_2ZcNcuU-DL5Mnq-hJGlGppmvtB0sWxdeLKPxK8w/exec",
   CLOUD_WEEKS_STATUS_URL: "https://extendsclass.com/api/json-storage/bin/ceacfec",
+  DIRECT_CLOUD_STORE_URL: "https://api.restful-api.dev/objects/ff808181a067127101a08c02980c68c1",
 
   // ---------------------------------------------------------------------------
   // 2. DANH SÁCH 15 TUẦN HỌC (CHỈ MỞ KHÓA TUẦN 1 VÀ TUẦN 2)

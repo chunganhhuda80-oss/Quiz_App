@@ -196,18 +196,46 @@ function saveOfficialAttempt(username, weekId, data) {
 // QUẢN LÝ ĐÓNG / MỞ TỪNG TUẦN HỌC & ĐỒNG BỘ ĐÁM MÂY (WEEKS ACCESS CONTROL & CLOUD SYNC)
 // ==============================================================================
 const WEEKS_STORAGE_KEY = "quiz_custom_weeks_status";
+const WEEKS_TIMESTAMP_KEY = "quiz_custom_weeks_last_updated";
 
 function getCustomWeeksStatus() {
   try {
     const raw = localStorage.getItem(WEEKS_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object") {
+      if (parsed.weeks && typeof parsed.weeks === "object") {
+        return parsed.weeks;
+      }
+      return parsed;
+    }
+    return null;
   } catch (e) {
     return null;
   }
 }
 
+function getLocalWeeksTimestamp() {
+  try {
+    const ts = localStorage.getItem(WEEKS_TIMESTAMP_KEY);
+    if (ts) return Number(ts);
+    const raw = localStorage.getItem(WEEKS_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.timestamp) return Number(parsed.timestamp);
+    }
+    return 0;
+  } catch (e) {
+    return 0;
+  }
+}
+
 function isWeekUnlocked(week) {
   if (!week) return false;
+  // Nếu tuần không có file câu hỏi (chưa cập nhật đề thi), luôn luôn khóa
+  if (!week.file || !week.file.trim()) {
+    return false;
+  }
   const custom = getCustomWeeksStatus();
   if (custom && typeof custom[week.id] === "boolean") {
     return custom[week.id];
@@ -216,16 +244,34 @@ function isWeekUnlocked(week) {
 }
 
 function saveAndSyncWeeksStatus(customState) {
-  localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(customState));
+  const timestamp = Date.now();
+  const payload = {
+    timestamp: timestamp,
+    weeks: customState
+  };
 
-  // Tự động đồng bộ lên Cloud để toàn bộ học sinh trên internet nhận được ngay lập tức
-  if (CONFIG.CLOUD_WEEKS_STATUS_URL) {
-    fetch(CONFIG.CLOUD_WEEKS_STATUS_URL, {
+  // 1. Lưu ngay lập tức vào LocalStorage (Đảm bảo F5 luôn giữ trạng thái mới nhất)
+  localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(customState));
+  localStorage.setItem(WEEKS_TIMESTAMP_KEY, String(timestamp));
+
+  // 2. Gửi đồng bộ lên Vercel Serverless Function (/api/weeks)
+  fetch("/api/weeks", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+
+  // 3. Đồng bộ trực tiếp lên Cloud Store (Hỗ trợ CORS 100% không bị chặn preflight)
+  if (CONFIG.DIRECT_CLOUD_STORE_URL) {
+    fetch(CONFIG.DIRECT_CLOUD_STORE_URL, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(customState)
+      body: JSON.stringify({
+        name: "Quiz_App_Weeks_Status",
+        data: payload
+      })
     }).catch(err => {
-      console.warn("Lỗi đồng bộ trạng thái tuần lên cloud:", err);
+      console.warn("Lỗi đồng bộ DIRECT_CLOUD_STORE_URL:", err);
     });
   }
 }
@@ -264,25 +310,74 @@ function resetWeeksStatusToDefault() {
  * Tự động đồng bộ trạng thái tuần thi từ Cloud về thiết bị của học sinh
  */
 async function syncWeeksStatusFromCloud() {
-  if (!CONFIG.CLOUD_WEEKS_STATUS_URL) return;
+  let cloudPayload = null;
+
+  // 1. Thử lấy từ Vercel serverless /api/weeks
   try {
-    const res = await fetch(CONFIG.CLOUD_WEEKS_STATUS_URL + "?v=" + Date.now());
+    const res = await fetch("/api/weeks?v=" + Date.now());
     if (res.ok) {
       const data = await res.json();
-      if (data && typeof data === "object") {
-        const currentLocal = localStorage.getItem(WEEKS_STORAGE_KEY);
-        const newStr = JSON.stringify(data);
-        if (currentLocal !== newStr) {
-          localStorage.setItem(WEEKS_STORAGE_KEY, newStr);
-          initWeeksSelector();
-          if (QuizState.selectedWeekId) {
-            selectWeek(QuizState.selectedWeekId);
-          }
-        }
+      if (data && (data.weeks || typeof data === "object")) {
+        cloudPayload = data;
       }
     }
-  } catch (err) {
-    // Không gián đoạn khi offline
+  } catch (e) {}
+
+  // 2. Thử lấy từ DIRECT_CLOUD_STORE_URL (restful-api.dev)
+  if (!cloudPayload && CONFIG.DIRECT_CLOUD_STORE_URL) {
+    try {
+      const res = await fetch(CONFIG.DIRECT_CLOUD_STORE_URL + "?v=" + Date.now());
+      if (res.ok) {
+        const json = await res.json();
+        if (json && json.data && (json.data.weeks || typeof json.data === "object")) {
+          cloudPayload = json.data;
+        }
+      }
+    } catch (e) {}
+  }
+
+  // 3. Fallback lấy từ extendsclass.com
+  if (!cloudPayload && CONFIG.CLOUD_WEEKS_STATUS_URL) {
+    try {
+      const res = await fetch(CONFIG.CLOUD_WEEKS_STATUS_URL + "?v=" + Date.now());
+      if (res.ok) {
+        const json = await res.json();
+        if (json && typeof json === "object") {
+          cloudPayload = json;
+        }
+      }
+    } catch (e) {}
+  }
+
+  if (!cloudPayload) return;
+
+  const cloudTimestamp = cloudPayload.timestamp ? Number(cloudPayload.timestamp) : 0;
+  const cloudWeeks = cloudPayload.weeks || cloudPayload;
+  const localTimestamp = getLocalWeeksTimestamp();
+
+  // BẢO VỆ TUYỆT ĐỐI KHÔNG BỊ MẤT TRẠNG THÁI KHI F5:
+  // Nếu máy cục bộ vừa có thao tác Admin mới hơn đám mây (localTimestamp > cloudTimestamp),
+  // TUYỆT ĐỐI KHÔNG để cloud ghi đè lên máy! Đẩy ngược dữ liệu local mới hơn lên đám mây để cập nhật.
+  if (localTimestamp > cloudTimestamp) {
+    const localCustom = getCustomWeeksStatus();
+    if (localCustom) {
+      saveAndSyncWeeksStatus(localCustom);
+    }
+    return;
+  }
+
+  // Nếu dữ liệu đám mây mới hơn hoặc bằng: Đồng bộ vào máy
+  if (cloudWeeks && typeof cloudWeeks === "object") {
+    const currentLocal = localStorage.getItem(WEEKS_STORAGE_KEY);
+    const newStr = JSON.stringify(cloudWeeks);
+    if (currentLocal !== newStr) {
+      localStorage.setItem(WEEKS_STORAGE_KEY, newStr);
+      localStorage.setItem(WEEKS_TIMESTAMP_KEY, String(cloudTimestamp));
+      initWeeksSelector();
+      if (QuizState.selectedWeekId) {
+        selectWeek(QuizState.selectedWeekId);
+      }
+    }
   }
 }
 
