@@ -335,12 +335,21 @@ function initWeeksSelector() {
         toggleBtn.addEventListener("click", (e) => {
           e.stopPropagation();
           const newStatus = !unlocked;
+          const actionWord = newStatus ? "MỞ KHÓA" : "KHÓA LẠI";
+          const confirmMsg = newStatus 
+            ? `❓ XÁC NHẬN MỞ KHÓA?\n\nBạn có chắc chắn muốn MỞ KHÓA ${week.name} (${week.title}) cho học sinh vào thi không?`
+            : `⚠️ CẢNH BÁO XÁC NHẬN KHÓA!\n\nBạn có chắc chắn muốn KHÓA ${week.name} (${week.title}) không?\nKhi khóa, tất cả học sinh sẽ BỊ CHẶN NGAY LẬP TỨC và không thể vào thi tuần này!`;
+
+          if (!confirm(confirmMsg)) {
+            return;
+          }
+
           setWeekUnlockedStatus(week.id, newStatus);
           initWeeksSelector();
           if (QuizState.selectedWeekId === week.id) {
             selectWeek(week.id);
           }
-          showAdminToast(`🛡️ [ADMIN] ${newStatus ? 'ĐÃ MỞ KHÓA' : 'ĐÃ KHÓA LẠI'} ${week.name} (${week.title})!`, newStatus ? 'success' : 'warn');
+          alert(`✓ THÀNH CÔNG!\nĐã ${actionWord} ${week.name} (${week.title}) thành công.\nCài đặt đã có hiệu lực ngay lập tức cho toàn bộ học sinh.`);
         });
       }
     }
@@ -350,15 +359,30 @@ function initWeeksSelector() {
         selectWeek(week.id);
       } else {
         playWrongSound();
-        alert(`🔒 ${week.name} (${week.title}) hiện đang đóng!\nHiện tại giáo viên chưa mở khóa tuần này.`);
+        alert(`🔒 BÀI THI ĐANG BỊ KHÓA!\n${week.name} (${week.title}) hiện đang bị khóa bởi Quản trị viên.\nHọc sinh chưa thể vào làm bài tuần này.`);
       }
     });
 
     container.appendChild(card);
   });
 
-  // Chọn tuần mặc định ban đầu (Tuần 1)
-  selectWeek(QuizState.selectedWeekId || 1);
+  // Chọn tuần mặc định ban đầu: Ưu tiên tuần đang mở và có sẵn file đề thi
+  const unlockedWeeksWithData = weeks.filter(w => isWeekUnlocked(w) && w.file && w.file.trim());
+  let targetWeekId = QuizState.selectedWeekId || 1;
+
+  if (!isAdmin) {
+    const currentWeek = weeks.find(w => w.id === targetWeekId);
+    if (!currentWeek || !isWeekUnlocked(currentWeek) || !currentWeek.file || !currentWeek.file.trim()) {
+      if (unlockedWeeksWithData.length > 0) {
+        targetWeekId = unlockedWeeksWithData[0].id;
+      } else {
+        const firstUnlocked = weeks.find(w => isWeekUnlocked(w));
+        targetWeekId = firstUnlocked ? firstUnlocked.id : 1;
+      }
+    }
+  }
+
+  selectWeek(targetWeekId);
 }
 
 /**
@@ -434,14 +458,15 @@ function updateOfficialScoreDisplay(weekId) {
 }
 
 /**
- * Xử lý khi người dùng bấm chọn một tuần đã mở khóa
+ * Xử lý khi người dùng bấm chọn một tuần
  */
 async function selectWeek(weekId) {
   const weeks = CONFIG.WEEKS || [];
   const week = weeks.find(w => w.id === weekId);
+  if (!week) return;
+
   const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
   const unlocked = isWeekUnlocked(week);
-  if (!week || (!unlocked && !isAdmin)) return;
 
   QuizState.selectedWeekId = weekId;
   QuizState.currentWeekInfo = week;
@@ -476,15 +501,77 @@ async function selectWeek(weekId) {
  * Tải danh sách câu hỏi của tuần được chọn từ file JSON
  */
 async function loadWeekQuestions(week) {
-  const targetFile = week.file || "questions_tuan1.json";
   const totalQEl = document.getElementById("info-total-q");
   const durationEl = document.getElementById("info-duration");
   const scaleEl = document.getElementById("info-scale");
+  const btnStart = document.getElementById("btn-start");
+  const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
+  const unlocked = isWeekUnlocked(week);
 
-  if (totalQEl) totalQEl.textContent = "Đang tải...";
+  // 1. TRƯỜNG HỢP TUẦN THI ĐANG BỊ KHÓA ĐỐI VỚI HỌC SINH
+  if (!unlocked && !isAdmin) {
+    QuizState.rawQuestions = [];
+    if (totalQEl) {
+      totalQEl.textContent = "Đang bị khóa 🔒";
+      totalQEl.style.color = "var(--danger)";
+    }
+    if (durationEl) durationEl.textContent = `${week.durationMinutes || 0} phút`;
+    if (scaleEl) scaleEl.textContent = "100 điểm";
+
+    if (btnStart) {
+      btnStart.classList.add("btn-locked");
+      btnStart.disabled = true;
+      btnStart.style.opacity = "0.55";
+      btnStart.style.cursor = "not-allowed";
+      btnStart.innerHTML = `
+        <span>Tuần thi đang bị khóa 🔒</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      `;
+    }
+    return;
+  }
+
+  // 2. TRƯỜNG HỢP TUẦN THI CHƯA CÓ FILE ĐỀ THI (CHƯA UPLOAD ĐỀ)
+  if (!week.file || !week.file.trim()) {
+    QuizState.rawQuestions = [];
+    if (totalQEl) {
+      totalQEl.textContent = "Chưa có đề ⏳";
+      totalQEl.style.color = "var(--danger)";
+    }
+    if (durationEl) durationEl.textContent = "0 phút";
+    if (scaleEl) scaleEl.textContent = "0 điểm";
+
+    if (btnStart) {
+      btnStart.classList.add("btn-locked");
+      btnStart.disabled = true;
+      btnStart.style.opacity = "0.55";
+      btnStart.style.cursor = "not-allowed";
+      btnStart.innerHTML = `
+        <span>Chưa có dữ liệu đề thi ⏳</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+      `;
+    }
+    return;
+  }
+
+  // 3. TUẦN CÓ FILE ĐỀ THI VÀ ĐƯỢC PHÉP TRUY CẬP: NẠP ĐỀ THI THẬT
+  if (totalQEl) {
+    totalQEl.textContent = "Đang tải...";
+    totalQEl.style.color = "";
+  }
+  if (btnStart) {
+    btnStart.classList.remove("btn-locked");
+    btnStart.disabled = false;
+    btnStart.style.opacity = "";
+    btnStart.style.cursor = "";
+  }
 
   try {
-    const res = await fetch(targetFile);
+    const res = await fetch(week.file);
     if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
     const data = await res.json();
 
@@ -498,12 +585,20 @@ async function loadWeekQuestions(week) {
     if (durationEl) durationEl.textContent = `${week.durationMinutes || 30} phút`;
     if (scaleEl) scaleEl.textContent = `${CONFIG.QUIZ.targetScale || 100} điểm`;
 
-    console.log(`Đã nạp thành công ${data.length} câu hỏi cho ${week.name} từ file ${targetFile}`);
+    updateOfficialScoreDisplay(week.id);
   } catch (err) {
     console.error(`Lỗi tải câu hỏi cho ${week.name}:`, err);
+    QuizState.rawQuestions = [];
     if (totalQEl) {
       totalQEl.textContent = "Lỗi nạp file!";
       totalQEl.style.color = "var(--danger)";
+    }
+    if (btnStart) {
+      btnStart.classList.add("btn-locked");
+      btnStart.disabled = true;
+      btnStart.style.opacity = "0.55";
+      btnStart.style.cursor = "not-allowed";
+      btnStart.innerHTML = `<span>Không thể nạp đề thi</span>`;
     }
   }
 }
@@ -538,10 +633,35 @@ function showScreen(screenId) {
 // BẮT ĐẦU BÀI THI
 // ==============================================================================
 function startQuiz() {
-  // BẮT BUỘC HỌC SINH PHẢI ĐĂNG NHẬP TRƯỚC KHI LÀM BÀI
+  // 1. BẮT BUỘC HỌC SINH PHẢI ĐĂNG NHẬP TRƯỚC KHI LÀM BÀI
   if (!AuthState.currentUser) {
     showScreen("auth-screen");
     showAuthAlert("⚠️ Bạn cần ĐĂNG NHẬP hoặc ĐĂNG KÝ tài khoản học sinh trước khi bắt đầu làm bài!", "error");
+    return;
+  }
+
+  const week = (CONFIG.WEEKS || []).find(w => w.id === QuizState.selectedWeekId);
+  const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
+  const unlocked = isWeekUnlocked(week);
+
+  // 2. CHẶN NẾU TUẦN THI ĐANG BỊ KHÓA ĐỐI VỚI HỌC SINH
+  if (!unlocked && !isAdmin) {
+    playWrongSound();
+    alert(`🔒 BÀI THI ĐANG BỊ KHÓA!\n${week ? week.name : 'Tuần này'} hiện đang bị khóa bởi Quản trị viên.\nHọc sinh không thể bắt đầu làm bài thi!`);
+    return;
+  }
+
+  // 3. CHẶN NẾU TUẦN THI CHƯA CÓ FILE CÂU HỎI
+  if (!week || !week.file || !week.file.trim()) {
+    playWrongSound();
+    alert(`⚠️ CHƯA CÓ DỮ LIỆU ĐỀ THI!\n${week ? week.name : 'Tuần này'} chưa có bộ câu hỏi thi (giáo viên chưa tải file câu hỏi lên hệ thống).\nVui lòng chọn Tuần 1 hoặc Tuần 2 để làm bài.`);
+    return;
+  }
+
+  // 4. KIỂM TRA DỮ LIỆU CÂU HỎI ĐÃ ĐƯỢC NẠP THÀNH CÔNG CHƯA
+  if (!QuizState.rawQuestions || QuizState.rawQuestions.length === 0) {
+    playWrongSound();
+    alert(`⚠️ Không có câu hỏi nào trong đề thi của ${week ? week.name : 'tuần này'}!\nVui lòng liên hệ giáo viên hoặc chọn tuần khác.`);
     return;
   }
 
@@ -549,12 +669,6 @@ function startQuiz() {
   QuizState.studentClass = AuthState.currentUser.className || "";
   QuizState.username = AuthState.currentUser.username;
   QuizState.startTime = new Date();
-
-  // Kiểm tra danh sách câu hỏi
-  if (!QuizState.rawQuestions || QuizState.rawQuestions.length === 0) {
-    alert("Chưa nạp được danh sách câu hỏi từ questions.json! Vui lòng kiểm tra lại.");
-    return;
-  }
 
   // Xáo trộn thứ tự câu hỏi nếu cấu hình bật
   if (CONFIG.QUIZ.shuffleQuestions) {
@@ -2006,34 +2120,40 @@ document.addEventListener("DOMContentLoaded", () => {
     btnDoneAdminModal.addEventListener("click", closeAdminWeeksModal);
   }
 
-  // Presets thao tác nhanh trong Modal
+  // Presets thao tác nhanh trong Modal (Có xác nhận an toàn)
   const presetOpenAll = document.getElementById("preset-open-all");
   if (presetOpenAll) {
     presetOpenAll.addEventListener("click", () => {
-      unlockAllWeeksGlobal();
-      renderAdminWeeksModalList();
-      initWeeksSelector();
-      showAdminToast("🛡️ Đã mở khóa toàn bộ 15 tuần học!", "success");
+      if (confirm("❓ XÁC NHẬN: Bạn có chắc chắn muốn MỞ KHÓA TOÀN BỘ 15 TUẦN cho học sinh không?")) {
+        unlockAllWeeksGlobal();
+        renderAdminWeeksModalList();
+        initWeeksSelector();
+        alert("✓ Đã mở khóa toàn bộ 15 tuần học thành công!");
+      }
     });
   }
 
   const presetDefault = document.getElementById("preset-default");
   if (presetDefault) {
     presetDefault.addEventListener("click", () => {
-      resetWeeksStatusToDefault();
-      renderAdminWeeksModalList();
-      initWeeksSelector();
-      showAdminToast("⚡ Đã đưa về chuẩn mặc định: Chỉ mở Tuần 1 & Tuần 2!", "success");
+      if (confirm("⚡ XÁC NHẬN: Đưa về chuẩn mặc định (Chỉ mở Tuần 1 & Tuần 2, khóa các tuần 3 đến 15)?")) {
+        resetWeeksStatusToDefault();
+        renderAdminWeeksModalList();
+        initWeeksSelector();
+        alert("✓ Đã đưa về chuẩn mặc định (Mở Tuần 1 & 2) thành công!");
+      }
     });
   }
 
   const presetLockAll = document.getElementById("preset-lock-all");
   if (presetLockAll) {
     presetLockAll.addEventListener("click", () => {
-      lockAllWeeksGlobal();
-      renderAdminWeeksModalList();
-      initWeeksSelector();
-      showAdminToast("🔒 Đã khóa tất cả 15 tuần thi!", "warn");
+      if (confirm("⚠️ CẢNH BÁO: Bạn có chắc chắn muốn KHÓA TẤT CẢ 15 TUẦN THI KHÔNG?\nHọc sinh sẽ bị chặn hoàn toàn, không thể vào thi bất kỳ tuần nào!")) {
+        lockAllWeeksGlobal();
+        renderAdminWeeksModalList();
+        initWeeksSelector();
+        alert("✓ Đã khóa toàn bộ 15 tuần thi thành công!");
+      }
     });
   }
 
@@ -2043,13 +2163,17 @@ document.addEventListener("DOMContentLoaded", () => {
     btnAdminUnlock.addEventListener("click", () => {
       const allOpen = (CONFIG.WEEKS || []).every(w => isWeekUnlocked(w));
       if (allOpen) {
-        resetWeeksStatusToDefault();
-        initWeeksSelector();
-        showAdminToast("🔒 Đã đưa về chuẩn tiến độ học tập (chỉ mở Tuần 1 & 2)", "warn");
+        if (confirm("Khóa lại các tuần 3-15, chỉ giữ mở Tuần 1 & 2 theo tiến độ?")) {
+          resetWeeksStatusToDefault();
+          initWeeksSelector();
+          alert("✓ Đã đưa về chuẩn tiến độ học tập (chỉ mở Tuần 1 & 2) thành công.");
+        }
       } else {
-        unlockAllWeeksGlobal();
-        initWeeksSelector();
-        showAdminToast("🛡️ Đã mở khóa toàn bộ 15 tuần học!", "success");
+        if (confirm("Mở khóa toàn bộ 15 tuần đề thi cho học sinh?")) {
+          unlockAllWeeksGlobal();
+          initWeeksSelector();
+          alert("✓ Đã mở khóa toàn bộ 15 tuần đề thi thành công.");
+        }
       }
     });
   }
@@ -2117,13 +2241,35 @@ function renderAdminWeeksModalList() {
     if (switchBtn) {
       switchBtn.addEventListener("click", () => {
         const nextState = !isWeekUnlocked(week);
+        const actionWord = nextState ? "MỞ KHÓA" : "KHÓA LẠI";
+        const confirmText = nextState 
+          ? `❓ XÁC NHẬN MỞ KHÓA?\n\nBạn có chắc chắn muốn MỞ KHÓA ${week.name} (${week.title}) cho học sinh vào thi không?`
+          : `⚠️ CẢNH BÁO XÁC NHẬN KHÓA!\n\nBạn có chắc chắn muốn KHÓA ${week.name} (${week.title}) không?\nKhi khóa, tất cả học sinh sẽ BỊ CHẶN NGAY LẬP TỨC và không thể vào thi tuần này!`;
+
+        if (!confirm(confirmText)) {
+          return;
+        }
+
         setWeekUnlockedStatus(week.id, nextState);
         renderAdminWeeksModalList();
         initWeeksSelector();
-        showAdminToast(`🛡️ ${nextState ? 'Đã MỞ KHÓA' : 'Đã KHÓA LẠI'} ${week.name}!`, nextState ? 'success' : 'warn');
+        if (QuizState.selectedWeekId === week.id) {
+          selectWeek(week.id);
+        }
+        alert(`✓ THÀNH CÔNG!\nĐã ${actionWord} ${week.name} (${week.title}) thành công.`);
       });
     }
 
     container.appendChild(row);
   });
 }
+
+// Đồng bộ tự động giữa các tab trình duyệt trong thời gian thực
+window.addEventListener("storage", (e) => {
+  if (e.key === WEEKS_STORAGE_KEY) {
+    initWeeksSelector();
+    if (QuizState.selectedWeekId) {
+      selectWeek(QuizState.selectedWeekId);
+    }
+  }
+});
