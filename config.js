@@ -7,9 +7,10 @@
 
 const CONFIG = {
   // ---------------------------------------------------------------------------
-  // 1. CẤU HÌNH GOOGLE SHEETS VỚI GOOGLE APPS SCRIPT
+  // 1. CẤU HÌNH GOOGLE SHEETS VÀ ĐỒNG BỘ ĐÁM MÂY (CLOUD SYNC)
   // ---------------------------------------------------------------------------
   GOOGLE_APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwbB2ajI_obZt98hsLRVdQE-6yki1_2ZcNcuU-DL5Mnq-hJGlGppmvtB0sWxdeLKPxK8w/exec",
+  CLOUD_WEEKS_STATUS_URL: "https://extendsclass.com/api/json-storage/bin/ceacfec",
 
   // ---------------------------------------------------------------------------
   // 2. DANH SÁCH 15 TUẦN HỌC (CHỈ MỞ KHÓA TUẦN 1 VÀ TUẦN 2)

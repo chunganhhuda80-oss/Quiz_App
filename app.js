@@ -193,7 +193,7 @@ function saveOfficialAttempt(username, weekId, data) {
 }
 
 // ==============================================================================
-// QUẢN LÝ ĐÓNG / MỞ TỪNG TUẦN HỌC (WEEKS ACCESS CONTROL)
+// QUẢN LÝ ĐÓNG / MỞ TỪNG TUẦN HỌC & ĐỒNG BỘ ĐÁM MÂY (WEEKS ACCESS CONTROL & CLOUD SYNC)
 // ==============================================================================
 const WEEKS_STORAGE_KEY = "quiz_custom_weeks_status";
 
@@ -215,10 +215,25 @@ function isWeekUnlocked(week) {
   return Boolean(week.isUnlocked);
 }
 
+function saveAndSyncWeeksStatus(customState) {
+  localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(customState));
+
+  // Tự động đồng bộ lên Cloud để toàn bộ học sinh trên internet nhận được ngay lập tức
+  if (CONFIG.CLOUD_WEEKS_STATUS_URL) {
+    fetch(CONFIG.CLOUD_WEEKS_STATUS_URL, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(customState)
+    }).catch(err => {
+      console.warn("Lỗi đồng bộ trạng thái tuần lên cloud:", err);
+    });
+  }
+}
+
 function setWeekUnlockedStatus(weekId, status) {
   const custom = getCustomWeeksStatus() || {};
   custom[weekId] = Boolean(status);
-  localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(custom));
+  saveAndSyncWeeksStatus(custom);
 }
 
 function unlockAllWeeksGlobal() {
@@ -226,7 +241,7 @@ function unlockAllWeeksGlobal() {
   (CONFIG.WEEKS || []).forEach(w => {
     custom[w.id] = true;
   });
-  localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(custom));
+  saveAndSyncWeeksStatus(custom);
 }
 
 function lockAllWeeksGlobal() {
@@ -234,7 +249,7 @@ function lockAllWeeksGlobal() {
   (CONFIG.WEEKS || []).forEach(w => {
     custom[w.id] = false;
   });
-  localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(custom));
+  saveAndSyncWeeksStatus(custom);
 }
 
 function resetWeeksStatusToDefault() {
@@ -242,7 +257,33 @@ function resetWeeksStatusToDefault() {
   (CONFIG.WEEKS || []).forEach(w => {
     custom[w.id] = Boolean(w.isUnlocked);
   });
-  localStorage.setItem(WEEKS_STORAGE_KEY, JSON.stringify(custom));
+  saveAndSyncWeeksStatus(custom);
+}
+
+/**
+ * Tự động đồng bộ trạng thái tuần thi từ Cloud về thiết bị của học sinh
+ */
+async function syncWeeksStatusFromCloud() {
+  if (!CONFIG.CLOUD_WEEKS_STATUS_URL) return;
+  try {
+    const res = await fetch(CONFIG.CLOUD_WEEKS_STATUS_URL + "?v=" + Date.now());
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data === "object") {
+        const currentLocal = localStorage.getItem(WEEKS_STORAGE_KEY);
+        const newStr = JSON.stringify(data);
+        if (currentLocal !== newStr) {
+          localStorage.setItem(WEEKS_STORAGE_KEY, newStr);
+          initWeeksSelector();
+          if (QuizState.selectedWeekId) {
+            selectWeek(QuizState.selectedWeekId);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    // Không gián đoạn khi offline
+  }
 }
 
 let adminToastTimeout = null;
@@ -2029,6 +2070,10 @@ function initAuth() {
 document.addEventListener("DOMContentLoaded", () => {
   // 1. Khởi tạo bộ chọn 15 tuần và nạp tuần mặc định (Tuần 1)
   initWeeksSelector();
+
+  // 1b. Đồng bộ trạng thái mở/khóa tuần từ Cloud ngay khi mở trang và định kỳ
+  syncWeeksStatusFromCloud();
+  setInterval(syncWeeksStatusFromCloud, 10000);
 
   // 2. Khởi tạo hệ thống tài khoản & xác thực học sinh
   initAuth();
