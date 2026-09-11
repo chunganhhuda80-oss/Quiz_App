@@ -169,26 +169,22 @@
     <!-- MÀN HÌNH 1: BẮT ĐẦU (START SCREEN - CHỌN TUẦN & THÔNG TIN BÀI THI) -->
     <!-- =================================================================== -->
     <section id="start-screen" class="screen-card">
-      <!-- Header thương hiệu & Tài khoản học sinh (Góc trên cùng bên trái có icon) -->
-      <div class="top-brand-header">
-        <div class="top-brand-left">
-          <div class="brand-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- 1. HÀNG TRÊN CÙNG: Icon ngang hàng với Môn học và Tài khoản người dùng -->
+      <div class="top-nav-bar">
+        <div class="top-nav-left-group">
+          <div class="brand-icon-mini">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
               <path d="M6 12v5c3 3 9 3 12 0v-5"/>
             </svg>
           </div>
-          <div class="top-brand-text">
-            <div class="header-badge">
-              <span class="badge-dot"></span>
-              <span id="badge-subject">Mạng Máy Tính</span>
-            </div>
-            <h1 id="quiz-title-display">BÀI KIỂM TRA TRẮC NGHIỆM</h1>
-            <p class="subtitle">Đọc kỹ câu hỏi trước khi chọn. Bạn không thể quay lại sửa sau khi đã chọn đáp án.</p>
+          <div class="header-badge">
+            <span class="badge-dot"></span>
+            <span id="badge-subject">Mạng Máy Tính</span>
           </div>
         </div>
 
-        <!-- Khu vực hiển thị thông tin tài khoản -->
+        <!-- Khu vực hiển thị thông tin tài khoản (Ngang hàng bên phải) -->
         <div id="user-nav-area" class="user-nav-area">
           <button type="button" class="btn-auth-nav" id="btn-open-auth">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -213,6 +209,12 @@
             </button>
           </div>
         </div>
+      </div>
+
+      <!-- 2. TIÊU ĐỀ HỆ THỐNG TRẮC NGHIỆM Ở DƯỚI MẤY CÁI ĐÓ -->
+      <div class="brand-header">
+        <h1 id="quiz-title-display">BÀI KIỂM TRA TRẮC NGHIỆM</h1>
+        <p class="subtitle">Đọc kỹ câu hỏi trước khi chọn. Bạn không thể quay lại sửa sau khi đã chọn đáp án.</p>
       </div>
 
       <!-- Thanh chuyển đổi 2 Tab chính: Bài kiểm tra & Lộ trình Mindmap (Ở DƯỚI HEADER) -->
@@ -396,22 +398,18 @@
     <!-- MÀN HÌNH MỚI: LỘ TRÌNH ĐÀO TẠO & SƠ ĐỒ TƯ DUY (MINDMAP SCREEN)     -->
     <!-- =================================================================== -->
     <section id="roadmap-screen" class="screen-card">
-      <!-- Header thương hiệu & Tài khoản học sinh (Góc trên cùng bên trái có icon) -->
-      <div class="top-brand-header">
-        <div class="top-brand-left">
-          <div class="brand-icon roadmap-brand-icon">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- 1. HÀNG TRÊN CÙNG: Icon ngang hàng với Chuyên đề và Tài khoản người dùng -->
+      <div class="top-nav-bar">
+        <div class="top-nav-left-group">
+          <div class="brand-icon-mini roadmap-icon-mini">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="3"/>
               <path d="M3 12h6m6 0h6M12 3v6m0 6v6"/>
             </svg>
           </div>
-          <div class="top-brand-text">
-            <div class="header-badge">
-              <span class="badge-dot"></span>
-              <span>Lộ Trình Đào Tạo Cyber Security & AI</span>
-            </div>
-            <h1>SƠ ĐỒ TƯ DUY & LỘ TRÌNH 15 TUẦN</h1>
-            <p class="subtitle">Khám phá kiến thức theo mô hình Mindmap trực quan. Nhấp vào từng nhánh để xem lý thuyết, nguyên lý và lab thực hành.</p>
+          <div class="header-badge">
+            <span class="badge-dot"></span>
+            <span>Lộ Trình Đào Tạo Cyber Security & AI</span>
           </div>
         </div>
 
@@ -431,6 +429,12 @@
             </button>
           </div>
         </div>
+      </div>
+
+      <!-- 2. TIÊU ĐỀ SƠ ĐỒ TƯ DUY Ở DƯỚI MẤY CÁI ĐÓ -->
+      <div class="brand-header">
+        <h1>SƠ ĐỒ TƯ DUY & LỘ TRÌNH 15 TUẦN</h1>
+        <p class="subtitle">Khám phá kiến thức theo mô hình Mindmap trực quan. Nhấp vào từng nhánh để xem lý thuyết, nguyên lý và lab thực hành.</p>
       </div>
 
       <!-- Thanh chuyển đổi 2 Tab chính: Bài kiểm tra & Lộ trình Mindmap (Ở DƯỚI HEADER) -->

@@ -199,114 +199,83 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   HEADER THƯƠNG HIỆU & ĐIỀU HƯỚNG TỔNG QUAN (TOP BRAND HEADER)
+   THANH ĐIỀU HƯỚNG TRÊN CÙNG (TOP NAV BAR: ICON + MÔN HỌC & TÀI KHOẢN)
    -------------------------------------------------------------------------- */
-.top-brand-header {
+.top-nav-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 18px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.75);
+  gap: 12px;
+  margin-bottom: 20px;
   flex-wrap: wrap;
 }
 
-.top-brand-left {
+.top-nav-left-group {
   display: flex;
   align-items: center;
-  gap: 16px;
-  flex: 1;
-  min-width: 280px;
+  gap: 12px;
 }
 
-.top-brand-left .brand-icon {
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
-  border-radius: 16px;
+.brand-icon-mini {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 14px;
   background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-  color: #fff;
-  display: flex;
+  color: #ffffff;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 18px -4px rgba(79, 70, 229, 0.4);
-  margin-bottom: 0;
+  box-shadow: 0 6px 16px -2px rgba(79, 70, 229, 0.4);
   flex-shrink: 0;
-  transition: all var(--transition-base);
+  transition: all var(--transition-fast);
 }
 
-.top-brand-left .brand-icon:hover {
-  transform: scale(1.05) rotate(2deg);
-  box-shadow: 0 12px 24px -4px rgba(79, 70, 229, 0.5);
+.brand-icon-mini:hover {
+  transform: scale(1.06);
+  box-shadow: 0 8px 20px -2px rgba(79, 70, 229, 0.5);
 }
 
-.top-brand-left .brand-icon.roadmap-brand-icon {
+.brand-icon-mini.roadmap-icon-mini {
   background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%) !important;
-  box-shadow: 0 8px 18px -4px rgba(2, 132, 199, 0.4);
+  box-shadow: 0 6px 16px -2px rgba(2, 132, 199, 0.4);
 }
 
-.top-brand-text {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.top-brand-text .header-badge {
-  align-self: flex-start;
-  margin-bottom: 2px;
-  font-size: 0.78rem;
-  padding: 4px 12px;
-}
-
-.top-brand-text h1 {
-  font-size: 1.45rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--text-main);
-  line-height: 1.25;
-  margin: 0;
-}
-
-.top-brand-text .subtitle {
-  color: var(--text-muted);
-  font-size: 0.88rem;
-  font-weight: 400;
-  line-height: 1.4;
-  margin: 2px 0 0 0;
-}
-
-.brand-header {
-  margin-bottom: 24px;
-}
-
-.brand-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-  color: #fff;
-  display: flex;
+.top-nav-bar .header-badge {
+  margin-bottom: 0;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
-  margin-bottom: 14px;
+  gap: 8px;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.84rem;
+  padding: 8px 16px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* TIÊU ĐỀ BÀI KIỂM TRA / LỘ TRÌNH (Ở DƯỚI HÀNG ICON VÀ TÀI KHOẢN) */
+.brand-header {
+  margin-bottom: 20px;
 }
 
 .brand-header h1 {
-  font-size: 1.65rem;
+  font-size: 1.7rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--text-main);
   line-height: 1.25;
-  margin-bottom: 8px;
+  margin: 0 0 6px 0;
 }
 
 .brand-header .subtitle {
   color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 400;
+  line-height: 1.45;
+  margin: 0;
 }
 
 /* Lưới thông tin bài thi */
@@ -3658,32 +3627,29 @@ body {
    RESPONSIVE CHO ROADMAP VÀ MINDMAP
    ========================================================================== */
 @media (max-width: 768px) {
-  .top-brand-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 14px;
-    padding-bottom: 12px;
-    margin-bottom: 14px;
+  .top-nav-bar {
+    gap: 10px;
+    margin-bottom: 16px;
   }
 
-  .top-brand-left {
-    gap: 12px;
+  .top-nav-left-group {
+    gap: 10px;
   }
 
-  .top-brand-left .brand-icon {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    border-radius: 12px;
+  .brand-icon-mini {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 10px;
   }
 
-  .top-brand-left .brand-icon svg {
-    width: 24px;
-    height: 24px;
+  .brand-icon-mini svg {
+    width: 20px;
+    height: 20px;
   }
 
-  .top-brand-text h1 {
-    font-size: 1.25rem;
+  .brand-header h1 {
+    font-size: 1.35rem;
   }
 
   .main-feature-tab-bar {
