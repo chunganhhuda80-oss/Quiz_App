@@ -21,6 +21,62 @@
   <div class="bg-glow bg-glow-2"></div>
   <div class="bg-glow bg-glow-3"></div>
 
+  <!-- =================================================================== -->
+  <!-- SIDEBAR ĐIỀU HƯỚNG DỌC BÊN TRÁI (HOVER COLLAPSIBLE SIDEBAR)         -->
+  <!-- =================================================================== -->
+  <aside id="app-sidebar" class="app-sidebar" aria-label="Thanh điều hướng">
+    <div class="sidebar-header">
+      <div class="sidebar-logo-box">
+        <div class="sidebar-icon-wrap">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <div class="sidebar-brand-text">
+          <span class="brand-title">CYBER & AI</span>
+          <span class="brand-sub">Học & Thi Trực Tuyến</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Danh sách các tab điều hướng dọc -->
+    <nav class="sidebar-nav">
+      <button type="button" class="sidebar-nav-item active" id="sidebar-tab-quiz" title="Bài Kiểm Tra">
+        <div class="nav-item-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+        </div>
+        <span class="nav-item-label">Bài Kiểm Tra</span>
+      </button>
+
+      <button type="button" class="sidebar-nav-item" id="sidebar-tab-roadmap" title="Lộ Trình Học Tập (Mindmap)">
+        <div class="nav-item-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 2v3m0 14v3M2 12h3m14 0h3m-3.5-6.5l-2.1 2.1m-8.8 8.8l-2.1 2.1m0-13l2.1 2.1m8.8 8.8l2.1 2.1"/>
+          </svg>
+        </div>
+        <span class="nav-item-label">Lộ Trình (Mindmap)</span>
+        <span class="sidebar-chip-pill">Mới</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-hint">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <span class="sidebar-hint-text">Rê chuột để xem chi tiết</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Lớp phủ làm tối màn hình chính khi rê chuột vào sidebar -->
+  <div id="sidebar-backdrop" class="sidebar-backdrop" style="display: none;"></div>
+
   <!-- Container chính của ứng dụng -->
   <div class="app-container">
 
@@ -217,24 +273,7 @@
         <p class="subtitle">Đọc kỹ câu hỏi trước khi chọn. Bạn không thể quay lại sửa sau khi đã chọn đáp án.</p>
       </div>
 
-      <!-- Thanh chuyển đổi 2 Tab chính: Bài kiểm tra & Lộ trình Mindmap (Ở DƯỚI HEADER) -->
-      <div class="main-feature-tab-bar">
-        <button type="button" class="feature-tab-btn active" id="tab-btn-quiz">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 11l3 3L22 4"/>
-            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-          </svg>
-          <span>Bài Kiểm Tra</span>
-        </button>
-        <button type="button" class="feature-tab-btn" id="tab-btn-roadmap">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 2v3m0 14v3M2 12h3m14 0h3m-3.5-6.5l-2.1 2.1m-8.8 8.8l-2.1 2.1m0-13l2.1 2.1m8.8 8.8l2.1 2.1"/>
-          </svg>
-          <span>Lộ Trình Học Tập (Mindmap)</span>
-          <span class="tab-chip-pill">Mới</span>
-        </button>
-      </div>
+
 
       <!-- Banner thông báo trạng thái tài khoản -->
       <div id="auth-hint-banner" class="auth-hint-banner">
@@ -437,24 +476,7 @@
         <p class="subtitle">Khám phá kiến thức theo mô hình Mindmap trực quan. Nhấp vào từng nhánh để xem lý thuyết, nguyên lý và lab thực hành.</p>
       </div>
 
-      <!-- Thanh chuyển đổi 2 Tab chính: Bài kiểm tra & Lộ trình Mindmap (Ở DƯỚI HEADER) -->
-      <div class="main-feature-tab-bar">
-        <button type="button" class="feature-tab-btn" id="roadmap-tab-btn-quiz">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 11l3 3L22 4"/>
-            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-          </svg>
-          <span>Bài Kiểm Tra</span>
-        </button>
-        <button type="button" class="feature-tab-btn active" id="roadmap-tab-btn-roadmap">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M12 2v3m0 14v3M2 12h3m14 0h3m-3.5-6.5l-2.1 2.1m-8.8 8.8l-2.1 2.1m0-13l2.1 2.1m8.8 8.8l2.1 2.1"/>
-          </svg>
-          <span>Lộ Trình Học Tập (Mindmap)</span>
-          <span class="tab-chip-pill">Mới</span>
-        </button>
-      </div>
+
 
       <!-- Bộ lọc Chuyên đề: Tất cả / Mạng máy tính / Trí tuệ nhân tạo -->
       <div class="roadmap-domain-filters">

@@ -123,15 +123,271 @@ body {
   100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
 }
 
+/* ==========================================================================
+   THANH ĐIỀU HƯỚNG DỌC BÊN TRÁI (HOVER COLLAPSIBLE SIDEBAR)
+   ========================================================================== */
+.app-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 72px; /* Trạng thái thu gọn mặc định */
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1.5px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 4px 0 24px rgba(15, 23, 42, 0.06);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Rê chuột vào hoặc active: Sidebar mở rộng ra */
+.app-sidebar:hover,
+.app-sidebar.is-hovered {
+  width: 270px;
+  box-shadow: 16px 0 45px rgba(15, 23, 42, 0.16);
+}
+
+.sidebar-header {
+  padding: 22px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-shrink: 0;
+}
+
+.sidebar-logo-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sidebar-icon-wrap {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+  flex-shrink: 0;
+}
+
+.sidebar-brand-text {
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+}
+
+.app-sidebar:hover .sidebar-brand-text,
+.app-sidebar.is-hovered .sidebar-brand-text {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.sidebar-brand-text .brand-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.sidebar-brand-text .brand-sub {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.sidebar-nav {
+  padding: 18px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1.5px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  position: relative;
+}
+
+.sidebar-nav-item .nav-item-icon {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  background: #f8fafc;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.sidebar-nav-item .nav-item-label {
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  white-space: nowrap;
+}
+
+.app-sidebar:hover .sidebar-nav-item .nav-item-label,
+.app-sidebar.is-hovered .sidebar-nav-item .nav-item-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.sidebar-chip-pill {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 999px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.app-sidebar:hover .sidebar-chip-pill,
+.app-sidebar.is-hovered .sidebar-chip-pill {
+  opacity: 1;
+}
+
+.sidebar-nav-item:hover {
+  background: #f1f5f9;
+  color: var(--primary);
+}
+
+.sidebar-nav-item:hover .nav-item-icon {
+  background: var(--primary-light);
+  color: var(--primary);
+  transform: scale(1.05);
+}
+
+.sidebar-nav-item.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(79, 70, 229, 0.16) 100%);
+  color: var(--primary);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.sidebar-nav-item.active .nav-item-icon {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.35);
+}
+
+.sidebar-footer {
+  padding: 16px 12px;
+  border-top: 1px solid #f1f5f9;
+  flex-shrink: 0;
+}
+
+.sidebar-hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-light);
+  font-size: 0.75rem;
+  padding: 6px 8px;
+}
+
+.sidebar-hint svg {
+  min-width: 15px;
+  flex-shrink: 0;
+}
+
+.sidebar-hint-text {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  white-space: nowrap;
+}
+
+.app-sidebar:hover .sidebar-hint-text,
+.app-sidebar.is-hovered .sidebar-hint-text {
+  opacity: 1;
+}
+
+/* Lớp phủ Backdrop làm tối màn hình chính khi rê chuột vào Sidebar */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 900;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* KHI LÀM BÀI HOẶC AUTH: KHÓA VÀ ẨN HOÀN TOÀN SIDEBAR & BACKDROP */
+body.exam-in-progress .app-sidebar,
+body.exam-in-progress .sidebar-backdrop,
+body.auth-mode .app-sidebar,
+body.auth-mode .sidebar-backdrop {
+  display: none !important;
+}
+
 /* --------------------------------------------------------------------------
-   CONTAINER CHÍNH & THẺ GIAO DIỆN GLASSMORPHISM
+   CONTAINER CHÍNH & SCALE TOÀN MÀN HÌNH THEO ĐỘ RỘNG TRÌNH DUYỆT
    -------------------------------------------------------------------------- */
 .app-container {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 680px;
+  max-width: 1440px; /* Scale rộng rãi theo màn hình Chrome */
   margin: 0 auto;
+  padding: 24px 36px 48px 108px; /* 108px chừa chỗ cho sidebar thu gọn 72px */
+  box-sizing: border-box;
+  transition: padding var(--transition-base), max-width var(--transition-base);
+}
+
+/* Khi đang làm bài thi: Giao diện tập trung, căn giữa gọn gàng không bị lệch */
+body.exam-in-progress .app-container {
+  max-width: 940px;
+  padding: 20px 24px 40px 24px;
+}
+
+/* Khi ở màn hình đăng nhập / đăng ký */
+body.auth-mode .app-container {
+  max-width: 620px;
+  padding: 24px 20px;
 }
 
 .screen-card {
@@ -142,7 +398,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.8);
   box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 255, 255, 0.6) inset;
   border-radius: var(--radius-xl);
-  padding: 36px 32px;
+  padding: 36px 36px;
   opacity: 0;
   transform: translateY(16px);
   transition: opacity var(--transition-base), transform var(--transition-base);
@@ -199,21 +455,24 @@ body {
 }
 
 /* --------------------------------------------------------------------------
-   THANH ĐIỀU HƯỚNG TRÊN CÙNG (TOP NAV BAR: ICON + MÔN HỌC & TÀI KHOẢN)
+   THANH ĐIỀU HƯỚNG TRÊN CÙNG (TOP NAV BAR: ICON + MÔN HỌC & TÀI KHOẢN GÓC PHẢI)
    -------------------------------------------------------------------------- */
 .top-nav-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 22px;
+  flex-wrap: nowrap; /* Bắt buộc cùng 1 hàng ngang, không rớt dòng */
+  width: 100%;
 }
 
 .top-nav-left-group {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .brand-icon-mini {
@@ -249,11 +508,15 @@ body {
   background: var(--primary-light);
   color: var(--primary);
   font-weight: 700;
-  font-size: 0.84rem;
+  font-size: 0.85rem;
   padding: 8px 16px;
   border-radius: 999px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 /* TIÊU ĐỀ BÀI KIỂM TRA / LỘ TRÌNH (Ở DƯỚI HÀNG ICON VÀ TÀI KHOẢN) */
@@ -1393,6 +1656,8 @@ body {
 .user-nav-area {
   display: flex;
   align-items: center;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .user-nav-area.logged-in .btn-auth-nav {
@@ -1418,6 +1683,8 @@ body {
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btn-auth-nav:hover {
@@ -1437,6 +1704,8 @@ body {
   border-radius: 999px;
   box-shadow: var(--shadow-sm);
   transition: all var(--transition-fast);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .user-profile-chip:hover {
@@ -3688,5 +3957,38 @@ body {
     from { transform: translateY(100%); }
     to { transform: translateY(0); }
   }
+
+  .app-sidebar {
+    width: 60px;
+  }
+
+  .app-sidebar:hover,
+  .app-sidebar.is-hovered {
+    width: 240px;
+  }
+
+  .app-container {
+    padding: 18px 18px 36px 78px;
+  }
 }
+
+@media (max-width: 540px) {
+  .app-sidebar {
+    display: none;
+  }
+
+  .app-container {
+    padding: 16px 14px 32px 14px;
+  }
+
+  .top-nav-bar {
+    flex-wrap: wrap;
+  }
+
+  .user-nav-area {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
 

@@ -814,6 +814,30 @@ function showScreen(screenId) {
     target.classList.add("active");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
+
+  // Khóa và cô lập giao diện khi đang trong chế độ làm bài thi (quiz-screen)
+  const isExam = (screenId === "quiz-screen");
+  const isAuth = (screenId === "auth-screen");
+  document.body.classList.toggle("exam-in-progress", isExam);
+  document.body.classList.toggle("auth-mode", isAuth);
+
+  // Ẩn backdrop nếu đang mở
+  const backdrop = document.getElementById("sidebar-backdrop");
+  if (backdrop && (isExam || isAuth)) {
+    backdrop.classList.remove("active");
+    backdrop.style.display = "none";
+  }
+
+  // Đồng bộ trạng thái tab trên thanh điều hướng dọc
+  const sidebarTabQuiz = document.getElementById("sidebar-tab-quiz");
+  const sidebarTabRoadmap = document.getElementById("sidebar-tab-roadmap");
+  if (screenId === "start-screen") {
+    if (sidebarTabQuiz) sidebarTabQuiz.classList.add("active");
+    if (sidebarTabRoadmap) sidebarTabRoadmap.classList.remove("active");
+  } else if (screenId === "roadmap-screen") {
+    if (sidebarTabRoadmap) sidebarTabRoadmap.classList.add("active");
+    if (sidebarTabQuiz) sidebarTabQuiz.classList.remove("active");
+  }
 }
 
 // ==============================================================================
@@ -2570,11 +2594,11 @@ async function loadRoadmapData() {
  * Chuyển sang Tab Bài Kiểm Tra
  */
 function switchToQuizTab(targetWeekId) {
-  // Đồng bộ trạng thái active của thanh Tab ở cả 2 màn hình
-  document.querySelectorAll("#tab-btn-quiz, #roadmap-tab-btn-quiz").forEach(btn => {
+  // Đồng bộ trạng thái active của thanh Sidebar và các Tab
+  document.querySelectorAll("#sidebar-tab-quiz, #tab-btn-quiz, #roadmap-tab-btn-quiz").forEach(btn => {
     btn.classList.add("active");
   });
-  document.querySelectorAll("#tab-btn-roadmap, #roadmap-tab-btn-roadmap").forEach(btn => {
+  document.querySelectorAll("#sidebar-tab-roadmap, #tab-btn-roadmap, #roadmap-tab-btn-roadmap").forEach(btn => {
     btn.classList.remove("active");
   });
 
@@ -2589,10 +2613,10 @@ function switchToQuizTab(targetWeekId) {
  * Chuyển sang Tab Lộ Trình (Mindmap)
  */
 async function switchToRoadmapTab(targetWeekId) {
-  document.querySelectorAll("#tab-btn-quiz, #roadmap-tab-btn-quiz").forEach(btn => {
+  document.querySelectorAll("#sidebar-tab-quiz, #tab-btn-quiz, #roadmap-tab-btn-quiz").forEach(btn => {
     btn.classList.remove("active");
   });
-  document.querySelectorAll("#tab-btn-roadmap, #roadmap-tab-btn-roadmap").forEach(btn => {
+  document.querySelectorAll("#sidebar-tab-roadmap, #tab-btn-roadmap, #roadmap-tab-btn-roadmap").forEach(btn => {
     btn.classList.add("active");
   });
 
@@ -3351,5 +3375,84 @@ function initRoadmapFeature() {
 
   // 8. Tải trước dữ liệu ngầm để sẵn sàng ngay khi người dùng bấm tab
   loadRoadmapData();
+
+  // 9. Khởi tạo thanh điều hướng dọc bên trái (Hover Collapsible Sidebar & Dimmed Screen)
+  initSidebarNavigation();
 }
+
+/**
+ * Khởi tạo thanh điều hướng dọc bên trái (Hover Collapsible Sidebar)
+ * - Mặc định thu gọn chỉ hiện icon (~72px)
+ * - Rê chuột sang bên trái sẽ mở rộng và làm màn hình chính hơi tối lại
+ * - Bấm vào tab chuyển mượt mà giữa Bài Kiểm Tra và Lộ Trình Mindmap
+ * - Khi làm bài thi (quiz-screen) hoặc đăng nhập (auth-screen), thanh này bị ẩn/khóa hoàn toàn
+ */
+function initSidebarNavigation() {
+  const sidebar = document.getElementById("app-sidebar");
+  const backdrop = document.getElementById("sidebar-backdrop");
+  const tabQuiz = document.getElementById("sidebar-tab-quiz");
+  const tabRoadmap = document.getElementById("sidebar-tab-roadmap");
+
+  if (!sidebar) return;
+
+  // Hiệu ứng rê chuột mở rộng sidebar và làm tối nhẹ màn hình chính
+  sidebar.addEventListener("mouseenter", () => {
+    if (document.body.classList.contains("exam-in-progress") || document.body.classList.contains("auth-mode")) return;
+    sidebar.classList.add("is-hovered");
+    if (backdrop) {
+      backdrop.style.display = "block";
+      requestAnimationFrame(() => {
+        backdrop.classList.add("active");
+      });
+    }
+  });
+
+  sidebar.addEventListener("mouseleave", () => {
+    sidebar.classList.remove("is-hovered");
+    if (backdrop) {
+      backdrop.classList.remove("active");
+      setTimeout(() => {
+        if (!sidebar.classList.contains("is-hovered")) {
+          backdrop.style.display = "none";
+        }
+      }, 260);
+    }
+  });
+
+  if (backdrop) {
+    backdrop.addEventListener("click", () => {
+      sidebar.classList.remove("is-hovered");
+      backdrop.classList.remove("active");
+      setTimeout(() => {
+        if (!sidebar.classList.contains("is-hovered")) {
+          backdrop.style.display = "none";
+        }
+      }, 260);
+    });
+  }
+
+  // Chuyển tab từ sidebar
+  if (tabQuiz) {
+    tabQuiz.addEventListener("click", () => {
+      switchToQuizTab();
+      sidebar.classList.remove("is-hovered");
+      if (backdrop) {
+        backdrop.classList.remove("active");
+        setTimeout(() => { backdrop.style.display = "none"; }, 200);
+      }
+    });
+  }
+
+  if (tabRoadmap) {
+    tabRoadmap.addEventListener("click", () => {
+      switchToRoadmapTab();
+      sidebar.classList.remove("is-hovered");
+      if (backdrop) {
+        backdrop.classList.remove("active");
+        setTimeout(() => { backdrop.style.display = "none"; }, 200);
+      }
+    });
+  }
+}
+
 
