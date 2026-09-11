@@ -1857,15 +1857,14 @@ function updateAuthUI() {
       const initial = AuthState.currentUser.fullName ? AuthState.currentUser.fullName.trim().charAt(0).toUpperCase() : "H";
       if (navAvatar) navAvatar.textContent = initial;
       if (navName) navName.textContent = AuthState.currentUser.fullName;
+      // Đối với tài khoản bình thường: chỉ hiện tên user ở góc trên bên phải, ẩn huy hiệu phụ
       if (navClass) {
-        navClass.textContent = AuthState.currentUser.className || "Học sinh";
-        navClass.style.color = "";
+        navClass.style.display = "none";
       }
       if (roadmapNavAvatar) roadmapNavAvatar.textContent = initial;
       if (roadmapNavName) roadmapNavName.textContent = AuthState.currentUser.fullName;
       if (roadmapNavClass) {
-        roadmapNavClass.textContent = AuthState.currentUser.className || "Học sinh";
-        roadmapNavClass.style.color = "";
+        roadmapNavClass.style.display = "none";
       }
     }
 
@@ -1887,19 +1886,10 @@ function updateAuthUI() {
       classInput.style.cursor = "default";
     }
 
+    // ĐÃ ĐĂNG NHẬP: Ẩn hoàn toàn banner thông báo đăng nhập (cả tài khoản admin lẫn tài khoản thường)
     if (authHintBanner) {
       authHintBanner.className = `auth-hint-banner logged-in ${isAdmin ? 'admin-logged' : ''}`;
-    }
-    if (authHintText) {
-      const roleBadge = isAdmin ? `<span style="color:#e11d48;font-weight:800;">[QUẢN TRỊ VIÊN]</span>` : "";
-      authHintText.innerHTML = `✓ Đã đăng nhập: <strong>${escapeHtml(AuthState.currentUser.fullName)}</strong> ${roleBadge} - <a href="#" id="link-switch-acc">Đổi tài khoản</a>`;
-      const linkSwitch = document.getElementById("link-switch-acc");
-      if (linkSwitch) {
-        linkSwitch.addEventListener("click", (e) => {
-          e.preventDefault();
-          handleLogout();
-        });
-      }
+      authHintBanner.style.display = "none";
     }
 
     if (btnStart) {
@@ -1933,7 +1923,13 @@ function updateAuthUI() {
       roadmapProfileChip.style.display = "none";
       roadmapProfileChip.classList.remove("is-admin");
     }
-    if (authHintBanner) authHintBanner.className = "auth-hint-banner";
+    if (authHintBanner) {
+      authHintBanner.className = "auth-hint-banner";
+      authHintBanner.style.display = "";
+    }
+    if (authHintText) {
+      authHintText.innerHTML = `Bạn cần <strong>Đăng nhập</strong> tài khoản học sinh để được cấp quyền thi.`;
+    }
     if (nameInput) {
       nameInput.value = "";
       nameInput.readOnly = false;

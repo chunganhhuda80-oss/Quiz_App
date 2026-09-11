@@ -1804,9 +1804,7 @@ body.auth-mode .app-container {
 }
 
 .auth-hint-banner.logged-in {
-  background: #f0fdf4;
-  border-color: #bbf7d0;
-  color: #166534;
+  display: none !important;
 }
 
 /* --------------------------------------------------------------------------
