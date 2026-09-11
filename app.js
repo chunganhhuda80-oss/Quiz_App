@@ -4162,11 +4162,40 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
         }
       });
 
-      // Lưu lần thi đầu tiên vào lịch sử thi chính thức
+      // 3. DỌN DẸP HỌC SINH ĐÃ BỊ XÓA KHỎI GOOGLE SHEET:
+      // Nếu một tài khoản học sinh (không phải Admin hay admin1) không còn bất kỳ bài thi nào trên Google Sheet,
+      // tự động xóa hoàn toàn tài khoản và lịch sử điểm của họ khỏi LocalStorage để Bảng Xếp Hạng cập nhật chính xác!
+      const activeSheetUsers = new Set(sheetFirstAttemptsByUser.keys());
+
+      for (let i = existingAccounts.length - 1; i >= 0; i--) {
+        const acc = existingAccounts[i];
+        const u = acc.username.toLowerCase();
+        // Bỏ qua tài khoản Admin và tài khoản Quán Quân mặc định admin1
+        if (acc.role === "admin" || u === "rappergaming" || u === "admin1") continue;
+
+        // Nếu học sinh này không còn bài thi nào trên Google Sheet
+        if (!activeSheetUsers.has(u)) {
+          console.log(`[Google Sheet Sync] Đã xóa tài khoản '${acc.fullName}' (@${u}) khỏi hệ thống vì đã bị xóa trên Google Sheet.`);
+          localStorage.removeItem(getUserHistoryKey(u));
+          existingAccounts.splice(i, 1);
+          hasChanges = true;
+        }
+      }
+
+      // 4. Lưu hoặc cập nhật lần thi đầu tiên vào lịch sử thi chính thức
       sheetFirstAttemptsByUser.forEach((weekMap, uname) => {
         const historyKey = getUserHistoryKey(uname);
         const history = getUserOfficialAttempts(uname);
         let userHistoryChanged = false;
+
+        // Xóa những tuần mà trên Google Sheet đã bị xóa bỏ
+        Object.keys(history).forEach(wId => {
+          if (!weekMap.has(Number(wId))) {
+            delete history[wId];
+            userHistoryChanged = true;
+            hasChanges = true;
+          }
+        });
 
         weekMap.forEach((attemptData, weekId) => {
           // Lưu hoặc cập nhật điểm theo Google Sheet nếu có thay đổi
