@@ -1437,9 +1437,11 @@ async function autoSaveResultsToCloud(summary) {
   const syncTarget = document.getElementById("sync-target-text");
 
   const weekLabel = QuizState.currentWeekInfo ? QuizState.currentWeekInfo.name : "Tuần 1";
-  let studentClassWithWeek = QuizState.studentClass 
-    ? `${QuizState.studentClass} [${weekLabel}]` 
-    : `[${weekLabel}]`;
+  let baseClass = QuizState.studentClass || "Chưa phân lớp";
+  if (QuizState.username && !QuizState.username.includes("khách") && !baseClass.toLowerCase().includes(QuizState.username.toLowerCase())) {
+    baseClass = `${baseClass} (@${QuizState.username})`;
+  }
+  let studentClassWithWeek = `${baseClass} [${weekLabel}]`;
 
   // Ghi nhận vi phạm chống gian lận vào thông tin lớp và payload
   if (QuizState.violationCount > 0) {
@@ -2046,13 +2048,10 @@ async function handleLoginSubmit(e) {
 
   // 2. Kiểm tra tài khoản trong Local Database trước (phản hồi tức thì 0ms)
   const accounts = getLocalAccounts();
-  let foundUser = accounts.find(u => u.username.toLowerCase() === username);
-  if (!foundUser && (username === "aaaaaa" || username === "admin1")) {
-    foundUser = accounts.find(u => u.username.toLowerCase() === "admin1" || u.username.toLowerCase() === "aaaaaa");
-  }
+  const foundUser = accounts.find(u => u.username.toLowerCase() === username);
 
   if (foundUser) {
-    const isMockUser = ["admin1", "aaaaaa", "nguyen_van_an", "tran_thi_mai", "le_hoang_nam", "pham_minh_duc", "vu_hai_yen", "hoang_thu_trang"].includes(foundUser.username.toLowerCase());
+    const isMockUser = ["nguyen_van_an", "tran_thi_mai", "le_hoang_nam", "pham_minh_duc", "vu_hai_yen", "hoang_thu_trang"].includes(foundUser.username.toLowerCase());
     const passMatch = foundUser.password === password || (isMockUser && (password === "123" || password === "123456"));
     if (!passMatch) {
       showAuthAlert("Mật khẩu không chính xác! Vui lòng thử lại.", "error");
@@ -3514,35 +3513,23 @@ function initSidebarNavigation() {
  * Danh sách các tài khoản kiểm thử mẫu cũ cần dọn dẹp triệt để khi người dùng xóa trên Google Sheet
  */
 const OBSOLETE_MOCK_USERNAMES = [
+  "admin1",
+  "aaaaaa",
+  "nguyen_van_an",
   "tran_thi_mai",
   "le_hoang_nam",
   "pham_minh_duc",
   "vu_hai_yen",
-  "hoang_thu_trang",
-  "nguyen_van_an"
+  "hoang_thu_trang"
 ];
 
 /**
- * Tài khoản mẫu Quán Quân (admin1) - Mật khẩu: 123 hoặc 123456
+ * Không cài cắm bất kỳ tài khoản giả lập nào - Dữ liệu hoàn toàn thực từ Google Sheet và người dùng
  */
-const MOCK_TEST_ACCOUNTS = [
-  {
-    username: "admin1",
-    password: "123",
-    fullName: "admin1",
-    className: "CNTT-K18A",
-    attempts: {
-      1: { score: 98, correct: 49, total: 50, percent: 98, durationText: "14:15" },
-      2: { score: 96, correct: 67, total: 70, percent: 96, durationText: "19:40" },
-      3: { score: 96, correct: 67, total: 70, percent: 96, durationText: "21:10" },
-      4: { score: 98, correct: 69, total: 70, percent: 98, durationText: "20:05" }
-    }
-  }
-];
+const MOCK_TEST_ACCOUNTS = [];
 
 /**
- * Tự động dọn dẹp các tài khoản kiểm thử cũ đã bị xóa trên Google Sheet
- * và đảm bảo tài khoản Quán Quân (admin1) sẵn sàng trong LocalStorage
+ * Tự động dọn dẹp triệt để các tài khoản kiểm thử cũ khỏi LocalStorage
  */
 function seedMockTestUsersIfEmpty() {
   try {
@@ -3561,45 +3548,11 @@ function seedMockTestUsersIfEmpty() {
       hasAccountChanges = true;
     }
 
-    // 3. Đảm bảo tài khoản admin1 tồn tại
-    let admin1Account = existingAccounts.find(a => a.username.toLowerCase() === "admin1");
-    if (!admin1Account) {
-      existingAccounts.push({
-        username: "admin1",
-        password: "123",
-        fullName: "admin1",
-        className: "CNTT-K18A",
-        createdAt: new Date().toISOString()
-      });
-      hasAccountChanges = true;
-    } else if (admin1Account.fullName !== "admin1") {
-      admin1Account.fullName = "admin1";
-      hasAccountChanges = true;
-    }
-
-    // 4. Đảm bảo điểm số 4 tuần cho admin1 nếu chưa có
-    const admin1History = getUserOfficialAttempts("admin1");
-    let historyChanged = false;
-    const adminMock = MOCK_TEST_ACCOUNTS[0];
-    Object.keys(adminMock.attempts).forEach(weekId => {
-      if (!admin1History[weekId]) {
-        admin1History[weekId] = {
-          ...adminMock.attempts[weekId],
-          firstRecordedAt: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })
-        };
-        historyChanged = true;
-      }
-    });
-
-    if (historyChanged) {
-      localStorage.setItem(getUserHistoryKey("admin1"), JSON.stringify(admin1History));
-    }
-
     if (hasAccountChanges) {
       saveLocalAccounts(existingAccounts);
     }
   } catch (e) {
-    console.warn("Lỗi khi dọn dẹp và khởi tạo tài khoản:", e);
+    console.warn("Lỗi khi dọn dẹp tài khoản cũ:", e);
   }
 }
 
@@ -3697,24 +3650,36 @@ function renderHomeRankingWidget() {
   const condText = document.getElementById("ranking-widget-condition-text");
   if (!container) return;
 
-  const { unlockedWeeks, totalUnlocked, rankedUsers } = calculateLeaderboardData();
+  const { unlockedWeeks, totalUnlocked, rankedUsers, pendingUsers } = calculateLeaderboardData();
+
+  // Xác định danh sách hiển thị trên widget Top 5:
+  // 1. Ưu tiên rankedUsers (những ai đã hoàn thành toàn bộ các tuần đã mở)
+  // 2. Nếu chưa có ai hoàn thành đủ, hiển thị các học sinh đang thi đua tạm dẫn từ pendingUsers (có completedWeeksCount > 0)
+  const hasOfficial = rankedUsers.length > 0;
+  const activePending = pendingUsers.filter(u => u.completedWeeksCount > 0);
+  const displayList = hasOfficial ? rankedUsers.slice(0, 5) : activePending.slice(0, 5);
 
   if (condText) {
     const weekNames = unlockedWeeks.map(w => w.name).join(", ");
-    condText.innerHTML = `Điều kiện xét duyệt: Đã hoàn thành tất cả <strong>${totalUnlocked} tuần đã mở</strong> (${weekNames}) • Cập nhật tức thì`;
+    if (hasOfficial) {
+      condText.innerHTML = `Điều kiện xét duyệt: Đã hoàn thành tất cả <strong>${totalUnlocked} tuần đã mở</strong> (${weekNames}) • Cập nhật tức thì`;
+    } else if (activePending.length > 0) {
+      condText.innerHTML = `Bảng Thi Đua Tạm Dẫn: Đang mở <strong>${totalUnlocked} tuần thi</strong> (${weekNames}) • Hoàn thành đủ các tuần để chính thức ghi danh Quán Quân! 🚀`;
+    } else {
+      condText.innerHTML = `Điều kiện xét duyệt: Đang mở <strong>${totalUnlocked} tuần thi</strong> (${weekNames}) • Chưa có bài thi nào được ghi nhận`;
+    }
   }
 
-  const top5 = rankedUsers.slice(0, 5);
-  if (top5.length === 0) {
+  if (displayList.length === 0) {
     container.innerHTML = `
       <div class="rank-card-empty">
-        Chưa có học sinh nào hoàn thành toàn bộ ${totalUnlocked} tuần đã mở. Hãy làm bài thi để là người đầu tiên ghi danh Top 1! 🚀
+        Chưa có học sinh nào hoàn thành bài thi cho các tuần đã mở. Hãy làm bài thi để là người đầu tiên ghi danh Top 1! 🚀
       </div>
     `;
     return;
   }
 
-  const badges = [
+  const officialBadges = [
     { class: "rank-top-1", label: "🥇 Quán Quân" },
     { class: "rank-top-2", label: "🥈 Á Quân" },
     { class: "rank-top-3", label: "🥉 Quý Quân" },
@@ -3722,8 +3687,16 @@ function renderHomeRankingWidget() {
     { class: "rank-card-mini-other", label: "🎖️ Top 5" }
   ];
 
-  container.innerHTML = top5.map((user, idx) => {
-    const meta = badges[idx] || { class: "rank-card-mini-other", label: `Hạng #${idx + 1}` };
+  container.innerHTML = displayList.map((user, idx) => {
+    let meta;
+    if (hasOfficial) {
+      meta = officialBadges[idx] || { class: "rank-card-mini-other", label: `Hạng #${idx + 1}` };
+    } else {
+      meta = {
+        class: idx === 0 ? "rank-top-1" : idx === 1 ? "rank-top-2" : "rank-card-mini-other",
+        label: `⏳ Tạm Dẫn (${user.completedWeeksCount}/${totalUnlocked}T)`
+      };
+    }
     const initial = (user.fullName || "H").trim().charAt(0).toUpperCase();
 
     return `
@@ -3825,9 +3798,13 @@ function renderRankingModal() {
   // 2. Cập nhật bục Vinh Danh Top 3 Podium (#ranking-podium-section)
   const podiumSection = document.getElementById("ranking-podium-section");
   if (podiumSection) {
-    const top1 = rankedUsers[0] || null;
-    const top2 = rankedUsers[1] || null;
-    const top3 = rankedUsers[2] || null;
+    const hasOfficial = rankedUsers.length > 0;
+    const activePending = pendingUsers.filter(u => u.completedWeeksCount > 0);
+    const sourceList = hasOfficial ? rankedUsers : activePending;
+
+    const top1 = sourceList[0] || null;
+    const top2 = sourceList[1] || null;
+    const top3 = sourceList[2] || null;
 
     const renderPodiumCol = (user, rank, crown, label) => {
       if (!user) {
@@ -3848,6 +3825,7 @@ function renderRankingModal() {
       }
 
       const initial = (user.fullName || "H").trim().charAt(0).toUpperCase();
+      const tempTag = !hasOfficial ? `<div style="font-size: 0.68rem; font-weight: 700; color: #d97706; margin-bottom: 2px;">⏳ Tạm Dẫn (${user.completedWeeksCount}/${totalUnlocked}T)</div>` : '';
       return `
         <div class="podium-item podium-rank-${rank}">
           <div class="podium-avatar-wrap">
@@ -3855,7 +3833,7 @@ function renderRankingModal() {
             <div class="podium-avatar">${initial}</div>
           </div>
           <div class="podium-name" title="${escapeHtml(user.fullName)}">${escapeHtml(user.fullName)}</div>
-          <div class="podium-class">${escapeHtml(user.className)}</div>
+          <div class="podium-class">${tempTag}${escapeHtml(user.className)}</div>
           <div class="podium-pillar">
             <span class="podium-pillar-rank">${label}</span>
             <span class="podium-pillar-score">${user.totalScore} đ (TB: ${user.avgScore})</span>
@@ -3981,17 +3959,27 @@ function openRankingModal(isAutoAfterLogin = false) {
   renderRankingModal();
   modal.style.display = "flex";
 
-  // Mặc định luôn active tab 'ranked' (Xếp hạng chính thức)
+  // Mặc định: nếu chưa có ai hoàn thành đủ số tuần thì tự động mở tab 'pending' để xem danh sách thi đua
   const btnRanked = document.getElementById("filter-btn-ranked");
   const btnPending = document.getElementById("filter-btn-pending");
   const listRanked = document.getElementById("ranking-list-ranked");
   const listPending = document.getElementById("ranking-list-pending");
 
   if (btnRanked && btnPending && listRanked && listPending) {
-    btnRanked.classList.add("active");
-    btnPending.classList.remove("active");
-    listRanked.style.display = "flex";
-    listPending.style.display = "none";
+    const { rankedUsers, pendingUsers } = calculateLeaderboardData();
+    const shouldDefaultToPending = rankedUsers.length === 0 && pendingUsers.some(u => u.completedWeeksCount > 0);
+
+    if (shouldDefaultToPending) {
+      btnPending.classList.add("active");
+      btnRanked.classList.remove("active");
+      listPending.style.display = "flex";
+      listRanked.style.display = "none";
+    } else {
+      btnRanked.classList.add("active");
+      btnPending.classList.remove("active");
+      listRanked.style.display = "flex";
+      listPending.style.display = "none";
+    }
   }
 
   // Đảm bảo nút đồng bộ chỉ hiện cho tài khoản Quản Trị Viên
@@ -4172,11 +4160,6 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
           return;
         }
 
-        // Chuẩn hóa tài khoản Quán Quân nếu trên Google Sheet đặt tên username là aaaaaa hoặc nguyen_van_an
-        if (uname === "aaaaaa" || uname === "nguyen_van_an") {
-          uname = "admin1";
-        }
-
         // Thêm tài khoản nếu chưa có trong LocalStorage hoặc cập nhật họ tên mới nhất
         if (!accountMap.has(uname)) {
           const newAcc = {
@@ -4223,11 +4206,16 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
             } catch (_) {}
           }
 
+          let percentFormatted = r.accuracy;
+          if (typeof percentFormatted === "number") {
+            percentFormatted = `${Math.round(percentFormatted * 100)}%`;
+          }
+
           userWeekMap.set(weekId, {
             score: r.scaledScore,
             correct: r.correctCount,
             total: r.totalQuestions,
-            percent: r.accuracy,
+            percent: percentFormatted,
             durationText: durationFormatted,
             firstRecordedAt: r.timestamp
           });
@@ -4235,15 +4223,15 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
       });
 
       // 3. DỌN DẸP HỌC SINH ĐÃ BỊ XÓA KHỎI GOOGLE SHEET:
-      // Nếu một tài khoản học sinh (không phải Admin hay admin1) không còn bất kỳ bài thi nào trên Google Sheet,
+      // Nếu một tài khoản học sinh không còn bất kỳ bài thi nào trên Google Sheet,
       // tự động xóa hoàn toàn tài khoản và lịch sử điểm của họ khỏi LocalStorage để Bảng Xếp Hạng cập nhật chính xác!
       const activeSheetUsers = new Set(sheetFirstAttemptsByUser.keys());
 
       for (let i = existingAccounts.length - 1; i >= 0; i--) {
         const acc = existingAccounts[i];
         const u = acc.username.toLowerCase();
-        // Bỏ qua tài khoản Admin và tài khoản Quán Quân mặc định admin1
-        if (acc.role === "admin" || u === "rappergaming" || u === "admin1") continue;
+        // Bỏ qua tài khoản Quản Trị Viên (Admin)
+        if (acc.role === "admin" || u === adminUname || u === "rappergaming") continue;
 
         // Nếu học sinh này không còn bài thi nào trên Google Sheet
         if (!activeSheetUsers.has(u)) {

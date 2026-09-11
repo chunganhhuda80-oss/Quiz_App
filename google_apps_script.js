@@ -20,11 +20,10 @@
 const SHEET_NAME_RESULTS = "KetQuaThi";
 const SHEET_NAME_ACCOUNTS = "TaiKhoan";
 
-// Tiêu đề các cột trong tab KetQuaThi
+// Tiêu đề các cột trong tab KetQuaThi (Chuẩn 10 cột khớp chính xác 100% với Google Sheet của giáo viên)
 const HEADERS_RESULTS = [
   "Thời gian nộp",
   "Họ và tên",
-  "Tài khoản (Username)",
   "Lớp / MSSV",
   "Điểm số (Thang 100)",
   "Điểm số thực tế",
@@ -209,38 +208,77 @@ function doPost(e) {
       detailsSummary = data.details;
     }
 
-    const newRow = [
-      timestamp,
-      studentName,
-      username,
-      studentClass,
-      scaledScore,
-      rawScore,
-      correctCount,
-      totalQuestions,
-      accuracy,
-      timeSpent,
-      detailsSummary
-    ];
+    // Kiểm tra cấu trúc tiêu đề hiện tại của Sheet để ghi đúng vị trí cột
+    let hasUsernameHeader = false;
+    if (resultSheet.getLastRow() > 0 && resultSheet.getLastColumn() > 0) {
+      const existingHeaders = resultSheet.getRange(1, 1, 1, resultSheet.getLastColumn()).getValues()[0];
+      hasUsernameHeader = existingHeaders.some(h => {
+        const s = (h || "").toString().toLowerCase();
+        return s.includes("tài khoản") || s.includes("username");
+      });
+    }
+
+    let newRow;
+    let scoreColIndex = 4; // Cột 4: Điểm số (Thang 100) theo chuẩn 10 cột
+    let statsStartColIndex = 6; // Cột 6, 7, 8: Số câu đúng, Tổng số câu, Tỷ lệ đúng (%)
+
+    if (hasUsernameHeader) {
+      // Trường hợp Sheet có cột Tài khoản riêng (11 cột)
+      newRow = [
+        timestamp,
+        studentName,
+        username,
+        studentClass,
+        scaledScore,
+        rawScore,
+        correctCount,
+        totalQuestions,
+        accuracy,
+        timeSpent,
+        detailsSummary
+      ];
+      scoreColIndex = 5;
+      statsStartColIndex = 7;
+    } else {
+      // Chuẩn 10 cột mặc định của người dùng (Không có cột username riêng):
+      // Ghi kèm username vào cột Lớp để giáo viên dễ đối chiếu: VD: 1234 (@hieung) [Tuần 1]
+      let classCombined = studentClass;
+      if (username && !username.includes("khách") && !classCombined.toLowerCase().includes(username.toLowerCase())) {
+        classCombined = `${studentClass} (@${username})`;
+      }
+
+      newRow = [
+        timestamp,       // Cột 1: Thời gian nộp
+        studentName,     // Cột 2: Họ và tên
+        classCombined,   // Cột 3: Lớp / MSSV
+        scaledScore,     // Cột 4: Điểm số (Thang 100)
+        rawScore,        // Cột 5: Điểm số thực tế
+        correctCount,    // Cột 6: Số câu đúng
+        totalQuestions,  // Cột 7: Tổng số câu
+        accuracy,        // Cột 8: Tỷ lệ đúng (%) -> Chuỗi '58%', KHÔNG BỊ HIỆN 5000%
+        timeSpent,       // Cột 9: Thời gian làm bài
+        detailsSummary   // Cột 10: Chi tiết bài làm (ĐÚNG trong Cột J, không bị đẩy sang Cột K!)
+      ];
+    }
 
     // Ghi dòng mới vào sheet
     resultSheet.appendRow(newRow);
 
     // Căn chỉnh dòng vừa thêm
     const lastRow = resultSheet.getLastRow();
-    const rowRange = resultSheet.getRange(lastRow, 1, 1, HEADERS_RESULTS.length);
+    const rowRange = resultSheet.getRange(lastRow, 1, 1, newRow.length);
     rowRange.setVerticalAlignment("middle");
-    resultSheet.getRange(lastRow, 5).setHorizontalAlignment("center").setFontWeight("bold"); // Cột điểm 100
-    resultSheet.getRange(lastRow, 7, 1, 3).setHorizontalAlignment("center"); // Các cột số liệu
+    resultSheet.getRange(lastRow, scoreColIndex).setHorizontalAlignment("center").setFontWeight("bold"); // Cột điểm 100
+    resultSheet.getRange(lastRow, statsStartColIndex, 1, 3).setHorizontalAlignment("center"); // Các cột số liệu
 
     // Đổi màu cho học sinh đạt hoặc chưa đạt (Yêu cầu >= 95 điểm mới qua môn)
     if (data.isCheatingAutoSubmit) {
-      resultSheet.getRange(lastRow, 1, 1, HEADERS_RESULTS.length).setBackground("#fee2e2"); // Đỏ nhạt cảnh báo vi phạm
-      resultSheet.getRange(lastRow, 5).setFontColor("#b91c1c");
+      resultSheet.getRange(lastRow, 1, 1, newRow.length).setBackground("#fee2e2"); // Đỏ nhạt cảnh báo vi phạm
+      resultSheet.getRange(lastRow, scoreColIndex).setFontColor("#b91c1c");
     } else if (scaledScore >= 95) {
-      resultSheet.getRange(lastRow, 5).setFontColor("#059669"); // Xanh lá (Đạt)
+      resultSheet.getRange(lastRow, scoreColIndex).setFontColor("#059669"); // Xanh lá (Đạt)
     } else {
-      resultSheet.getRange(lastRow, 5).setFontColor("#dc2626"); // Đỏ (Chưa đạt)
+      resultSheet.getRange(lastRow, scoreColIndex).setFontColor("#dc2626"); // Đỏ (Chưa đạt)
     }
 
     // ==========================================================================
@@ -255,8 +293,9 @@ function doPost(e) {
       }
 
       const rows = resultSheet.getDataRange().getValues();
+      const headerRow = rows.length > 0 ? rows[0] : [];
       const dataRows = rows.slice(1);
-      const results = extractFirstAttemptsFromRows(dataRows);
+      const results = extractFirstAttemptsFromRows(dataRows, headerRow);
 
       return ContentService.createTextOutput(
         JSON.stringify({ status: "success", count: results.length, results: results })
@@ -284,36 +323,100 @@ function doPost(e) {
 
 /**
  * Hàm hỗ trợ: Lọc CHỈ LẤY LẦN THI ĐẦU TIÊN của mỗi học sinh theo từng tuần
- * Bất kỳ lần thi sau nào (thi lại / nộp đè) sẽ được tự động bỏ qua để đảm bảo tính công bằng
+ * Bất kỳ lần thi sau nào (thi lại / nộp đè) sẽ được tự động bỏ qua để đảm bảo tính công bằng.
+ * Hỗ trợ linh hoạt cả chuẩn 10 cột, 11 cột và các dòng cũ đã nộp.
  */
-function extractFirstAttemptsFromRows(dataRows) {
+function extractFirstAttemptsFromRows(dataRows, headerRow) {
   const results = [];
   const seenStudentWeek = {};
 
+  let hasUserColInHeader = false;
+  if (Array.isArray(headerRow) && headerRow.length > 0) {
+    hasUserColInHeader = headerRow.some(h => {
+      const s = (h || "").toString().toLowerCase();
+      return s.includes("tài khoản") || s.includes("username");
+    });
+  }
+
   for (let i = 0; i < dataRows.length; i++) {
     const r = dataRows[i];
-    const username = (r[2] || "").toString().toLowerCase().trim();
+    if (!r || r.length === 0 || !r[0]) continue;
+
+    const col0 = r[0]; // Thời gian nộp
+    const col1 = (r[1] || "").toString().trim(); // Họ và tên
+    let username = "";
+    let studentClass = "";
+    let scaledScore = 0;
+    let rawScore = "";
+    let correctCount = 0;
+    let totalQuestions = 0;
+    let accuracy = "";
+    let timeSpent = "";
+
+    // Phân tích tự động từng dòng:
+    // Dạng 1: Dòng 11 cột (hoặc dòng cũ bị dịch): r[2] là username ("hieung"), r[3] chứa "[Tuần", r[4] là số điểm (58)
+    const col3Str = (r[3] || "").toString();
+    const col4Num = Number(r[4]);
+    const isShiftedOr11Col = hasUserColInHeader || (col3Str.match(/Tuần\s*\d+/i) && !isNaN(col4Num));
+
+    if (isShiftedOr11Col) {
+      username = (r[2] || "").toString().toLowerCase().trim();
+      studentClass = col3Str;
+      scaledScore = !isNaN(col4Num) ? col4Num : (Number(r[3]) || 0);
+      rawScore = r[5] || "";
+      correctCount = Number(r[6]) || 0;
+      totalQuestions = Number(r[7]) || 0;
+      accuracy = r[8];
+      timeSpent = r[9];
+    } else {
+      // Dạng 2: Chuẩn 10 cột
+      // r[2]: Lớp / MSSV (kèm @username nếu có)
+      // r[3]: Điểm số (Thang 100)
+      // r[4]: Điểm số thực tế
+      // r[5]: Số câu đúng
+      // r[6]: Tổng số câu
+      // r[7]: Tỷ lệ đúng (%)
+      // r[8]: Thời gian làm bài
+      studentClass = (r[2] || "").toString();
+      const userMatch = studentClass.match(/@([a-zA-Z0-9_\.\-]+)/);
+      if (userMatch) {
+        username = userMatch[1].toLowerCase().trim();
+      } else {
+        username = studentClass.split("[")[0].trim().toLowerCase();
+      }
+      scaledScore = Number(r[3]) || 0;
+      rawScore = r[4] || "";
+      correctCount = Number(r[5]) || 0;
+      totalQuestions = Number(r[6]) || 0;
+      accuracy = r[7];
+      timeSpent = r[8];
+    }
+
     if (!username || username.includes("khách")) continue;
 
-    const studentClass = (r[3] || "").toString();
+    // Chuẩn hóa định dạng tỷ lệ đúng (VD: 0.58 -> "58%")
+    if (typeof accuracy === "number") {
+      accuracy = `${Math.round(accuracy * 100)}%`;
+    }
+
     const match = studentClass.match(/Tuần\s*(\d+)/i);
     const weekId = match ? match[1] : "1";
     const uniqueKey = username + "_w" + weekId;
 
-    // QUY TẮC: Chỉ lấy hàng đầu tiên xuất hiện trên Google Sheet cho tuần đó
+    // QUY TẮC BẤT DI BẤT DỊCH: Chỉ lấy hàng đầu tiên xuất hiện trên Google Sheet cho tuần đó
     if (!seenStudentWeek[uniqueKey]) {
       seenStudentWeek[uniqueKey] = true;
       results.push({
-        timestamp: r[0],
-        studentName: r[1],
+        timestamp: col0,
+        studentName: col1,
         username: username,
         studentClass: studentClass,
-        scaledScore: Number(r[4]) || 0,
-        rawScore: r[5],
-        correctCount: Number(r[6]) || 0,
-        totalQuestions: Number(r[7]) || 0,
-        accuracy: r[8],
-        timeSpent: r[9],
+        scaledScore: scaledScore,
+        rawScore: rawScore,
+        correctCount: correctCount,
+        totalQuestions: totalQuestions,
+        accuracy: accuracy,
+        timeSpent: timeSpent,
         isOfficialFirstAttempt: true
       });
     }
@@ -340,8 +443,9 @@ function doGet(e) {
       }
 
       const rows = resultSheet.getDataRange().getValues();
+      const headerRow = rows.length > 0 ? rows[0] : [];
       const dataRows = rows.slice(1);
-      const results = extractFirstAttemptsFromRows(dataRows);
+      const results = extractFirstAttemptsFromRows(dataRows, headerRow);
 
       return ContentService.createTextOutput(
         JSON.stringify({ status: "success", count: results.length, results: results })
