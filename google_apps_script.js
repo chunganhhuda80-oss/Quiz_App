@@ -166,22 +166,64 @@ function doPost(e) {
     if (data.action === "update_profile") {
       const accSheet = ss.getSheetByName(SHEET_NAME_ACCOUNTS);
       const username = (data.username || "").toString().trim().toLowerCase();
-      const newFullName = (data.fullName || "").toString().trim();
-      const newClassName = (data.className || "").toString().trim();
+      const newFullName = (data.fullName || data.studentName || "").toString().trim();
+      const newClassName = (data.className || data.studentClass || "").toString().trim();
       const newPass = data.password ? data.password.toString() : "";
 
-      if (accSheet && accSheet.getLastRow() > 1) {
+      // A. Cập nhật trong tab TaiKhoan
+      if (accSheet) {
+        let foundInAcc = false;
         const lastRow = accSheet.getLastRow();
-        const usersData = accSheet.getRange(2, 1, lastRow - 1, HEADERS_ACCOUNTS.length).getValues();
+        if (lastRow > 1) {
+          const usersData = accSheet.getRange(2, 1, lastRow - 1, HEADERS_ACCOUNTS.length).getValues();
 
-        for (let i = 0; i < usersData.length; i++) {
-          const u = usersData[i][1].toString().trim().toLowerCase();
-          if (u === username) {
-            const rowIndex = i + 2;
-            if (newFullName) accSheet.getRange(rowIndex, 4).setValue(newFullName);
-            if (newClassName) accSheet.getRange(rowIndex, 5).setValue(newClassName);
-            if (newPass) accSheet.getRange(rowIndex, 3).setValue(newPass);
-            break;
+          for (let i = 0; i < usersData.length; i++) {
+            const u = usersData[i][1].toString().trim().toLowerCase();
+            if (u === username) {
+              const rowIndex = i + 2;
+              if (newFullName) accSheet.getRange(rowIndex, 4).setValue(newFullName);
+              if (newClassName) accSheet.getRange(rowIndex, 5).setValue(newClassName);
+              if (newPass) accSheet.getRange(rowIndex, 3).setValue(newPass);
+              accSheet.getRange(rowIndex, 6).setValue(Utilities.formatDate(new Date(), "GMT+7", "dd/MM/yyyy HH:mm:ss"));
+              foundInAcc = true;
+              break;
+            }
+          }
+        }
+
+        // Nếu tài khoản chưa có trong TaiKhoan, bổ sung luôn
+        if (!foundInAcc && username && newFullName) {
+          const nowStr = Utilities.formatDate(new Date(), "GMT+7", "dd/MM/yyyy HH:mm:ss");
+          accSheet.appendRow([nowStr, username, newPass || "123", newFullName, newClassName, nowStr]);
+        }
+      }
+
+      // B. Cập nhật Họ tên mới trong KetQuaThi và dọn dẹp các dòng rác 'Không tên' 0 điểm
+      const resSheet = ss.getSheetByName(SHEET_NAME_RESULTS);
+      if (resSheet && resSheet.getLastRow() > 1) {
+        const rLast = resSheet.getLastRow();
+        const rData = resSheet.getRange(2, 1, rLast - 1, HEADERS_RESULTS.length).getValues();
+        for (let j = rData.length - 1; j >= 0; j--) {
+          const rowClass = (rData[j][2] || "").toString().toLowerCase();
+          const rowName = (rData[j][1] || "").toString().trim();
+          const rowScore = Number(rData[j][3]) || 0;
+          const rowTotal = Number(rData[j][6]) || 0;
+
+          if (rowClass.includes(`@${username}`) || rowClass.includes(`(${username})`) || rowName.toLowerCase() === username) {
+            const actualRow = j + 2;
+            // Dòng rác 'Không tên' hoặc 0 câu hỏi -> Xóa triệt để khỏi Sheet
+            if ((!rowName || rowName === "Không tên") && rowScore === 0 && rowTotal === 0) {
+              resSheet.deleteRow(actualRow);
+            } else if (newFullName) {
+              resSheet.getRange(actualRow, 2).setValue(newFullName);
+              if (newClassName) {
+                let currentCls = (rData[j][2] || "").toString();
+                let weekSuffix = "";
+                const matchWeek = currentCls.match(/\[Tuần\s*\d+\]/i);
+                if (matchWeek) weekSuffix = ` ${matchWeek[0]}`;
+                resSheet.getRange(actualRow, 3).setValue(`${newClassName} (@${username})${weekSuffix}`);
+              }
+            }
           }
         }
       }
@@ -192,128 +234,7 @@ function doPost(e) {
     }
 
     // ==========================================================================
-    // 4. XỬ LÝ NỘP KẾT QUẢ BÀI THI (action === "submit_quiz" hoặc mặc định)
-    // ==========================================================================
-    let resultSheet = ss.getSheetByName(SHEET_NAME_RESULTS);
-    if (!resultSheet) {
-      resultSheet = ss.getActiveSheet();
-      if (resultSheet.getName() === SHEET_NAME_ACCOUNTS) {
-        resultSheet = ss.insertSheet(SHEET_NAME_RESULTS);
-      } else {
-        resultSheet.setName(SHEET_NAME_RESULTS);
-      }
-    }
-
-    // Tạo tiêu đề bài thi nếu chưa có
-    if (resultSheet.getLastRow() === 0) {
-      resultSheet.appendRow(HEADERS_RESULTS);
-      const headerRange = resultSheet.getRange(1, 1, 1, HEADERS_RESULTS.length);
-      headerRange.setFontWeight("bold");
-      headerRange.setBackground("#4f46e5"); // Màu chàm
-      headerRange.setFontColor("#ffffff");
-      headerRange.setHorizontalAlignment("center");
-      headerRange.setVerticalAlignment("middle");
-      resultSheet.setRowHeight(1, 35);
-      resultSheet.setFrozenRows(1);
-    }
-
-    const timestamp = data.timestamp || Utilities.formatDate(new Date(), "GMT+7", "dd/MM/yyyy HH:mm:ss");
-    const studentName = data.studentName || "Không tên";
-    const username = data.username || "Khách (chưa đăng nhập)";
-    const studentClass = data.studentClass || "";
-    const scaledScore = data.scaledScore !== undefined ? Number(data.scaledScore) : 0;
-    const rawScore = `${data.pointsEarned || 0} / ${data.totalPossiblePoints || 0}`;
-    const correctCount = data.correctCount !== undefined ? Number(data.correctCount) : 0;
-    const totalQuestions = data.totalQuestions !== undefined ? Number(data.totalQuestions) : 0;
-    const accuracy = totalQuestions > 0 ? `${Math.round((correctCount / totalQuestions) * 100)}%` : "0%";
-    const timeSpent = data.timeSpent || "";
-    
-    // Tóm tắt chi tiết các câu đã làm
-    let detailsSummary = "";
-    if (Array.isArray(data.details)) {
-      detailsSummary = data.details.map((item, i) => {
-        const status = item.isCorrect ? "ĐÚNG" : "SAI";
-        return `Câu ${i + 1}: ${status} [Chọn: ${item.selectedOption || "Bỏ qua"} | Đ/Á: ${item.correctAnswer}] (+${item.pointsEarned || 0}đ)`;
-      }).join("\n");
-    } else if (typeof data.details === "string") {
-      detailsSummary = data.details;
-    }
-
-    // Kiểm tra cấu trúc tiêu đề hiện tại của Sheet để ghi đúng vị trí cột
-    let hasUsernameHeader = false;
-    if (resultSheet.getLastRow() > 0 && resultSheet.getLastColumn() > 0) {
-      const existingHeaders = resultSheet.getRange(1, 1, 1, resultSheet.getLastColumn()).getValues()[0];
-      hasUsernameHeader = existingHeaders.some(h => {
-        const s = (h || "").toString().toLowerCase();
-        return s.includes("tài khoản") || s.includes("username");
-      });
-    }
-
-    let newRow;
-    let scoreColIndex = 4; // Cột 4: Điểm số (Thang 100) theo chuẩn 10 cột
-    let statsStartColIndex = 6; // Cột 6, 7, 8: Số câu đúng, Tổng số câu, Tỷ lệ đúng (%)
-
-    if (hasUsernameHeader) {
-      // Trường hợp Sheet có cột Tài khoản riêng (11 cột)
-      newRow = [
-        timestamp,
-        studentName,
-        username,
-        studentClass,
-        scaledScore,
-        rawScore,
-        correctCount,
-        totalQuestions,
-        accuracy,
-        timeSpent,
-        detailsSummary
-      ];
-      scoreColIndex = 5;
-      statsStartColIndex = 7;
-    } else {
-      // Chuẩn 10 cột mặc định của người dùng (Không có cột username riêng):
-      // Ghi kèm username vào cột Lớp để giáo viên dễ đối chiếu: VD: 1234 (@hieung) [Tuần 1]
-      let classCombined = studentClass;
-      if (username && !username.includes("khách") && !classCombined.toLowerCase().includes(username.toLowerCase())) {
-        classCombined = `${studentClass} (@${username})`;
-      }
-
-      newRow = [
-        timestamp,       // Cột 1: Thời gian nộp
-        studentName,     // Cột 2: Họ và tên
-        classCombined,   // Cột 3: Lớp / MSSV
-        scaledScore,     // Cột 4: Điểm số (Thang 100)
-        rawScore,        // Cột 5: Điểm số thực tế
-        correctCount,    // Cột 6: Số câu đúng
-        totalQuestions,  // Cột 7: Tổng số câu
-        accuracy,        // Cột 8: Tỷ lệ đúng (%) -> Chuỗi '58%', KHÔNG BỊ HIỆN 5000%
-        timeSpent,       // Cột 9: Thời gian làm bài
-        detailsSummary   // Cột 10: Chi tiết bài làm (ĐÚNG trong Cột J, không bị đẩy sang Cột K!)
-      ];
-    }
-
-    // Ghi dòng mới vào sheet
-    resultSheet.appendRow(newRow);
-
-    // Căn chỉnh dòng vừa thêm
-    const lastRow = resultSheet.getLastRow();
-    const rowRange = resultSheet.getRange(lastRow, 1, 1, newRow.length);
-    rowRange.setVerticalAlignment("middle");
-    resultSheet.getRange(lastRow, scoreColIndex).setHorizontalAlignment("center").setFontWeight("bold"); // Cột điểm 100
-    resultSheet.getRange(lastRow, statsStartColIndex, 1, 3).setHorizontalAlignment("center"); // Các cột số liệu
-
-    // Đổi màu cho học sinh đạt hoặc chưa đạt (Yêu cầu >= 95 điểm mới qua môn)
-    if (data.isCheatingAutoSubmit) {
-      resultSheet.getRange(lastRow, 1, 1, newRow.length).setBackground("#fee2e2"); // Đỏ nhạt cảnh báo vi phạm
-      resultSheet.getRange(lastRow, scoreColIndex).setFontColor("#b91c1c");
-    } else if (scaledScore >= 95) {
-      resultSheet.getRange(lastRow, scoreColIndex).setFontColor("#059669"); // Xanh lá (Đạt)
-    } else {
-      resultSheet.getRange(lastRow, scoreColIndex).setFontColor("#dc2626"); // Đỏ (Chưa đạt)
-    }
-
-    // ==========================================================================
-    // 4. XỬ LÝ LẤY BẢNG XẾP HẠNG TỪ GOOGLE SHEET (action === "get_leaderboard")
+    // 4. XỬ LÝ LẤY BẢNG XẾP HẠNG (action === "get_leaderboard" hoặc "get_results")
     // ==========================================================================
     if (data.action === "get_leaderboard" || data.action === "get_results") {
       const resultSheet = ss.getSheetByName(SHEET_NAME_RESULTS);
@@ -333,13 +254,140 @@ function doPost(e) {
       ).setMimeType(ContentService.MimeType.JSON);
     }
 
+    // ==========================================================================
+    // 5. XỬ LÝ NỘP KẾT QUẢ BÀI THI (action === "submit_quiz" hoặc có mảng data.details)
+    // ==========================================================================
+    if (data.action === "submit_quiz" || (!data.action && data.details && Array.isArray(data.details))) {
+      let resultSheet = ss.getSheetByName(SHEET_NAME_RESULTS);
+      if (!resultSheet) {
+        resultSheet = ss.getActiveSheet();
+        if (resultSheet.getName() === SHEET_NAME_ACCOUNTS) {
+          resultSheet = ss.insertSheet(SHEET_NAME_RESULTS);
+        } else {
+          resultSheet.setName(SHEET_NAME_RESULTS);
+        }
+      }
+
+      // Tạo tiêu đề bài thi nếu chưa có
+      if (resultSheet.getLastRow() === 0) {
+        resultSheet.appendRow(HEADERS_RESULTS);
+        const headerRange = resultSheet.getRange(1, 1, 1, HEADERS_RESULTS.length);
+        headerRange.setFontWeight("bold");
+        headerRange.setBackground("#4f46e5"); // Màu chàm
+        headerRange.setFontColor("#ffffff");
+        headerRange.setHorizontalAlignment("center");
+        headerRange.setVerticalAlignment("middle");
+        resultSheet.setRowHeight(1, 35);
+        resultSheet.setFrozenRows(1);
+      }
+
+      const timestamp = data.timestamp || Utilities.formatDate(new Date(), "GMT+7", "dd/MM/yyyy HH:mm:ss");
+      const studentName = data.studentName || data.fullName || "Không tên";
+      const username = data.username || "Khách (chưa đăng nhập)";
+      const studentClass = data.studentClass || data.className || "";
+      const scaledScore = data.scaledScore !== undefined ? Number(data.scaledScore) : 0;
+      const rawScore = `${data.pointsEarned || 0} / ${data.totalPossiblePoints || 0}`;
+      const correctCount = data.correctCount !== undefined ? Number(data.correctCount) : 0;
+      const totalQuestions = data.totalQuestions !== undefined ? Number(data.totalQuestions) : 0;
+      const accuracy = totalQuestions > 0 ? `${Math.round((correctCount / totalQuestions) * 100)}%` : "0%";
+      const timeSpent = data.timeSpent || "";
+
+      // Tóm tắt chi tiết các câu đã làm
+      let detailsSummary = "";
+      if (Array.isArray(data.details)) {
+        detailsSummary = data.details.map((item, i) => {
+          const status = item.isCorrect ? "ĐÚNG" : "SAI";
+          return `Câu ${i + 1}: ${status} [Chọn: ${item.selectedOption || "Bỏ qua"} | Đ/Á: ${item.correctAnswer}] (+${item.pointsEarned || 0}đ)`;
+        }).join("\n");
+      } else if (typeof data.details === "string") {
+        detailsSummary = data.details;
+      }
+
+      // Kiểm tra cấu trúc tiêu đề hiện tại của Sheet để ghi đúng vị trí cột
+      let hasUsernameHeader = false;
+      if (resultSheet.getLastRow() > 0 && resultSheet.getLastColumn() > 0) {
+        const existingHeaders = resultSheet.getRange(1, 1, 1, resultSheet.getLastColumn()).getValues()[0];
+        hasUsernameHeader = existingHeaders.some(h => {
+          const s = (h || "").toString().toLowerCase();
+          return s.includes("tài khoản") || s.includes("username");
+        });
+      }
+
+      let newRow;
+      let scoreColIndex = 4; // Cột 4: Điểm số (Thang 100) theo chuẩn 10 cột
+      let statsStartColIndex = 6; // Cột 6, 7, 8: Số câu đúng, Tổng số câu, Tỷ lệ đúng (%)
+
+      if (hasUsernameHeader) {
+        newRow = [
+          timestamp,
+          studentName,
+          username,
+          studentClass,
+          scaledScore,
+          rawScore,
+          correctCount,
+          totalQuestions,
+          accuracy,
+          timeSpent,
+          detailsSummary
+        ];
+        scoreColIndex = 5;
+        statsStartColIndex = 7;
+      } else {
+        let classCombined = studentClass;
+        if (username && !username.includes("khách") && !classCombined.toLowerCase().includes(username.toLowerCase())) {
+          classCombined = `${studentClass} (@${username})`;
+        }
+
+        newRow = [
+          timestamp,       // Cột 1: Thời gian nộp
+          studentName,     // Cột 2: Họ và tên
+          classCombined,   // Cột 3: Lớp / MSSV
+          scaledScore,     // Cột 4: Điểm số (Thang 100)
+          rawScore,        // Cột 5: Điểm số thực tế
+          correctCount,    // Cột 6: Số câu đúng
+          totalQuestions,  // Cột 7: Tổng số câu
+          accuracy,        // Cột 8: Tỷ lệ đúng (%) -> Chuỗi '58%', KHÔNG BỊ HIỆN 5000%
+          timeSpent,       // Cột 9: Thời gian làm bài
+          detailsSummary   // Cột 10: Chi tiết bài làm (ĐÚNG trong Cột J, không bị đẩy sang Cột K!)
+        ];
+      }
+
+      // Ghi dòng mới vào sheet
+      resultSheet.appendRow(newRow);
+
+      // Căn chỉnh dòng vừa thêm
+      const lastRow = resultSheet.getLastRow();
+      const rowRange = resultSheet.getRange(lastRow, 1, 1, newRow.length);
+      rowRange.setVerticalAlignment("middle");
+      resultSheet.getRange(lastRow, scoreColIndex).setHorizontalAlignment("center").setFontWeight("bold");
+      resultSheet.getRange(lastRow, statsStartColIndex, 1, 3).setHorizontalAlignment("center");
+
+      // Đổi màu cho học sinh đạt hoặc chưa đạt
+      if (data.isCheatingAutoSubmit) {
+        resultSheet.getRange(lastRow, 1, 1, newRow.length).setBackground("#fee2e2");
+        resultSheet.getRange(lastRow, scoreColIndex).setFontColor("#b91c1c");
+      } else if (scaledScore >= 95) {
+        resultSheet.getRange(lastRow, scoreColIndex).setFontColor("#059669");
+      } else {
+        resultSheet.getRange(lastRow, scoreColIndex).setFontColor("#dc2626");
+      }
+
+      return ContentService.createTextOutput(
+        JSON.stringify({
+          status: "success",
+          message: "Kết quả đã được lưu thành công vào Google Sheet!",
+          studentName: studentName,
+          score: scaledScore
+        })
+      ).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ==========================================================================
+    // 6. PHẢN HỒI MẶC ĐỊNH CHO HÀNH ĐỘNG KHÔNG XÁC ĐỊNH (TUYỆT ĐỐI KHÔNG GHI ĐÈ SHEET)
+    // ==========================================================================
     return ContentService.createTextOutput(
-      JSON.stringify({
-        status: "success",
-        message: "Kết quả đã được lưu thành công vào Google Sheet!",
-        studentName: studentName,
-        score: scaledScore
-      })
+      JSON.stringify({ status: "ignored", message: "Hành động không xác định hoặc không được hỗ trợ" })
     ).setMimeType(ContentService.MimeType.JSON);
 
   } catch (error) {
@@ -425,6 +473,10 @@ function extractFirstAttemptsFromRows(dataRows, headerRow) {
 
     if (!username || username.includes("khách")) continue;
 
+    // Bỏ qua hàng rác / lỗi ("Không tên" hoặc điểm 0 và 0 câu hỏi)
+    const isGhostRow = (col1 === "Không tên" || !col1) && (totalQuestions === 0 || scaledScore === 0);
+    if (isGhostRow) continue;
+
     // Chuẩn hóa định dạng tỷ lệ đúng (VD: 0.58 -> "58%")
     if (typeof accuracy === "number") {
       accuracy = `${Math.round(accuracy * 100)}%`;
@@ -457,7 +509,7 @@ function extractFirstAttemptsFromRows(dataRows, headerRow) {
 }
 
 /**
- * Xử lý GET request: Trả về Bảng Xếp Hạng & Danh sách điểm thi dạng JSON (Chỉ lấy lần thi đầu)
+ * Xử lý GET request: Trả về Bảng Xếp Hạng, Danh sách tài khoản hoặc Dọn dẹp rác
  */
 function doGet(e) {
   try {
@@ -483,7 +535,59 @@ function doGet(e) {
       ).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // 2. Mặc định: Phản hồi trạng thái Webhook sẵn sàng
+    // 2. API Lấy danh sách tài khoản học sinh đã đăng ký từ tab TaiKhoan (cho phép đồng bộ đa thiết bị/tab)
+    if (action === "get_accounts") {
+      const accSheet = ss.getSheetByName(SHEET_NAME_ACCOUNTS);
+      if (!accSheet || accSheet.getLastRow() <= 1) {
+        return ContentService.createTextOutput(
+          JSON.stringify({ status: "success", count: 0, accounts: [] })
+        ).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const rows = accSheet.getDataRange().getValues();
+      const accounts = [];
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const u = (row[1] || "").toString().trim().toLowerCase();
+        if (u) {
+          accounts.push({
+            username: u,
+            password: (row[2] || "").toString(),
+            fullName: (row[3] || "").toString().trim() || u,
+            className: (row[4] || "").toString().trim() || "Chưa phân lớp",
+            createdAt: row[0] || "",
+            lastLogin: row[5] || ""
+          });
+        }
+      }
+
+      return ContentService.createTextOutput(
+        JSON.stringify({ status: "success", count: accounts.length, accounts: accounts })
+      ).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // 3. API Dọn dẹp dòng rác 'Không tên' trong KetQuaThi (tiện ích kích hoạt qua URL)
+    if (action === "clean_ghost_rows") {
+      const resSheet = ss.getSheetByName(SHEET_NAME_RESULTS);
+      let deletedCount = 0;
+      if (resSheet && resSheet.getLastRow() > 1) {
+        const rData = resSheet.getDataRange().getValues();
+        for (let j = rData.length - 1; j >= 1; j--) {
+          const rowName = (rData[j][1] || "").toString().trim();
+          const rowScore = Number(rData[j][3]) || 0;
+          const rowTotal = Number(rData[j][6]) || 0;
+          if ((!rowName || rowName === "Không tên") && rowScore === 0 && rowTotal === 0) {
+            resSheet.deleteRow(j + 1);
+            deletedCount++;
+          }
+        }
+      }
+      return ContentService.createTextOutput(
+        JSON.stringify({ status: "success", message: `Đã dọn dẹp ${deletedCount} dòng rác 'Không tên' trong KetQuaThi!`, deletedCount: deletedCount })
+      ).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // 4. Mặc định: Phản hồi trạng thái Webhook sẵn sàng
     return ContentService.createTextOutput(
       JSON.stringify({
         status: "ready",

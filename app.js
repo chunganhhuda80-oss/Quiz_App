@@ -2131,6 +2131,62 @@ function saveLocalAccounts(accounts) {
   }
 }
 
+/**
+ * Đồng bộ danh sách tài khoản học sinh từ Google Sheet tab TaiKhoan
+ * Cho phép đăng nhập liên thông giữa các tab, thiết bị hoặc trình duyệt khác
+ */
+async function syncAccountsFromGoogleSheet() {
+  if (!CONFIG.GOOGLE_APPS_SCRIPT_URL || !CONFIG.GOOGLE_APPS_SCRIPT_URL.startsWith("http")) return;
+  try {
+    const res = await fetch(`${CONFIG.GOOGLE_APPS_SCRIPT_URL}?action=get_accounts`);
+    if (!res.ok) return;
+    const json = await res.json();
+    if (json && json.status === "success" && Array.isArray(json.accounts)) {
+      const localAccounts = getLocalAccounts();
+      const map = new Map();
+      localAccounts.forEach(a => map.set(a.username.toLowerCase(), a));
+      let changed = false;
+
+      json.accounts.forEach(cloudAcc => {
+        const u = (cloudAcc.username || "").toLowerCase().trim();
+        if (!u) return;
+
+        if (map.has(u)) {
+          const localAcc = map.get(u);
+          if (cloudAcc.fullName && cloudAcc.fullName !== "Không tên" && localAcc.fullName !== cloudAcc.fullName) {
+            localAcc.fullName = cloudAcc.fullName;
+            changed = true;
+          }
+          if (cloudAcc.className && localAcc.className !== cloudAcc.className) {
+            localAcc.className = cloudAcc.className;
+            changed = true;
+          }
+          if (cloudAcc.password && localAcc.password !== cloudAcc.password) {
+            localAcc.password = cloudAcc.password;
+            changed = true;
+          }
+        } else {
+          localAccounts.push({
+            username: u,
+            password: cloudAcc.password || "",
+            fullName: (cloudAcc.fullName && cloudAcc.fullName !== "Không tên") ? cloudAcc.fullName : u,
+            className: cloudAcc.className || "Chưa phân lớp",
+            createdAt: cloudAcc.createdAt || new Date().toISOString()
+          });
+          map.set(u, localAccounts[localAccounts.length - 1]);
+          changed = true;
+        }
+      });
+
+      if (changed) {
+        saveLocalAccounts(localAccounts);
+      }
+    }
+  } catch (e) {
+    console.warn("Lỗi tải danh sách tài khoản từ Google Sheet:", e);
+  }
+}
+
 function showAuthAlert(msg, type = "error") {
   const alertBox = document.getElementById("auth-alert");
   if (!alertBox) return;
@@ -2436,8 +2492,26 @@ async function handleLoginSubmit(e) {
   }
 
   // 2. Kiểm tra tài khoản trong Local Database trước (phản hồi tức thì 0ms)
-  const accounts = getLocalAccounts();
-  const foundUser = accounts.find(u => u.username.toLowerCase() === username);
+  let accounts = getLocalAccounts();
+  let foundUser = accounts.find(u => u.username.toLowerCase() === username);
+
+  // Nếu không thấy trong local hoặc mật khẩu không khớp, tự động đồng bộ nhanh từ tab TaiKhoan trên Google Sheet
+  const isMockCandidate = foundUser && ["nguyen_van_an", "tran_thi_mai", "le_hoang_nam", "pham_minh_duc", "vu_hai_yen", "hoang_thu_trang"].includes(foundUser.username.toLowerCase());
+  if (!foundUser || (foundUser.password !== password && !isMockCandidate && !["123", "123456"].includes(password))) {
+    if (CONFIG.GOOGLE_APPS_SCRIPT_URL && CONFIG.GOOGLE_APPS_SCRIPT_URL.startsWith("http")) {
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.querySelector(".btn-text").textContent = "Đang đối chiếu tài khoản...";
+      }
+      await syncAccountsFromGoogleSheet();
+      accounts = getLocalAccounts();
+      foundUser = accounts.find(u => u.username.toLowerCase() === username);
+      if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.querySelector(".btn-text").textContent = "Đăng Nhập Vào Thi";
+      }
+    }
+  }
 
   if (foundUser) {
     const isMockUser = ["nguyen_van_an", "tran_thi_mai", "le_hoang_nam", "pham_minh_duc", "vu_hai_yen", "hoang_thu_trang"].includes(foundUser.username.toLowerCase());
@@ -2447,16 +2521,24 @@ async function handleLoginSubmit(e) {
       return;
     }
 
+    // Bảo vệ họ tên hiển thị: TUYỆT ĐỐI KHÔNG để 'Không tên' xuất hiện trên giao diện
+    let safeFullName = foundUser.fullName;
+    if (!safeFullName || safeFullName === "Không tên" || safeFullName.trim().length === 0) {
+      safeFullName = foundUser.username;
+      foundUser.fullName = safeFullName;
+      saveLocalAccounts(accounts);
+    }
+
     // Đăng nhập thành công
     AuthState.currentUser = {
       username: foundUser.username,
-      fullName: foundUser.fullName,
-      className: foundUser.className,
+      fullName: safeFullName,
+      className: foundUser.className || "Chưa phân lớp",
       loggedAt: new Date().toISOString()
     };
     localStorage.setItem(AuthState.storageKeyUser, JSON.stringify(AuthState.currentUser));
 
-    showAuthAlert(`Chào mừng trở lại, ${foundUser.fullName}! Đang vào phòng thi... 🎉`, "success");
+    showAuthAlert(`Chào mừng trở lại, ${safeFullName}! Đang vào phòng thi... 🎉`, "success");
     updateAuthUI();
 
     setTimeout(() => {
@@ -2469,40 +2551,7 @@ async function handleLoginSubmit(e) {
     return;
   }
 
-  // Nếu không thấy trong local, gửi tín hiệu kiểm tra
-  if (CONFIG.GOOGLE_APPS_SCRIPT_URL && CONFIG.GOOGLE_APPS_SCRIPT_URL.startsWith("http")) {
-    if (btnSubmit) {
-      btnSubmit.disabled = true;
-      btnSubmit.querySelector(".btn-text").textContent = "Đang kiểm tra...";
-    }
-    showAuthAlert("Đang đối chiếu tài khoản trên đám mây...", "success");
-
-    try {
-      fetch(CONFIG.GOOGLE_APPS_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({
-          action: "login",
-          username: username,
-          password: password
-        })
-      });
-    } catch (err) {
-      console.warn("Lỗi kết nối kiểm tra tài khoản:", err);
-    }
-
-    setTimeout(() => {
-      if (btnSubmit) {
-        btnSubmit.disabled = false;
-        btnSubmit.querySelector(".btn-text").textContent = "Đăng Nhập Vào Thi";
-      }
-      showAuthAlert("Không tìm thấy tài khoản! Vui lòng kiểm tra lại hoặc chọn tab 'Đăng ký mới'.", "error");
-    }, 700);
-    return;
-  }
-
-  showAuthAlert("Không tìm thấy tài khoản! Vui lòng chọn tab 'Đăng ký mới' để tạo tài khoản.", "error");
+  showAuthAlert("Không tìm thấy tài khoản! Vui lòng kiểm tra lại hoặc chọn tab 'Đăng ký mới'.", "error");
 }
 
 async function handleRegisterSubmit(e) {
@@ -2652,10 +2701,20 @@ function initAuth() {
     const savedUser = localStorage.getItem(AuthState.storageKeyUser);
     if (savedUser) {
       AuthState.currentUser = JSON.parse(savedUser);
+      // Tự động sửa chữa nếu session hiện tại bị lưu nhầm tên rác "Không tên"
+      if (AuthState.currentUser && (!AuthState.currentUser.fullName || AuthState.currentUser.fullName === "Không tên")) {
+        const accounts = getLocalAccounts();
+        const acc = accounts.find(a => a.username.toLowerCase() === AuthState.currentUser.username.toLowerCase());
+        AuthState.currentUser.fullName = (acc && acc.fullName && acc.fullName !== "Không tên") ? acc.fullName : AuthState.currentUser.username;
+        localStorage.setItem(AuthState.storageKeyUser, JSON.stringify(AuthState.currentUser));
+      }
     }
   } catch (e) {
     console.warn("Lỗi đọc session user:", e);
   }
+
+  // Tự động đồng bộ tài khoản từ Google Sheet ở nền
+  syncAccountsFromGoogleSheet();
 
   // 2. Cập nhật giao diện và tự động hiển thị màn hình:
   // - Nếu ĐÃ ĐĂNG NHẬP: vào thẳng màn hình Start (chọn tuần thi)
@@ -4784,11 +4843,17 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
           return;
         }
 
+        // Bỏ qua các kết quả rác/lỗi (tên 'Không tên' hoặc điểm 0 & tổng số câu = 0)
+        const isGhostAttempt = (!r.studentName || r.studentName === "Không tên") && (Number(r.totalQuestions) === 0 || Number(r.scaledScore) === 0);
+        if (isGhostAttempt) return;
+
+        const validStudentName = (r.studentName && r.studentName !== "Không tên" && r.studentName.trim().length >= 2) ? r.studentName.trim() : null;
+
         // Thêm tài khoản nếu chưa có trong LocalStorage hoặc cập nhật họ tên mới nhất
         if (!accountMap.has(uname)) {
           const newAcc = {
             username: uname,
-            fullName: r.studentName || uname,
+            fullName: validStudentName || uname,
             className: (r.studentClass || "").split("[")[0].trim() || "Chưa phân lớp",
             createdAt: r.timestamp || new Date().toISOString()
           };
@@ -4797,8 +4862,13 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
           hasChanges = true;
         } else {
           const curAcc = accountMap.get(uname);
-          if (r.studentName && curAcc.fullName !== r.studentName) {
-            curAcc.fullName = r.studentName;
+          if (validStudentName && curAcc.fullName !== validStudentName) {
+            curAcc.fullName = validStudentName;
+            hasChanges = true;
+          }
+          // Tự động khôi phục nếu tài khoản vô tình bị gán tên rác 'Không tên'
+          if (!curAcc.fullName || curAcc.fullName === "Không tên") {
+            curAcc.fullName = validStudentName || curAcc.username;
             hasChanges = true;
           }
         }
@@ -4846,9 +4916,7 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
         }
       });
 
-      // 3. DỌN DẸP HỌC SINH ĐÃ BỊ XÓA KHỎI GOOGLE SHEET:
-      // Nếu một tài khoản học sinh không còn bất kỳ bài thi nào trên Google Sheet,
-      // tự động xóa hoàn toàn tài khoản và lịch sử điểm của họ khỏi LocalStorage để Bảng Xếp Hạng cập nhật chính xác!
+      // 3. DỌN DẸP LỊCH SỬ THI CỦA HỌC SINH ĐÃ BỊ XÓA KHỎI GOOGLE SHEET:
       const activeSheetUsers = new Set(sheetFirstAttemptsByUser.keys());
 
       for (let i = existingAccounts.length - 1; i >= 0; i--) {
@@ -4859,10 +4927,14 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
 
         // Nếu học sinh này không còn bài thi nào trên Google Sheet
         if (!activeSheetUsers.has(u)) {
-          console.log(`[Google Sheet Sync] Đã xóa tài khoản '${acc.fullName}' (@${u}) khỏi hệ thống vì đã bị xóa trên Google Sheet.`);
           localStorage.removeItem(getUserHistoryKey(u));
-          existingAccounts.splice(i, 1);
-          hasChanges = true;
+          // TUYỆT ĐỐI KHÔNG xóa tài khoản đăng ký của người dùng (tài khoản có password hoặc createdAt)
+          // Chỉ xóa các tài khoản tạm thời phát sinh tự động từ Sheet cũ
+          if (!acc.password && !acc.createdAt) {
+            console.log(`[Google Sheet Sync] Đã xóa tài khoản tạm '${acc.fullName}' (@${u}) khỏi hệ thống vì đã bị xóa trên Google Sheet.`);
+            existingAccounts.splice(i, 1);
+            hasChanges = true;
+          }
         }
       }
 
@@ -4894,6 +4966,14 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
           localStorage.setItem(historyKey, JSON.stringify(history));
         }
       });
+
+      // Tự động kiểm tra và làm sạch AuthState.currentUser nếu đang dính 'Không tên'
+      if (AuthState.currentUser && (!AuthState.currentUser.fullName || AuthState.currentUser.fullName === "Không tên")) {
+        const myAcc = accountMap.get(AuthState.currentUser.username.toLowerCase());
+        AuthState.currentUser.fullName = (myAcc && myAcc.fullName && myAcc.fullName !== "Không tên") ? myAcc.fullName : AuthState.currentUser.username;
+        localStorage.setItem(AuthState.storageKeyUser, JSON.stringify(AuthState.currentUser));
+        updateAuthUI();
+      }
 
       if (hasChanges) {
         saveLocalAccounts(existingAccounts);
@@ -5575,7 +5655,9 @@ async function handleProfileSave() {
         action: "update_profile",
         username: account.username,
         fullName: newFullName,
+        studentName: newFullName,
         className: newClassName,
+        studentClass: newClassName,
         password: passwordChanged ? newPass : undefined
       })
     }).catch(err => console.warn("Lỗi sync profile lên Google Sheet:", err));
