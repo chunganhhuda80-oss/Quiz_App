@@ -48,6 +48,7 @@ const HEADERS_ACCOUNTS = [
  * Xử lý khi nhận dữ liệu POST từ website
  */
 function doPost(e) {
+  let lock;
   try {
     let data;
     
@@ -58,6 +59,31 @@ function doPost(e) {
       data = e.parameter;
     } else {
       throw new Error("Không nhận được dữ liệu hợp lệ");
+    }
+
+    // 0. BẢO VỆ CHỐNG SPAM & DDOS (RATE LIMITING BẰNG CACHESERVICE)
+    const cache = CacheService.getScriptCache();
+    const clientKey = "rate_" + (data.username || "guest").toLowerCase().replace(/[^a-z0-9_]/g, "");
+    const cachedCount = Number(cache.get(clientKey) || 0);
+
+    if (cachedCount > 20) {
+      return ContentService.createTextOutput(
+        JSON.stringify({
+          status: "rate_limited",
+          message: "Bạn đang gửi yêu cầu quá nhanh! Vui lòng chờ 30 giây để hệ thống xử lý an toàn."
+        })
+      ).setMimeType(ContentService.MimeType.JSON);
+    }
+    cache.put(clientKey, String(cachedCount + 1), 30);
+
+    // KHÓA ĐỒNG THỜI (LOCKSERVICE) - Chống nghẽn dữ liệu khi hàng chục học sinh cùng nộp bài 1 lúc
+    lock = LockService.getScriptLock();
+    try {
+      lock.waitLock(15000); // Chờ tối đa 15 giây để xếp hàng ghi an toàn
+    } catch (lockErr) {
+      return ContentService.createTextOutput(
+        JSON.stringify({ status: "busy", message: "Hệ thống đang ghi dữ liệu bài thi khác, vui lòng thử lại sau 3 giây!" })
+      ).setMimeType(ContentService.MimeType.JSON);
     }
 
     const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -373,6 +399,11 @@ function doPost(e) {
         resultSheet.getRange(lastRow, scoreColIndex).setFontColor("#dc2626");
       }
 
+      // Xóa cache Bảng Xếp Hạng để cập nhật ngay lập tức kết quả mới
+      try {
+        CacheService.getScriptCache().remove("cached_leaderboard");
+      } catch (_) {}
+
       return ContentService.createTextOutput(
         JSON.stringify({
           status: "success",
@@ -397,6 +428,10 @@ function doPost(e) {
         message: error.toString()
       })
     ).setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    if (lock) {
+      try { lock.releaseLock(); } catch (_) {}
+    }
   }
 }
 
@@ -518,11 +553,17 @@ function doGet(e) {
 
     // 1. API Lấy toàn bộ kết quả bài thi từ sheet KetQuaThi (Đã lọc chỉ lần thi đầu tiên)
     if (action === "get_leaderboard" || action === "get_results") {
+      const cache = CacheService.getScriptCache();
+      const cached = cache.get("cached_leaderboard");
+      if (cached) {
+        return ContentService.createTextOutput(cached).setMimeType(ContentService.MimeType.JSON);
+      }
+
       const resultSheet = ss.getSheetByName(SHEET_NAME_RESULTS);
       if (!resultSheet || resultSheet.getLastRow() <= 1) {
-        return ContentService.createTextOutput(
-          JSON.stringify({ status: "success", count: 0, results: [] })
-        ).setMimeType(ContentService.MimeType.JSON);
+        const emptyOutput = JSON.stringify({ status: "success", count: 0, results: [] });
+        try { cache.put("cached_leaderboard", emptyOutput, 10); } catch (_) {}
+        return ContentService.createTextOutput(emptyOutput).setMimeType(ContentService.MimeType.JSON);
       }
 
       const rows = resultSheet.getDataRange().getValues();
@@ -530,9 +571,9 @@ function doGet(e) {
       const dataRows = rows.slice(1);
       const results = extractFirstAttemptsFromRows(dataRows, headerRow);
 
-      return ContentService.createTextOutput(
-        JSON.stringify({ status: "success", count: results.length, results: results })
-      ).setMimeType(ContentService.MimeType.JSON);
+      const output = JSON.stringify({ status: "success", count: results.length, results: results });
+      try { cache.put("cached_leaderboard", output, 10); } catch (_) {} // Lưu cache 10 giây
+      return ContentService.createTextOutput(output).setMimeType(ContentService.MimeType.JSON);
     }
 
     // 2. API Lấy danh sách tài khoản học sinh đã đăng ký từ tab TaiKhoan (cho phép đồng bộ đa thiết bị/tab)
