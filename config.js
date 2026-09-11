@@ -60,22 +60,22 @@ const CONFIG = {
     {
       id: 5,
       name: "Tuần 5",
-      title: "Tầng Mạng & Cấu Trúc Địa Chỉ IPv4",
-      file: "",
-      durationMinutes: 30,
-      totalQuestions: 0,
-      isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      title: "FHRP/Wireless & Định Tuyến Tĩnh (Static Routing)",
+      file: "questions_tuan5.json",
+      durationMinutes: 40,
+      totalQuestions: 90,
+      isUnlocked: true,
+      description: "90 câu trắc nghiệm (HSRP/VRRP, Wi-Fi 802.11, WLC, Static Routing, Longest Prefix Match, Summarization)"
     },
     {
       id: 6,
       name: "Tuần 6",
-      title: "Chia Mạng Con (Subnetting & VLSM)",
-      file: "",
-      durationMinutes: 35,
-      totalQuestions: 0,
-      isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      title: "Định Tuyến OSPF, DHCP DORA & Chuyển Mạch Layer 3",
+      file: "questions_tuan6.json",
+      durationMinutes: 45,
+      totalQuestions: 100,
+      isUnlocked: true,
+      description: "100 câu trắc nghiệm (STP Forwarding, OSPF DR/BDR, LSA, Metric Cost, DHCP DORA, NAT, SVI Layer 3)"
     },
     {
       id: 7,

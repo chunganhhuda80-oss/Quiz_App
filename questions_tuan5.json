@@ -1,0 +1,902 @@
+[
+  {
+    "id": 1,
+    "question": "Thứ tự đúng của quá trình TCP 3-way Handshake khi thiết lập kết nối là gì?",
+    "optionA": "Client gửi ACK trước tiên, Server phản hồi SYN, Client gửi lại SYN-ACK cuối cùng",
+    "optionB": "Client gửi SYN, Server phản hồi SYN-ACK, Client gửi ACK để xác nhận hoàn tất kết nối",
+    "optionC": "Cả hai bên cùng gửi SYN đồng thời rồi chờ nhận ACK từ phía còn lại duy nhất",
+    "optionD": "Server gửi SYN trước, Client phản hồi ACK, sau đó Server gửi tiếp gói FIN kết thúc",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 2,
+    "question": "UDP thường được ưu tiên sử dụng trong trường hợp nào so với TCP?",
+    "optionA": "Khi ứng dụng yêu cầu cơ chế windowing để kiểm soát luồng dữ liệu chặt chẽ",
+    "optionB": "Khi ứng dụng cần đảm bảo tuyệt đối mọi gói tin đến đúng thứ tự như truyền file quan trọng",
+    "optionC": "Khi cần thiết lập phiên làm việc lâu dài với cơ chế xác nhận từng gói tin gửi đi",
+    "optionD": "Khi ứng dụng cần tốc độ truyền cao hơn độ tin cậy, như streaming video hoặc gọi thoại VoIP",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 3,
+    "question": "Cổng (port) 53 theo mặc định được dùng cho giao thức nào trong tầng Application?",
+    "optionA": "DNS, giao thức phân giải tên miền thành địa chỉ IP tương ứng",
+    "optionB": "HTTP, giao thức truyền tải nội dung trang web qua trình duyệt",
+    "optionC": "SNMP, giao thức giám sát và quản lý thiết bị mạng từ xa",
+    "optionD": "DHCP, giao thức cấp phát địa chỉ IP tự động cho thiết bị trong mạng",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 4,
+    "question": "Thiết bị nào sau đây hoạt động chủ yếu ở Layer 3, dùng địa chỉ IP đích để chọn đường đi giữa các mạng khác nhau?",
+    "optionA": "Access Point, thiết bị cầu nối giữa mạng có dây và không dây",
+    "optionB": "Hub, thiết bị chia sẻ băng thông cho toàn bộ collision domain",
+    "optionC": "Router, thiết bị định tuyến traffic giữa các subnet khác nhau",
+    "optionD": "Switch Layer 2, thiết bị chuyển mạch nội bộ trong cùng một VLAN",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 5,
+    "question": "Virtual MAC trong nhóm HSRP có vai trò gì đối với các thiết bị đầu cuối?",
+    "optionA": "Giúp PC luôn thấy cùng một địa chỉ MAC gateway bất kể router vật lý nào đang thực sự Active",
+    "optionB": "Thay thế hoàn toàn địa chỉ MAC vật lý gốc của từng router, khiến router mất khả năng giao tiếp riêng",
+    "optionC": "Chỉ dùng để mã hóa traffic đi qua router Active nhằm tăng cường bảo mật đường truyền",
+    "optionD": "Được gán cố định cho PC trong subnet để phân biệt PC nào thuộc VLAN nào tương ứng",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 6,
+    "question": "Vì sao cần đảm bảo router đóng vai Active trong nhóm HSRP có Priority cao hơn một cách rõ ràng khi cấu hình?",
+    "optionA": "Để router đó tự động tắt hoàn toàn khả năng chuyển sang Standby trong mọi trường hợp",
+    "optionB": "Để đảm bảo đúng router mong muốn sẽ giành quyền Active thay vì để kết quả phụ thuộc vào so sánh IP mặc định",
+    "optionC": "Để giảm tốc độ hội tụ của giao thức HSRP xuống mức thấp nhất có thể trong mạng",
+    "optionD": "Để loại bỏ hoàn toàn Virtual IP khỏi cấu hình nhóm HSRP đang thiết lập",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 7,
+    "question": "Một công ty dùng VRRP thay vì HSRP cho hệ thống gateway dự phòng, lý do hợp lý nhất là gì?",
+    "optionA": "Công ty chỉ dùng duy nhất thiết bị Cisco nên bắt buộc phải chọn giao thức độc quyền tương ứng",
+    "optionB": "VRRP có tốc độ hội tụ chậm hơn HSRP nên phù hợp hơn với mạng cần độ trễ cao",
+    "optionC": "VRRP không hỗ trợ khái niệm Virtual IP nên đơn giản hóa việc cấu hình gateway",
+    "optionD": "Hạ tầng công ty gồm thiết bị của nhiều hãng khác nhau nên cần chuẩn mở tương thích đa hãng",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 8,
+    "question": "Mô hình TCP/IP bốn tầng khác mô hình OSI bảy tầng ở điểm nào?",
+    "optionA": "Mô hình TCP/IP không có tầng nào tương ứng với Network layer của OSI",
+    "optionB": "Tầng Application của TCP/IP gộp chung ba tầng Application, Presentation, Session của OSI",
+    "optionC": "Tầng Network Access của TCP/IP tách riêng thành hai tầng độc lập như OSI",
+    "optionD": "TCP/IP có nhiều tầng hơn OSI vì bổ sung thêm tầng bảo mật riêng biệt",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 9,
+    "question": "Địa chỉ Link-Local trong IPv6 nằm ở dải nào và có phạm vi sử dụng ra sao?",
+    "optionA": "Dải fc00::/7, dùng để định tuyến toàn cầu trên Internet giống địa chỉ Public IPv4",
+    "optionB": "Dải fe80::/10, chỉ dùng trong phạm vi một segment mạng và tự động sinh trên mọi interface",
+    "optionC": "Dải ff00::/8, dùng riêng cho việc gửi gói tin broadcast tới toàn bộ thiết bị trong mạng",
+    "optionD": "Dải 2000::/3, chỉ được cấp phát thủ công bởi quản trị viên chứ không tự sinh ra",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 10,
+    "question": "Vì sao game bắn súng online thường ưu tiên dùng UDP thay vì TCP dù có thể mất một vài gói tin?",
+    "optionA": "Vì UDP luôn đảm bảo gói tin đến đúng thứ tự tốt hơn TCP trong mọi điều kiện mạng",
+    "optionB": "Vì độ trễ thấp quan trọng hơn độ tin cậy tuyệt đối, cơ chế bắt tay và ACK của TCP sẽ làm tăng độ trễ đáng kể",
+    "optionC": "Vì TCP không hỗ trợ truyền dữ liệu thời gian thực dưới bất kỳ hình thức nào",
+    "optionD": "Vì UDP có cơ chế mã hóa mạnh hơn giúp bảo mật dữ liệu người chơi tốt hơn",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 11,
+    "question": "Trong bảng định tuyến, thành phần nào cho biết địa chỉ router kế tiếp cần gửi gói tin tới để tới được mạng đích?",
+    "optionA": "Subnet mask, chỉ ra ranh giới giữa phần network và phần host của địa chỉ đích",
+    "optionB": "Administrative Distance, chỉ ra độ tin cậy tương đối giữa các nguồn route khác nhau",
+    "optionC": "Next-hop, chỉ ra địa chỉ IP của router kế tiếp trên đường đi tới mạng đích tương ứng",
+    "optionD": "Metric, chỉ ra chi phí tương đối của đường đi được chọn theo giao thức định tuyến đang dùng",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 12,
+    "question": "Floating Static Route được cấu hình với đặc điểm gì để đóng vai trò route dự phòng?",
+    "optionA": "Không cần cấu hình AD riêng vì route dự phòng luôn tự động có AD bằng 0 mặc định",
+    "optionB": "Được cấu hình với Administrative Distance cao hơn route chính nên chỉ được dùng khi route chính bị mất",
+    "optionC": "Chỉ hoạt động được khi route chính và route dự phòng có cùng giá trị AD như nhau",
+    "optionD": "Được cấu hình với Administrative Distance thấp hơn route chính nên luôn được ưu tiên sử dụng trước",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 13,
+    "question": "Vấn đề gì phát sinh nếu toàn bộ PC trong một subnet chỉ trỏ default gateway về đúng một router duy nhất?",
+    "optionA": "Khi router đó gặp sự cố, toàn bộ subnet sẽ mất kết nối ra ngoài dù các đường khác trong mạng vẫn hoạt động bình thường",
+    "optionB": "Router đó sẽ tự động nhân bản thành nhiều router ảo để tránh gây ra sự cố mất kết nối",
+    "optionC": "Toàn bộ mạng sẽ tự động chuyển sang dùng địa chỉ IPv6 thay vì IPv4 khi router gặp sự cố",
+    "optionD": "Không có vấn đề gì xảy ra vì switch sẽ tự động đảm nhiệm luôn vai trò định tuyến thay thế",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 14,
+    "question": "Vì sao nhiều thiết bị IoT trong nhà thường ưu tiên kết nối băng tần 2.4GHz thay vì 5GHz?",
+    "optionA": "Vì thiết bị IoT không thể hoạt động được trên băng tần 5GHz dưới bất kỳ điều kiện nào",
+    "optionB": "Vì băng tần 5GHz đã bị loại bỏ hoàn toàn khỏi các chuẩn wifi mới nhất hiện nay",
+    "optionC": "Vì 2.4GHz có vùng phủ sóng xa hơn và xuyên tường tốt hơn, phù hợp thiết bị đặt rải rác trong nhà",
+    "optionD": "Vì 2.4GHz luôn có tốc độ truyền dữ liệu cao hơn hẳn so với băng tần 5GHz hiện đại",
+    "correctAnswer": "C",
+    "points": 4
+  },
+  {
+    "id": 15,
+    "question": "Với subnet mask 255.255.255.224 (/27), giá trị increment (block size) giữa các subnet liên tiếp là bao nhiêu?",
+    "optionA": "8, tương ứng với số bit host còn lại sau khi mượn bit để chia subnet",
+    "optionB": "32, vì tính theo công thức 256 trừ đi giá trị octet thay đổi của subnet mask là 224",
+    "optionC": "27, lấy trực tiếp từ số bit mạng của subnet mask theo ký hiệu CIDR đang xét",
+    "optionD": "24, lấy trực tiếp từ số bit mượn được dùng để tạo ra subnet mask tương ứng",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 16,
+    "question": "Điểm khác biệt cốt lõi giữa SLAAC và DHCPv6 khi cấp địa chỉ IPv6 là gì?",
+    "optionA": "DHCPv6 không cần router tham gia trong khi SLAAC bắt buộc phải có DHCP server riêng",
+    "optionB": "SLAAC chỉ hoạt động được với IPv4 còn DHCPv6 là phiên bản nâng cấp dành riêng cho IPv6",
+    "optionC": "Cả hai cơ chế đều giống hệt nhau, chỉ khác tên gọi giữa các hãng thiết bị mạng",
+    "optionD": "SLAAC để thiết bị tự sinh địa chỉ dựa trên Router Advertisement còn DHCPv6 cấp phát tập trung qua server theo cơ chế Stateful",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 17,
+    "question": "Trong mô hình SOHO (Small Office/Home Office), đặc điểm nổi bật nhất là gì?",
+    "optionA": "Luôn phân tách rõ ba lớp Access, Distribution và Core như doanh nghiệp lớn",
+    "optionB": "Bắt buộc phải có ít nhất hai router dự phòng để đảm bảo độ sẵn sàng",
+    "optionC": "Thường tích hợp router, switch, AP và modem chung vào một thiết bị duy nhất",
+    "optionD": "Không bao giờ sử dụng địa chỉ IP riêng (private) cho thiết bị nội bộ",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 18,
+    "question": "Một doanh nghiệp có số lượng VLAN lớn và traffic liên VLAN rất cao, phương án Inter-VLAN Routing nào sẽ phù hợp hơn về mặt hiệu năng?",
+    "optionA": "Cả hai phương án đều có hiệu năng hoàn toàn giống nhau bất kể lưu lượng traffic liên VLAN",
+    "optionB": "Router-on-a-stick, vì cổng vật lý duy nhất luôn xử lý traffic lớn tốt hơn nhiều SVI song song",
+    "optionC": "Không phương án nào phù hợp, doanh nghiệp bắt buộc phải dùng riêng một router cho mỗi VLAN",
+    "optionD": "Layer 3 Switch dùng SVI, vì routing bằng phần cứng ASIC xử lý được lưu lượng lớn hiệu quả hơn Router-on-a-stick",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 19,
+    "question": "Vì sao PC chỉ cần trỏ default gateway về Virtual IP của nhóm HSRP mà không cần biết router vật lý nào đang Active?",
+    "optionA": "Vì Virtual IP chỉ tồn tại tạm thời và sẽ bị xóa ngay sau khi router Active phục hồi",
+    "optionB": "Vì HSRP yêu cầu PC phải đổi địa chỉ gateway thủ công ngay khi router Active gặp sự cố",
+    "optionC": "Vì Virtual IP và Virtual MAC luôn cố định trong nhóm, PC không cần quan tâm router vật lý nào đang xử lý phía sau",
+    "optionD": "Vì PC luôn tự động dò tìm lại địa chỉ router mới mỗi khi có sự cố xảy ra trong mạng",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 20,
+    "question": "Vì sao mô hình Enterprise (802.1X) phù hợp với môi trường doanh nghiệp hơn PSK?",
+    "optionA": "Vì PSK có tốc độ xác thực nhanh hơn nên không phù hợp với số lượng người dùng lớn",
+    "optionB": "Vì Enterprise không yêu cầu bất kỳ hình thức xác thực nào khi kết nối vào mạng wifi",
+    "optionC": "Vì Enterprise chỉ hoạt động được trên băng tần 2.4GHz phù hợp văn phòng nhỏ",
+    "optionD": "Vì mỗi người dùng xác thực riêng qua RADIUS server nên có thể truy vết được từng cá nhân cụ thể",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 21,
+    "question": "Route Summarization (Supernetting) được thực hiện nhằm mục đích gì trong bảng định tuyến?",
+    "optionA": "Thay thế hoàn toàn subnet mask bằng địa chỉ MAC trong quá trình định tuyến gói tin",
+    "optionB": "Chia nhỏ một subnet lớn thành nhiều subnet con để tăng số lượng route cần quản lý",
+    "optionC": "Mã hóa toàn bộ địa chỉ IP trong routing table nhằm tăng cường tính bảo mật dữ liệu",
+    "optionD": "Gộp nhiều subnet nhỏ liền kề thành một route lớn hơn để giảm số dòng trong routing table",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 22,
+    "question": "Trường FCS (Frame Check Sequence) trong khung Ethernet II nằm ở vị trí nào và có chức năng gì?",
+    "optionA": "Không tồn tại trong Ethernet II mà chỉ có ở chuẩn Ethernet cũ hơn",
+    "optionB": "Nằm ở phần trailer cuối khung, dùng CRC để kiểm tra lỗi và loại bỏ frame sai",
+    "optionC": "Nằm ở phần đầu khung, dùng để xác định địa chỉ MAC nguồn của thiết bị gửi",
+    "optionD": "Nằm giữa khung, dùng để mã hóa toàn bộ nội dung payload trước khi gửi đi",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 23,
+    "question": "PC ở VLAN 10 muốn giao tiếp với PC ở VLAN 20, điều kiện bắt buộc để hai PC này nói chuyện được là gì?",
+    "optionA": "Không cần điều kiện gì đặc biệt vì VLAN chỉ ảnh hưởng tới tốc độ chứ không ảnh hưởng kết nối",
+    "optionB": "Phải đi qua một thiết bị Layer 3 để định tuyến giữa hai broadcast domain khác nhau này",
+    "optionC": "Phải đổi cả hai PC sang chung một VLAN duy nhất thì mới có thể giao tiếp được",
+    "optionD": "Chỉ cần cùng kết nối vào một switch Layer 2 duy nhất là đủ để giao tiếp bình thường",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 24,
+    "question": "Sự khác biệt giữa Access port và Trunk port trên switch là gì?",
+    "optionA": "Access port chỉ thuộc một VLAN duy nhất còn Trunk port cho phép nhiều VLAN cùng đi qua một link",
+    "optionB": "Cả hai loại cổng đều hoạt động giống hệt nhau, chỉ khác tên gọi theo từng hãng sản xuất",
+    "optionC": "Access port cho phép nhiều VLAN đi qua còn Trunk port chỉ thuộc đúng một VLAN cố định",
+    "optionD": "Trunk port chỉ dùng để nối trực tiếp với PC còn Access port dùng để nối switch với switch",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 25,
+    "question": "Khi router nhận một gói tin, router tra bảng định tuyến theo nguyên tắc nào để chọn route phù hợp?",
+    "optionA": "Router chọn ngẫu nhiên một route bất kỳ trong số các route khớp với địa chỉ đích",
+    "optionB": "Longest prefix match, ưu tiên route có subnet mask dài nhất khớp với địa chỉ IP đích",
+    "optionC": "Route có Administrative Distance cao nhất luôn được ưu tiên chọn để forward gói tin",
+    "optionD": "Route được cấu hình đầu tiên trong bảng luôn được ưu tiên chọn bất kể subnet mask",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 26,
+    "question": "Chuẩn 802.11ac (Wi-Fi 5) hoạt động trên băng tần nào và có đặc điểm tốc độ ra sao?",
+    "optionA": "Hoạt động đồng thời trên cả 2.4GHz và 5GHz với tốc độ tối đa 600Mbps",
+    "optionB": "Chỉ hoạt động trên băng tần 5GHz và đạt tốc độ truyền dữ liệu ở mức hàng Gbps",
+    "optionC": "Chỉ hoạt động trên băng tần 60GHz và có vùng phủ sóng xa hơn hẳn các chuẩn khác",
+    "optionD": "Chỉ hoạt động trên băng tần 2.4GHz và đạt tốc độ tối đa khoảng 54Mbps",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 27,
+    "question": "Một văn phòng nhỏ chỉ có một AP duy nhất, kiến trúc AP nào sẽ phù hợp và tiết kiệm chi phí hơn?",
+    "optionA": "Lightweight AP kết hợp WLC, vì luôn tiết kiệm chi phí hơn bất kể quy mô mạng",
+    "optionB": "Cả hai kiến trúc đều có chi phí triển khai hoàn toàn giống nhau trong mọi trường hợp",
+    "optionC": "Autonomous AP, vì không cần đầu tư thêm WLC trung tâm cho một số lượng AP rất ít",
+    "optionD": "Không kiến trúc nào phù hợp vì văn phòng nhỏ luôn cần tối thiểu hai AP để hoạt động",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 28,
+    "question": "Collision domain và Broadcast domain khác nhau như thế nào trên một switch nhiều cổng?",
+    "optionA": "Cả hai khái niệm hoàn toàn giống nhau và luôn bị giới hạn bởi router duy nhất",
+    "optionB": "Collision domain chỉ tồn tại khi dùng cáp quang, không tồn tại với cáp đồng UTP",
+    "optionC": "Broadcast domain nhỏ hơn collision domain trên mọi loại switch không có ngoại lệ",
+    "optionD": "Mỗi cổng switch là một collision domain riêng, trong khi broadcast domain vẫn lan toàn bộ switch trừ khi có VLAN",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 29,
+    "question": "Chuẩn 802.11ax (Wi-Fi 6) cải thiện điều gì đáng chú ý so với các chuẩn trước?",
+    "optionA": "Không hỗ trợ đồng thời nhiều thiết bị kết nối, chỉ phù hợp mạng gia đình rất nhỏ",
+    "optionB": "Hiệu năng cao hơn khi có nhiều thiết bị cùng kết nối đồng thời trên cả hai băng tần",
+    "optionC": "Chỉ hoạt động trên băng tần 2.4GHz và bỏ hoàn toàn hỗ trợ băng tần 5GHz",
+    "optionD": "Giảm đáng kể vùng phủ sóng so với 802.11ac nhằm tăng tính bảo mật cho mạng",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 30,
+    "question": "EtherChannel mang lại lợi ích gì khi gộp nhiều liên kết vật lý thành một logical link?",
+    "optionA": "Vừa tăng tổng băng thông vừa tạo dự phòng, đồng thời STP xem đó là một link duy nhất nên không bị block",
+    "optionB": "Làm giảm băng thông tổng thể vì phải chia sẻ tài nguyên xử lý giữa nhiều liên kết vật lý",
+    "optionC": "Chỉ giúp tăng băng thông nhưng hoàn toàn không có khả năng dự phòng khi một liên kết bị đứt",
+    "optionD": "Thay thế hoàn toàn nhu cầu sử dụng giao thức STP trên toàn bộ hệ thống mạng",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 31,
+    "question": "Trong nhóm GLBP, vai trò AVG (Active Virtual Gateway) đảm nhiệm chức năng gì?",
+    "optionA": "Chỉ đóng vai trò dự phòng thụ động, không tham gia bất kỳ hoạt động cân bằng tải nào",
+    "optionB": "Chịu trách nhiệm phân phối địa chỉ Virtual MAC cho các router AVF nhằm cân bằng tải giữa chúng",
+    "optionC": "Thay thế hoàn toàn vai trò của Virtual IP trong toàn bộ nhóm GLBP đang cấu hình",
+    "optionD": "Chỉ được kích hoạt khi toàn bộ router AVF trong nhóm đều gặp sự cố đồng thời",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 32,
+    "question": "Trong một nhóm VRRP, thiết bị đóng vai trò tương đương với Active của HSRP được gọi là gì?",
+    "optionA": "Standby, chịu trách nhiệm xử lý traffic thực tế trong khi router còn lại đóng vai Master",
+    "optionB": "Follower, chịu trách nhiệm xử lý traffic thực tế trong khi Leader đóng vai dự phòng",
+    "optionC": "Master, chịu trách nhiệm xử lý traffic thực tế trong khi các router còn lại đóng vai Backup",
+    "optionD": "Client, chịu trách nhiệm xử lý traffic thực tế trong khi Server đóng vai dự phòng",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 33,
+    "question": "Một mạng dùng static route nhưng quên cấu hình route chiều ngược lại trên router đích, hiện tượng gì sẽ xảy ra khi test ping?",
+    "optionA": "Toàn bộ mạng sẽ ngừng hoạt động hoàn toàn cho tới khi cấu hình lại từ đầu",
+    "optionB": "Ping vẫn thành công hoàn toàn bình thường vì router tự động học được route chiều ngược lại",
+    "optionC": "Gói tin ping gửi đi tới được đích nhưng gói phản hồi không tìm được đường quay lại nên ping thất bại",
+    "optionD": "Router nguồn sẽ báo lỗi ngay lập tức và từ chối gửi gói tin ping đi từ đầu",
+    "correctAnswer": "C",
+    "points": 4
+  },
+  {
+    "id": 34,
+    "question": "Khi switch nhận một frame có địa chỉ MAC đích chưa từng xuất hiện trong bảng CAM, switch sẽ xử lý ra sao?",
+    "optionA": "Giữ nguyên frame trong bộ nhớ đệm cho tới khi địa chỉ đích xuất hiện trong bảng",
+    "optionB": "Gửi yêu cầu ARP tới router để hỏi địa chỉ MAC tương ứng cần chuyển tới",
+    "optionC": "Flood frame đó ra toàn bộ cổng còn lại trừ cổng vừa nhận vào, gọi là unknown unicast flooding",
+    "optionD": "Loại bỏ ngay lập tức frame đó vì địa chỉ đích không hợp lệ trên toàn hệ thống",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 35,
+    "question": "Một mạng dùng subnet mask 255.255.255.192, số lượng host khả dụng tối đa trên mỗi subnet là bao nhiêu?",
+    "optionA": "62 host khả dụng, vì còn lại 6 bit host nên tính theo công thức hai lũy thừa sáu trừ hai",
+    "optionB": "64 host khả dụng, tính trực tiếp bằng giá trị increment của subnet mask đang dùng",
+    "optionC": "30 host khả dụng, tương ứng với subnet mask 255.255.255.224 chứ không phải .192",
+    "optionD": "126 host khả dụng, tương ứng với subnet mask 255.255.255.128 dùng bảy bit host",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 36,
+    "question": "VRRP (Virtual Router Redundancy Protocol) khác HSRP ở điểm nào?",
+    "optionA": "Cả hai giao thức hoàn toàn giống nhau và có thể thay thế nhau ở mọi tình huống",
+    "optionB": "VRRP chỉ hỗ trợ IPv6 trong khi HSRP chỉ hỗ trợ IPv4 truyền thống",
+    "optionC": "VRRP là chuẩn mở tương thích đa hãng trong khi HSRP là giao thức độc quyền của Cisco",
+    "optionD": "VRRP là giao thức độc quyền của Cisco trong khi HSRP là chuẩn mở tương thích đa hãng",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 37,
+    "question": "Trong nhóm FHRP, yếu tố nào quyết định router nào sẽ đóng vai trò Active?",
+    "optionA": "Priority được cấu hình cao hơn sẽ ưu tiên trở thành Active, nếu bằng nhau thì xét tiếp địa chỉ IP cao hơn",
+    "optionB": "Router nào khởi động chậm nhất trong nhóm sẽ luôn được chọn làm Active mặc định",
+    "optionC": "Vai trò Active hoàn toàn được chọn ngẫu nhiên và không dựa trên bất kỳ thông số cấu hình nào",
+    "optionD": "Router có ít cổng vật lý đang hoạt động nhất sẽ tự động được chọn làm Active",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 38,
+    "question": "Trong mô hình phân cấp ba lớp (Three-Tier Hierarchical Model), lớp Distribution đảm nhiệm vai trò gì?",
+    "optionA": "Chỉ chuyển tiếp traffic tốc độ cao nhất, tuyệt đối không xử lý bất kỳ policy nào",
+    "optionB": "Thay thế hoàn toàn vai trò của Core Layer trong mọi mô hình mạng doanh nghiệp",
+    "optionC": "Là nơi duy nhất end device kết nối trực tiếp và cấu hình Port Security",
+    "optionD": "Tổng hợp traffic từ Access, thực hiện routing giữa VLAN, áp dụng ACL và chính sách QoS",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 39,
+    "question": "Một nhóm HSRP gồm ba router phục vụ cùng một subnet quan trọng, mục tiêu chính khi triển khai là gì?",
+    "optionA": "Thay thế hoàn toàn nhu cầu dùng OSPF hoặc bất kỳ giao thức định tuyến động nào khác",
+    "optionB": "Loại bỏ single point of failure ở default gateway, đảm bảo subnet vẫn có đường ra ngoài dù một router bị lỗi",
+    "optionC": "Giảm số lượng VLAN cần cấu hình trên switch bằng cách gộp chung nhiều subnet lại",
+    "optionD": "Tăng số lượng địa chỉ IP khả dụng cho subnet đó bằng cách gộp thêm dải IP mới",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 40,
+    "question": "Điểm khác biệt nổi bật của GLBP so với HSRP và VRRP là gì?",
+    "optionA": "GLBP cho phép nhiều router cùng active xử lý traffic song song nhằm cân bằng tải, thay vì chỉ một router Active duy nhất",
+    "optionB": "GLBP không hề có cơ chế dự phòng, chỉ đơn thuần cân bằng tải giữa các router",
+    "optionC": "GLBP yêu cầu toàn bộ router trong nhóm phải cùng một hãng sản xuất phần cứng khác biệt",
+    "optionD": "GLBP chỉ hỗ trợ tối đa hai router trong một nhóm, ít hơn nhiều so với HSRP và VRRP",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 41,
+    "question": "Vì sao AD (Administrative Distance) được dùng để so sánh độ tin cậy giữa các nguồn route khác nhau?",
+    "optionA": "Vì AD chỉ có ý nghĩa với router Cisco, không áp dụng được cho thiết bị hãng khác",
+    "optionB": "Vì AD dùng để tính toán chi phí băng thông của từng đường đi trong mạng OSPF",
+    "optionC": "Vì khi có nhiều nguồn cùng quảng bá một route tới cùng một đích, router cần một tiêu chí để chọn nguồn đáng tin cậy nhất",
+    "optionD": "Vì AD thay thế hoàn toàn vai trò của subnet mask khi so sánh các route trong bảng định tuyến",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 42,
+    "question": "SSID trong mạng không dây có vai trò gì?",
+    "optionA": "Là tên mạng wifi được phát ra để thiết bị người dùng nhận diện và kết nối tới",
+    "optionB": "Là mật khẩu bảo mật dùng để mã hóa toàn bộ traffic không dây giữa các thiết bị",
+    "optionC": "Là địa chỉ MAC riêng của Access Point dùng để định danh duy nhất trong mạng",
+    "optionD": "Là giao thức xác thực trung tâm dùng thay thế hoàn toàn cho RADIUS server",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 43,
+    "question": "Quy tắc rút gọn địa chỉ IPv6 cho phép làm gì khi viết địa chỉ?",
+    "optionA": "Bỏ số 0 đứng đầu mỗi nhóm và thay một dãy nhóm toàn số 0 liên tiếp bằng dấu hai hai chấm một lần duy nhất",
+    "optionB": "Chuyển đổi toàn bộ địa chỉ 128-bit thành dạng thập phân giống hệt cách viết của IPv4",
+    "optionC": "Bỏ toàn bộ số 0 ở bất kỳ vị trí nào trong địa chỉ và có thể dùng dấu hai hai chấm nhiều lần tuỳ ý",
+    "optionD": "Chỉ được rút gọn nếu địa chỉ đó thuộc loại Link-Local, không áp dụng cho các loại khác",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 44,
+    "question": "Một router có ba route tới cùng một đích: Static route AD 1, OSPF AD 110, và Directly Connected AD 0, router sẽ ưu tiên dùng route nào?",
+    "optionA": "Directly Connected, vì có Administrative Distance thấp nhất trong ba loại route đang xét",
+    "optionB": "Static route, vì được cấu hình thủ công nên luôn đáng tin cậy hơn các loại route tự động khác",
+    "optionC": "OSPF, vì đây là giao thức định tuyến động nên luôn được ưu tiên hơn route tĩnh",
+    "optionD": "Router sẽ dùng đồng thời cả ba route cùng lúc để cân bằng tải traffic ra ngoài",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 45,
+    "question": "Thứ tự chuyển đổi đúng của các trạng thái cổng trong STP là gì?",
+    "optionA": "Learning, Blocking, Forwarding, rồi cuối cùng quay lại Listening để chờ bầu chọn lại",
+    "optionB": "Listening và Learning diễn ra đồng thời song song trước khi vào trạng thái Blocking",
+    "optionC": "Blocking, Listening, Learning, rồi cuối cùng chuyển sang Forwarding để truyền traffic bình thường",
+    "optionD": "Forwarding luôn là trạng thái đầu tiên trước khi chuyển dần về Blocking khi có lỗi",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 46,
+    "question": "Một công ty có ba router kết nối theo dạng chuỗi, để toàn bộ mạng ping được nhau bằng static route, cần lưu ý điều gì?",
+    "optionA": "Chỉ cần cấu hình static route một chiều duy nhất là đủ để toàn bộ mạng thông suốt hai chiều",
+    "optionB": "Phải cấu hình static route đầy đủ hai chiều trên từng router để đảm bảo gói tin đi và về đúng đường",
+    "optionC": "Chỉ router đầu tiên trong chuỗi cần cấu hình static route, các router còn lại tự động đồng bộ theo",
+    "optionD": "Router ở giữa không cần cấu hình bất kỳ static route nào vì đã tự động học được đường đi",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 47,
+    "question": "Tại sao STP không coi các liên kết trong một EtherChannel là nhiều đường đi riêng biệt cần chặn bớt?",
+    "optionA": "Vì EtherChannel gộp nhiều link vật lý thành một logical link duy nhất nên STP chỉ nhìn thấy một đường đi cần xử lý",
+    "optionB": "Vì các cổng trong EtherChannel luôn được đặt ở chế độ Blocking cố định vĩnh viễn không đổi",
+    "optionC": "Vì EtherChannel chỉ hoạt động khi đã tắt hoàn toàn giao thức STP trên toàn bộ switch",
+    "optionD": "Vì STP mặc định bỏ qua hoàn toàn mọi cổng đang tham gia EtherChannel mà không xử lý gì cả",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 48,
+    "question": "Router-on-a-stick sử dụng cấu trúc nào trên router để định tuyến giữa nhiều VLAN qua một cổng vật lý duy nhất?",
+    "optionA": "Subinterface, mỗi subinterface gắn với một VLAN qua trunk và đóng vai trò default gateway riêng",
+    "optionB": "SVI (Switched Virtual Interface), được tạo trực tiếp trên router thay vì trên switch Layer 3",
+    "optionC": "Loopback interface, dùng để mô phỏng nhiều VLAN ảo trên cùng một cổng vật lý duy nhất",
+    "optionD": "Port-channel, gộp nhiều cổng vật lý thành một liên kết logic để phục vụ nhiều VLAN",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 49,
+    "question": "Vì sao doanh nghiệp thường ưu tiên GLBP hơn HSRP khi cần tận dụng tối đa băng thông của nhiều router gateway?",
+    "optionA": "Vì GLBP yêu cầu cấu hình phức tạp hơn nên phù hợp với mạng gia đình quy mô nhỏ",
+    "optionB": "Vì GLBP chỉ hoạt động được khi mạng không có bất kỳ router dự phòng nào khác",
+    "optionC": "Vì GLBP có tốc độ failover chậm hơn nên phù hợp với mạng ít yêu cầu về độ ổn định",
+    "optionD": "Vì GLBP cho phép nhiều router cùng xử lý traffic song song thay vì để router Standby nhàn rỗi chờ sẵn như HSRP",
+    "correctAnswer": "D",
+    "points": 4
+  },
+  {
+    "id": 50,
+    "question": "WPA3 cải tiến gì so với WPA2 trong bảo mật mạng không dây?",
+    "optionA": "Loại bỏ hoàn toàn nhu cầu dùng mật khẩu khi kết nối vào mạng wifi bất kỳ",
+    "optionB": "Chỉ hoạt động được trên băng tần 2.4GHz, không tương thích với băng tần 5GHz",
+    "optionC": "Giảm tốc độ truyền dữ liệu để đổi lấy mức độ bảo mật cao hơn đáng kể",
+    "optionD": "Chống tấn công brute-force tốt hơn nhờ cơ chế xác thực được cải tiến so với WPA2",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 51,
+    "question": "Chuẩn 802.11n (Wi-Fi 4) có điểm khác biệt gì so với các chuẩn 802.11a/b/g trước đó?",
+    "optionA": "Có tốc độ thấp hơn 802.11a vì chỉ tập trung tăng vùng phủ sóng thay vì tốc độ",
+    "optionB": "Hỗ trợ đồng thời cả hai băng tần 2.4GHz và 5GHz, đạt tốc độ tối đa cao hơn hẳn các chuẩn cũ",
+    "optionC": "Chỉ hoạt động trên băng tần 2.4GHz giống hệt chuẩn 802.11b trước đó không có cải tiến",
+    "optionD": "Không tương thích ngược với bất kỳ thiết bị wifi đời cũ nào đã triển khai trước đó",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 52,
+    "question": "Kiến trúc Lightweight AP kết hợp WLC (Wireless LAN Controller) mang lại lợi ích gì cho mạng lớn?",
+    "optionA": "Toàn bộ cấu hình và quản lý được tập trung tại WLC, giúp quản lý đồng loạt nhiều AP dễ dàng hơn",
+    "optionB": "Loại bỏ hoàn toàn nhu cầu dùng SSID khi triển khai mạng không dây cho doanh nghiệp",
+    "optionC": "Chỉ phù hợp với mạng rất nhỏ có duy nhất một AP hoạt động tại một thời điểm",
+    "optionD": "Mỗi AP phải tự cấu hình độc lập hoàn toàn, không có bất kỳ điểm quản lý tập trung nào",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 53,
+    "question": "Tầng nào trong mô hình OSI chịu trách nhiệm định tuyến (routing) và đánh địa chỉ logic bằng IP?",
+    "optionA": "Tầng Physical (Layer 1), nơi chỉ truyền tín hiệu điện hoặc ánh sáng",
+    "optionB": "Tầng Data Link (Layer 2), nơi switch xử lý địa chỉ MAC nội bộ",
+    "optionC": "Tầng Network (Layer 3), nơi router đọc IP đích để chọn đường đi phù hợp",
+    "optionD": "Tầng Transport (Layer 4), nơi quản lý cổng và phiên truyền dữ liệu",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 54,
+    "question": "Vì sao Rapid-PVST+ hội tụ nhanh hơn đáng kể so với PVST+ truyền thống?",
+    "optionA": "Vì Rapid-PVST+ trao đổi trạng thái trực tiếp giữa các switch thay vì phải chờ hết thời gian timer như PVST+",
+    "optionB": "Vì Rapid-PVST+ không cần bầu Root Bridge nên tiết kiệm được toàn bộ thời gian xử lý ban đầu",
+    "optionC": "Vì PVST+ chạy chung một instance cho tất cả VLAN nên luôn nhanh hơn Rapid-PVST+ khi mạng lớn",
+    "optionD": "Vì Rapid-PVST+ chỉ hoạt động trên EtherChannel chứ không áp dụng cho cổng đơn lẻ",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 55,
+    "question": "Địa chỉ MAC 48-bit được chia thành hai phần theo cấu trúc nào?",
+    "optionA": "Toàn bộ 48-bit đều do người quản trị mạng tự do đặt theo ý muốn riêng",
+    "optionB": "32-bit đầu xác định địa chỉ mạng, 16-bit sau xác định địa chỉ thiết bị cụ thể",
+    "optionC": "16-bit đầu là số hiệu VLAN, 32-bit sau là địa chỉ IP được mã hóa kèm theo",
+    "optionD": "24-bit đầu là mã OUI do IEEE cấp cho hãng sản xuất, 24-bit sau do hãng tự đặt cho thiết bị",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 56,
+    "question": "Lệnh nào dùng để kiểm tra vai trò Active/Standby của các router trong nhóm HSRP trên Cisco IOS?",
+    "optionA": "show standby brief, hiển thị tóm tắt trạng thái các nhóm HSRP đang cấu hình trên router",
+    "optionB": "show vlan brief, hiển thị danh sách VLAN cùng cổng tương ứng trên switch",
+    "optionC": "show ip route, hiển thị bảng định tuyến hiện tại của router đang xét",
+    "optionD": "show spanning-tree, hiển thị trạng thái các cổng trong giao thức chống loop STP",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 57,
+    "question": "Trong quá trình kết thúc kết nối TCP 4-way Termination, bước nào diễn ra đầu tiên?",
+    "optionA": "Cả hai bên đồng thời gửi ACK trước rồi mới lần lượt gửi FIN sau đó",
+    "optionB": "Bên nhận gửi ngay gói RST để reset toàn bộ kết nối một cách đột ngột",
+    "optionC": "Server luôn là bên bắt buộc phải gửi FIN trước Client trong mọi trường hợp",
+    "optionD": "Một bên gửi gói FIN để báo hiệu muốn kết thúc phiên kết nối hiện tại",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 58,
+    "question": "Một AP wifi cấu hình WPA2-PSK cho toàn bộ nhân viên dùng chung một mật khẩu, rủi ro bảo mật chính là gì?",
+    "optionA": "WPA2-PSK không hỗ trợ mã hóa AES nên toàn bộ traffic bị truyền dưới dạng không mã hóa",
+    "optionB": "Mật khẩu PSK sẽ tự động thay đổi liên tục nên không ai truy cập được mạng ổn định",
+    "optionC": "PSK chỉ hoạt động được với băng tần 5GHz nên giới hạn thiết bị có thể kết nối",
+    "optionD": "Không thể truy vết được từng cá nhân cụ thể khi có sự cố, vì mọi người dùng chung một khóa xác thực",
+    "correctAnswer": "D",
+    "points": 4
+  },
+  {
+    "id": 59,
+    "question": "Giữa hai phương án Inter-VLAN Routing, khi nào Router-on-a-stick vẫn là lựa chọn hợp lý dù hiệu năng thấp hơn SVI?",
+    "optionA": "Khi hệ thống đã có sẵn router nhưng chưa đầu tư Layer 3 Switch, và lưu lượng liên VLAN không quá lớn",
+    "optionB": "Khi hệ thống mạng không có VLAN nào cần định tuyến liên thông với nhau cả",
+    "optionC": "Khi doanh nghiệp có ngân sách lớn và ưu tiên tuyệt đối về hiệu năng xử lý cao nhất",
+    "optionD": "Khi lưu lượng liên VLAN cực kỳ lớn và cần xử lý bằng phần cứng ASIC tốc độ cao",
+    "correctAnswer": "A",
+    "points": 4
+  },
+  {
+    "id": 60,
+    "question": "Trên router thực hiện Router-on-a-stick, lệnh nào dùng để gắn một subinterface với đúng VLAN tương ứng?",
+    "optionA": "switchport access vlan [vlan-id], lệnh dùng để gán cổng access trên switch vào đúng VLAN",
+    "optionB": "encapsulation dot1Q [vlan-id], khai báo subinterface đó xử lý traffic đã gắn thẻ của VLAN nào",
+    "optionC": "channel-group [số] mode active, lệnh dùng để gộp nhiều cổng vật lý thành EtherChannel",
+    "optionD": "ip helper-address [ip], lệnh dùng để relay yêu cầu DHCP sang một server ở subnet khác",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 61,
+    "question": "Khi cấu hình static route bằng exit interface thay vì next-hop IP trên một liên kết point-to-point, điều gì có thể xảy ra?",
+    "optionA": "Không có sự khác biệt nào giữa việc dùng exit interface và next-hop IP trong mọi loại liên kết",
+    "optionB": "Route được cấu hình theo cách này sẽ luôn có Administrative Distance cao hơn cách dùng next-hop IP",
+    "optionC": "Router sẽ luôn báo lỗi cấu hình sai cú pháp và không thể lưu lại route đó được",
+    "optionD": "Router vẫn hoạt động bình thường trên liên kết point-to-point nhưng cách này không phù hợp với liên kết multi-access",
+    "correctAnswer": "D",
+    "points": 4
+  },
+  {
+    "id": 62,
+    "question": "Nguyên tắc Peer-to-peer Communication trong mô hình OSI có ý nghĩa gì?",
+    "optionA": "Hai máy tính chỉ có thể giao tiếp trực tiếp khi cùng chạy hệ điều hành giống hệt nhau",
+    "optionB": "Peer-to-peer chỉ áp dụng cho tầng Physical, các tầng còn lại giao tiếp tuỳ ý không theo quy tắc",
+    "optionC": "Mọi gói tin bắt buộc phải đi qua Application layer của thiết bị trung gian như switch hay router",
+    "optionD": "Mỗi tầng trên máy gửi chỉ giao tiếp logic với đúng tầng tương ứng trên máy nhận, dù dữ liệu đi qua nhiều tầng vật lý trung gian",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 63,
+    "question": "Trong quá trình bầu chọn Root Bridge của STP, switch nào sẽ thắng và trở thành Root Bridge?",
+    "optionA": "Switch có địa chỉ MAC lớn nhất bất kể giá trị Priority được cấu hình là bao nhiêu",
+    "optionB": "Switch được cắm điện và khởi động sớm nhất trong toàn bộ hệ thống mạng",
+    "optionC": "Switch có Bridge ID (gồm Priority và MAC address) nhỏ nhất trong toàn bộ mạng",
+    "optionD": "Switch có nhiều cổng vật lý đang hoạt động nhất tại thời điểm bầu chọn",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 64,
+    "question": "Giữa hai loại route Directly Connected và Static route, loại nào có Administrative Distance thấp hơn và được ưu tiên hơn?",
+    "optionA": "Cả hai loại route đều có cùng giá trị Administrative Distance bằng nhau tuyệt đối",
+    "optionB": "Directly Connected không có khái niệm Administrative Distance nên không thể so sánh được",
+    "optionC": "Directly Connected có AD bằng 0, thấp hơn Static route có AD bằng 1 nên luôn được ưu tiên hơn",
+    "optionD": "Static route có AD bằng 0, thấp hơn Directly Connected có AD bằng 1 nên được ưu tiên hơn",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 65,
+    "question": "So với Router-on-a-stick, vì sao Layer 3 Switch dùng SVI thường có hiệu năng cao hơn khi định tuyến liên VLAN?",
+    "optionA": "Vì Layer 3 Switch không cần cấu hình VLAN nào cả nên xử lý nhanh hơn đáng kể",
+    "optionB": "Vì SVI không cần địa chỉ IP riêng cho từng VLAN nên tiết kiệm được thời gian xử lý",
+    "optionC": "Vì SVI thực hiện routing bằng phần cứng ASIC ngay trên switch thay vì phải gửi qua một cổng vật lý duy nhất như router",
+    "optionD": "Vì Router-on-a-stick luôn dùng cổng tốc độ chậm hơn hẳn so với cổng trên Layer 3 Switch",
+    "correctAnswer": "C",
+    "points": 4
+  },
+  {
+    "id": 66,
+    "question": "Trong bảng so sánh Administrative Distance, OSPF có giá trị AD mặc định là bao nhiêu và so với Static route thì sao?",
+    "optionA": "OSPF có AD bằng 120, giống hệt với giá trị AD mặc định của giao thức RIP truyền thống",
+    "optionB": "OSPF không có khái niệm Administrative Distance vì đây là giao thức link-state hiện đại",
+    "optionC": "OSPF có AD bằng 110, cao hơn Static route nên Static route sẽ được ưu tiên nếu cả hai cùng học được một route",
+    "optionD": "OSPF có AD bằng 1, thấp hơn Static route nên OSPF sẽ luôn được ưu tiên hơn trong mọi trường hợp",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 67,
+    "question": "Administrative Distance (AD) của Static route mặc định là bao nhiêu?",
+    "optionA": "110, giống hệt với giá trị AD mặc định của giao thức định tuyến động OSPF",
+    "optionB": "1, thấp hơn OSPF nhưng cao hơn route Directly Connected có AD bằng 0",
+    "optionC": "120, giống hệt với giá trị AD mặc định của giao thức định tuyến RIP truyền thống",
+    "optionD": "0, giá trị thấp nhất và luôn được ưu tiên tuyệt đối so với mọi loại route khác",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 68,
+    "question": "Autonomous AP khác Lightweight AP như thế nào về cách vận hành?",
+    "optionA": "Autonomous AP hoạt động độc lập với cấu hình riêng từng cái, còn Lightweight AP phụ thuộc vào WLC trung tâm",
+    "optionB": "Lightweight AP hoạt động độc lập với cấu hình riêng từng cái, còn Autonomous AP phụ thuộc vào WLC",
+    "optionC": "Autonomous AP chỉ dùng được cho mạng doanh nghiệp lớn có hàng trăm AP triển khai",
+    "optionD": "Cả hai loại AP đều bắt buộc phải kết nối với WLC mới có thể phát sóng wifi bình thường",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 69,
+    "question": "Khi router Active trong nhóm HSRP gặp sự cố, điều gì diễn ra tiếp theo?",
+    "optionA": "PC trong subnet phải đổi địa chỉ default gateway sang IP vật lý của router Standby ngay lập tức",
+    "optionB": "Toàn bộ nhóm HSRP sẽ ngừng hoạt động cho tới khi quản trị viên can thiệp cấu hình lại thủ công",
+    "optionC": "Router Standby sẽ giữ nguyên vai trò chờ và không xử lý bất kỳ traffic nào cho tới khi được cấu hình lại",
+    "optionD": "Router Standby tự động chuyển lên đóng vai Active để tiếp quản traffic trong vòng vài giây",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 70,
+    "question": "Vì sao cần phân biệt cáp thẳng (Straight-through) và cáp chéo (Crossover) khi đấu nối thiết bị mạng?",
+    "optionA": "Vì cáp thẳng bắt buộc dùng cho mọi kết nối kể cả Switch nối Switch",
+    "optionB": "Vì cáp thẳng nối hai thiết bị khác loại còn cáp chéo nối hai thiết bị cùng loại theo chuẩn cũ",
+    "optionC": "Vì cáp chéo chỉ dùng được cho kết nối cáp quang tốc độ rất cao",
+    "optionD": "Vì cả hai loại cáp hoàn toàn giống nhau, chỉ khác tên gọi thương mại",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 71,
+    "question": "Dải địa chỉ nào sau đây thuộc nhóm Private IP theo RFC 1918?",
+    "optionA": "172.16.0.0 đến 172.31.255.255, tương ứng khối /12 dành riêng cho mạng nội bộ",
+    "optionB": "224.0.0.0 đến 239.255.255.255, dải này dùng cho mạng nội bộ private diện rộng",
+    "optionC": "172.32.0.0 đến 172.63.255.255, khối này cũng được xem là dải private hợp lệ",
+    "optionD": "11.0.0.0 đến 11.255.255.255, đây là khối /8 private thứ hai theo chuẩn RFC",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 72,
+    "question": "So với băng tần 2.4GHz, băng tần 5GHz có đặc điểm gì khác biệt?",
+    "optionA": "Cả hai băng tần hoàn toàn giống nhau về tốc độ, vùng phủ và mức độ nhiễu tín hiệu",
+    "optionB": "Chỉ được hỗ trợ bởi các thiết bị wifi đời rất cũ, không còn phổ biến hiện nay",
+    "optionC": "Vùng phủ sóng xa hơn nhưng tốc độ truyền lại thấp hơn đáng kể so với 2.4GHz",
+    "optionD": "Tốc độ truyền cao hơn nhưng vùng phủ sóng ngắn hơn và ít bị nhiễu từ thiết bị khác hơn",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 73,
+    "question": "Cú pháp cấu hình Static route trên router Cisco IOS đúng là dạng nào sau đây?",
+    "optionA": "ip static-route [next-hop IP] [network đích] [subnet mask] enable",
+    "optionB": "ip route [network đích] [subnet mask] [next-hop IP hoặc exit interface]",
+    "optionC": "router static [network đích] area [next-hop IP] [subnet mask]",
+    "optionD": "route add [subnet mask] [network đích] via [next-hop IP] permanent",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 74,
+    "question": "Trong VTP (VLAN Trunking Protocol), chế độ nào cho phép switch tạo, sửa, xóa VLAN rồi gửi thông tin cho switch khác?",
+    "optionA": "Client mode, chế độ chỉ nhận thông tin VLAN từ switch khác mà không tự tạo được",
+    "optionB": "Passive mode, chế độ chỉ lắng nghe thông tin VLAN nhưng không xử lý gì thêm",
+    "optionC": "Server mode, chế độ có toàn quyền quản lý VLAN và phân phối thông tin trong domain",
+    "optionD": "Transparent mode, chế độ chỉ chuyển tiếp thông tin VTP mà không tham gia đồng bộ",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 75,
+    "question": "HSRP (Hot Standby Router Protocol) hoạt động dựa trên nguyên lý nào?",
+    "optionA": "Mỗi PC trong subnet phải tự cấu hình thủ công địa chỉ router nào đang hoạt động tại từng thời điểm",
+    "optionB": "Tất cả router trong nhóm cùng xử lý traffic đồng thời mà không phân biệt vai trò Active hay Standby",
+    "optionC": "Nhiều router chia sẻ một Virtual IP và Virtual MAC chung, một router đóng vai Active còn lại đóng vai Standby chờ sẵn",
+    "optionD": "Chỉ một router duy nhất tồn tại trong nhóm, không có khái niệm dự phòng hay chờ sẵn",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 76,
+    "question": "VLAN được tạo ra chủ yếu nhằm mục đích gì trên một switch vật lý?",
+    "optionA": "Mã hóa toàn bộ dữ liệu truyền qua switch nhằm chống nghe lén trên đường truyền",
+    "optionB": "Tăng tốc độ xử lý phần cứng của switch bằng cách gộp nhiều cổng vật lý lại với nhau",
+    "optionC": "Thay thế hoàn toàn vai trò định tuyến của router giữa các mạng khác nhau",
+    "optionD": "Chia một switch vật lý thành nhiều broadcast domain logic riêng biệt để tăng bảo mật và giảm traffic",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 77,
+    "question": "Trong một toà nhà nhiều tầng cần phủ sóng wifi đồng bộ với hàng chục AP, kiến trúc nào giúp quản lý cấu hình tập trung hiệu quả nhất?",
+    "optionA": "Không cần bất kỳ kiến trúc quản lý tập trung nào vì AP luôn tự đồng bộ với nhau",
+    "optionB": "Autonomous AP, vì mỗi AP tự quản lý độc lập sẽ giúp tiết kiệm thời gian cấu hình hơn",
+    "optionC": "Chỉ cần dùng chuẩn 802.11b là đủ đáp ứng nhu cầu phủ sóng của toà nhà lớn",
+    "optionD": "Lightweight AP kết hợp WLC, cho phép quản lý và cấu hình đồng loạt toàn bộ AP từ một điểm trung tâm",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 78,
+    "question": "LACP và PAgP khác nhau như thế nào khi đàm phán EtherChannel?",
+    "optionA": "Cả hai đều là chuẩn mở giống hệt nhau, chỉ khác tên gọi giữa các phiên bản IOS",
+    "optionB": "PAgP là chuẩn mở tương thích đa hãng còn LACP là giao thức độc quyền của Cisco",
+    "optionC": "LACP chỉ hoạt động trên switch Layer 3 còn PAgP chỉ hoạt động trên switch Layer 2",
+    "optionD": "LACP là chuẩn mở 802.3ad tương thích đa hãng còn PAgP là giao thức độc quyền của Cisco",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 79,
+    "question": "Một chi nhánh chỉ có một đường ra Internet duy nhất, phương án route nào phù hợp nhất để đơn giản hóa cấu hình?",
+    "optionA": "Cấu hình hàng trăm route tĩnh cụ thể cho từng địa chỉ đích khác nhau trên Internet",
+    "optionB": "Chỉ dùng Floating Static Route mà không cần bất kỳ route chính nào khác đi kèm",
+    "optionC": "Không cấu hình bất kỳ route nào và để router tự học toàn bộ Internet qua Broadcast",
+    "optionD": "Default route (0.0.0.0/0) trỏ ra hướng Internet duy nhất, tránh phải liệt kê từng route cụ thể",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 80,
+    "question": "Điều gì xảy ra nếu Native VLAN trên hai đầu một đường trunk không khớp nhau?",
+    "optionA": "Trunk sẽ ngừng hoạt động hoàn toàn và không còn frame nào được truyền qua nữa",
+    "optionB": "Không có ảnh hưởng gì vì Native VLAN chỉ mang tính lý thuyết, không tác động thực tế",
+    "optionC": "Gây ra lỗi VLAN mismatch, có thể khiến traffic của Native VLAN bị định tuyến sai hoặc rò rỉ giữa các VLAN",
+    "optionD": "Switch sẽ tự động đồng bộ lại Native VLAN giống nhau ở cả hai đầu mà không cần cấu hình",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 81,
+    "question": "Khi một PC gửi email, dữ liệu lần lượt được đóng gói qua các tầng theo thứ tự nào là đúng?",
+    "optionA": "Packet được tạo trước Segment vì Network layer luôn xử lý sớm hơn Transport",
+    "optionB": "Bits được tạo trước tiên, sau đó mới đóng gói ngược lên thành Data ở trên cùng",
+    "optionC": "Data ở Application, rồi Segment, Packet, Frame, cuối cùng thành Bits để truyền đi",
+    "optionD": "Data ở Application, rồi Frame, Packet, Segment, cuối cùng thành Bits để truyền đi",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 82,
+    "question": "Windowing trong TCP giúp thực hiện chức năng nào của quá trình truyền dữ liệu?",
+    "optionA": "Kiểm soát luồng, giới hạn số byte gửi trước khi cần nhận ACK để tránh làm ngập bên nhận",
+    "optionB": "Mã hóa toàn bộ nội dung payload trước khi đóng gói thành segment để gửi đi",
+    "optionC": "Định tuyến gói tin qua đường đi tối ưu nhất dựa trên bảng routing table hiện có",
+    "optionD": "Nén dữ liệu nhằm giảm kích thước segment trước khi truyền qua đường mạng",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 83,
+    "question": "Cờ (Flag) nào trong TCP Segment dùng để khởi tạo một kết nối mới giữa client và server?",
+    "optionA": "FIN, cờ báo hiệu kết thúc kết nối một cách bình thường và có trật tự",
+    "optionB": "SYN, cờ đánh dấu gói tin đầu tiên nhằm khởi tạo phiên kết nối TCP",
+    "optionC": "ACK, cờ dùng để xác nhận đã nhận được dữ liệu từ phía còn lại",
+    "optionD": "RST, cờ dùng để reset kết nối một cách đột ngột khi có lỗi xảy ra",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 84,
+    "question": "Mô hình xác thực PSK (Pre-Shared Key) và Enterprise (802.1X) khác nhau như thế nào?",
+    "optionA": "Cả hai mô hình đều xác thực riêng từng người dùng thông qua máy chủ RADIUS tập trung",
+    "optionB": "PSK chỉ áp dụng được cho mạng doanh nghiệp lớn, không phù hợp với mạng gia đình nhỏ",
+    "optionC": "Enterprise dùng chung một mật khẩu cho mọi người dùng còn PSK xác thực riêng từng người qua RADIUS",
+    "optionD": "PSK dùng chung một mật khẩu cho mọi người dùng còn Enterprise xác thực riêng từng người qua RADIUS server",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 85,
+    "question": "VLSM (Variable Length Subnet Mask) mang lại lợi ích gì so với chia subnet đều (Fixed Length)?",
+    "optionA": "Loại bỏ hoàn toàn nhu cầu dùng router để định tuyến giữa các subnet khác nhau",
+    "optionB": "Cho phép chia kích thước subnet khác nhau theo đúng nhu cầu host thực tế, tiết kiệm địa chỉ IP hơn",
+    "optionC": "Bắt buộc mọi subnet phải có cùng kích thước để dễ quản lý và tính toán nhanh hơn",
+    "optionD": "Chỉ áp dụng được cho địa chỉ IPv6, hoàn toàn không dùng được với IPv4 truyền thống",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 86,
+    "question": "Default route trong bảng định tuyến được ký hiệu như thế nào và dùng khi nào?",
+    "optionA": "Ký hiệu 0.0.0.0/0, được dùng khi không có route nào khác khớp cụ thể hơn với địa chỉ đích",
+    "optionB": "Ký hiệu 255.255.255.255/32, dùng riêng cho traffic broadcast nội bộ trong subnet",
+    "optionC": "Ký hiệu 10.0.0.0/8, mặc định trỏ toàn bộ traffic vào dải địa chỉ private nội bộ",
+    "optionD": "Ký hiệu 127.0.0.1/8, chỉ dùng để kiểm tra loopback trên chính thiết bị router",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 87,
+    "question": "Sự khác biệt chính giữa phương pháp switching Store-and-forward và Cut-through là gì?",
+    "optionA": "Cut-through luôn phát hiện lỗi tốt hơn vì đọc toàn bộ nội dung khung trước khi xử lý",
+    "optionB": "Cả hai phương pháp có tốc độ xử lý hoàn toàn giống nhau trong mọi trường hợp",
+    "optionC": "Store-and-forward kiểm tra FCS toàn bộ frame trước khi chuyển tiếp còn Cut-through chỉ đọc phần địa chỉ đích rồi chuyển ngay",
+    "optionD": "Store-and-forward không bao giờ được dùng trên các switch hiện đại ngày nay",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 88,
+    "question": "Wireless Enterprise (802.1X) yêu cầu thành phần hạ tầng nào để xác thực từng người dùng riêng biệt?",
+    "optionA": "NTP server, đóng vai trò đồng bộ thời gian giữa các thiết bị trong toàn bộ hệ thống",
+    "optionB": "DHCP server, đóng vai trò cấp phát địa chỉ IP tự động cho từng thiết bị kết nối",
+    "optionC": "RADIUS server, đóng vai trò xác thực tập trung cho từng người dùng kết nối vào mạng không dây",
+    "optionD": "Syslog server, đóng vai trò lưu trữ tập trung log sự kiện từ các thiết bị mạng",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 89,
+    "question": "Trong quy trình đóng gói dữ liệu (Encapsulation), PDU tại tầng Data Link (Layer 2) được gọi là gì?",
+    "optionA": "Segment, đơn vị do tầng Transport tạo ra khi phân đoạn dữ liệu",
+    "optionB": "Packet, đơn vị chứa địa chỉ IP nguồn và đích của tầng mạng",
+    "optionC": "Bit, chuỗi tín hiệu thô được truyền qua đường truyền vật lý",
+    "optionD": "Frame, gồm phần header MAC nguồn/đích cùng trailer FCS kiểm tra lỗi",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 90,
+    "question": "Câu mẹo \"All People Seem To Need Data Processing\" giúp ghi nhớ điều gì trong mô hình OSI?",
+    "optionA": "Thứ tự bảy bước xử lý gói tin bên trong router hiện đại",
+    "optionB": "Thứ tự bảy tầng OSI tính từ Application xuống Physical",
+    "optionC": "Thứ tự bảy bước cấu hình VLAN trên switch Cisco IOS",
+    "optionD": "Danh sách bảy giao thức phổ biến nhất tầng Application",
+    "correctAnswer": "B",
+    "points": 2
+  }
+]

@@ -1,0 +1,1002 @@
+[
+  {
+    "id": 1,
+    "question": "Trạng thái Forwarding trong STP có ý nghĩa gì đối với hoạt động của cổng switch?",
+    "optionA": "Cổng đang trong quá trình học địa chỉ MAC nhưng vẫn chưa được phép forward dữ liệu",
+    "optionB": "Cổng bị vô hiệu hóa hoàn toàn bởi quản trị viên và không tham gia vào STP nữa",
+    "optionC": "Cổng chỉ nhận BPDU nhưng hoàn toàn không được phép truyền tải bất kỳ dữ liệu nào",
+    "optionD": "Cổng được phép truyền tải traffic dữ liệu bình thường sau khi đã hoàn tất các bước bầu chọn trước đó",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 2,
+    "question": "Trường Type/Length trong khung Ethernet II dùng để làm gì?",
+    "optionA": "Xác định loại giao thức lớp trên đang được đóng gói bên trong, ví dụ 0x0800 cho IPv4",
+    "optionB": "Dùng CRC để kiểm tra lỗi và loại bỏ frame nếu phát hiện sai sót",
+    "optionC": "Chứa địa chỉ MAC nguồn của thiết bị gửi frame đi trong mạng cục bộ",
+    "optionD": "Chứa dữ liệu payload thực tế cần truyền đi giữa hai thiết bị",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 3,
+    "question": "Vì sao việc bầu DR/BDR chỉ diễn ra trên mạng multi-access (như Ethernet) mà không diễn ra trên liên kết point-to-point?",
+    "optionA": "Vì liên kết point-to-point không hỗ trợ giao thức OSPF dưới bất kỳ hình thức nào",
+    "optionB": "Vì mạng point-to-point luôn có tốc độ nhanh hơn nên không cần thêm bước bầu chọn",
+    "optionC": "Vì DR/BDR chỉ là khái niệm áp dụng cho giao thức RIP chứ không áp dụng cho OSPF",
+    "optionD": "Vì liên kết point-to-point chỉ có đúng hai router nên không cần giảm số lượng adjacency như mạng multi-access nhiều router",
+    "correctAnswer": "D",
+    "points": 4
+  },
+  {
+    "id": 4,
+    "question": "Administrative Distance của route Directly Connected trong bảng định tuyến là bao nhiêu?",
+    "optionA": "1, giá trị tương đương với Static route được cấu hình thủ công",
+    "optionB": "110, giá trị tương đương với giao thức định tuyến động OSPF",
+    "optionC": "0, giá trị thấp nhất nên luôn được ưu tiên tuyệt đối so với mọi loại route khác",
+    "optionD": "120, giá trị tương đương với giao thức định tuyến động RIP truyền thống",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 5,
+    "question": "Một client nhận được nhiều Offer từ nhiều DHCP server khác nhau trong cùng một subnet, client sẽ xử lý ra sao?",
+    "optionA": "Chọn một Offer phù hợp rồi gửi Request broadcast xác nhận, các server còn lại sẽ biết client không chọn mình",
+    "optionB": "Gửi lại Discover thêm một lần nữa để buộc các server phải Offer lại từ đầu",
+    "optionC": "Chấp nhận toàn bộ các Offer nhận được cùng lúc để có nhiều địa chỉ IP dự phòng",
+    "optionD": "Bỏ qua tất cả Offer và tự động chọn một địa chỉ IP tĩnh có sẵn trong hệ thống",
+    "correctAnswer": "A",
+    "points": 4
+  },
+  {
+    "id": 6,
+    "question": "Trường Sequence Number trong TCP Segment dùng để làm gì?",
+    "optionA": "Đánh dấu loại cờ nào đang được sử dụng trong segment đang truyền đi",
+    "optionB": "Xác định số hiệu cổng nguồn của ứng dụng đang gửi dữ liệu đi qua tầng Transport",
+    "optionC": "Đánh số byte dữ liệu để bên nhận có thể sắp xếp lại đúng thứ tự khi các segment đến không theo trình tự",
+    "optionD": "Chỉ ra kích thước cửa sổ nhận tối đa mà bên gửi có thể gửi trước khi cần ACK",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 7,
+    "question": "Nếu quên cấu hình ip helper-address trên router giữa client và DHCP server ở subnet khác, hiện tượng gì sẽ xảy ra với client?",
+    "optionA": "Router sẽ tự động chuyển sang làm DHCP server thay thế cho server ở subnet khác",
+    "optionB": "Client sẽ nhận được địa chỉ IP tĩnh mặc định do router tự động cấp phát",
+    "optionC": "Client sẽ không nhận được địa chỉ IP tự động vì gói Discover broadcast không được relay qua router",
+    "optionD": "Client vẫn nhận IP bình thường vì DHCP Discover luôn tự động vượt qua mọi router",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 8,
+    "question": "Dual-stack là kỹ thuật gì trong quá trình chuyển đổi từ IPv4 sang IPv6?",
+    "optionA": "Đóng gói toàn bộ gói tin IPv6 bên trong gói tin IPv4 để truyền qua hạ tầng cũ",
+    "optionB": "Chuyển đổi hoàn toàn một chiều từ IPv4 sang IPv6 mà không thể quay lại được nữa",
+    "optionC": "Thiết bị hoặc router chạy đồng thời cả hai giao thức IPv4 và IPv6 song song với nhau",
+    "optionD": "Chỉ cho phép thiết bị chạy IPv6 giao tiếp được với thiết bị khác cũng chạy IPv6",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 9,
+    "question": "Interface có băng thông càng cao thì Cost trong OSPF sẽ như thế nào và điều đó ảnh hưởng ra sao tới việc chọn đường?",
+    "optionA": "Cost càng thấp, khiến đường đi qua interface đó càng được ưu tiên hơn khi so sánh nhiều đường khác nhau",
+    "optionB": "Cost không thay đổi bất kể băng thông của interface là bao nhiêu trong OSPF",
+    "optionC": "Cost càng cao, khiến đường đi qua interface đó bị router né tránh hoàn toàn",
+    "optionD": "Cost chỉ phụ thuộc vào số lượng VLAN cấu hình trên interface đó, không liên quan băng thông",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 10,
+    "question": "Inside Global trong NAT là khái niệm chỉ điều gì?",
+    "optionA": "Địa chỉ thật của thiết bị bên ngoài, không liên quan gì tới quá trình NAT nội bộ",
+    "optionB": "Địa chỉ của thiết bị bên ngoài Internet đang giao tiếp với mạng nội bộ",
+    "optionC": "Địa chỉ Public đại diện cho thiết bị nội bộ khi giao tiếp ra ngoài Internet sau khi đã qua NAT",
+    "optionD": "Địa chỉ Private gốc của thiết bị nội bộ trước khi được xử lý qua NAT",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 11,
+    "question": "Vì sao cáp quang Single-mode phù hợp cho kết nối liên tòa nhà hoặc kết nối với ISP hơn Multi-mode?",
+    "optionA": "Vì cả hai loại cáp quang có khoảng cách truyền tối đa hoàn toàn giống nhau",
+    "optionB": "Vì Single-mode dùng laser truyền được khoảng cách xa hàng chục km, trong khi Multi-mode chỉ truyền gần",
+    "optionC": "Vì Single-mode chỉ dùng được trong datacenter, không phù hợp cho kết nối liên tòa nhà",
+    "optionD": "Vì Multi-mode luôn rẻ hơn và truyền xa hơn Single-mode trong mọi điều kiện lắp đặt",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 12,
+    "question": "Vì sao Cut-through switching có thể chuyển tiếp cả những frame bị lỗi mà Store-and-forward sẽ loại bỏ?",
+    "optionA": "Vì cả hai phương pháp đều bỏ qua hoàn toàn việc kiểm tra lỗi khi chuyển tiếp frame",
+    "optionB": "Vì Cut-through chỉ đọc 12 byte đầu chứa địa chỉ đích rồi forward ngay mà không đợi kiểm tra FCS ở cuối frame",
+    "optionC": "Vì Store-and-forward không có khả năng phát hiện lỗi bằng cơ chế CRC như Cut-through",
+    "optionD": "Vì Cut-through luôn kiểm tra toàn bộ nội dung frame kỹ hơn Store-and-forward trước khi xử lý",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 13,
+    "question": "Wildcard mask trong cấu hình OSPF được tính như thế nào từ subnet mask thông thường?",
+    "optionA": "Wildcard mask luôn cố định là 255.255.255.255 bất kể subnet mask đang dùng là gì",
+    "optionB": "Wildcard mask được tính bằng cách cộng thêm 1 vào từng octet của subnet mask gốc",
+    "optionC": "Wildcard mask là dạng đảo ngược bit của subnet mask, ví dụ 255.255.255.0 sẽ có wildcard là 0.0.0.255",
+    "optionD": "Wildcard mask hoàn toàn giống hệt với subnet mask, không có sự khác biệt nào cả",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 14,
+    "question": "Vì sao DHCP Discover không thể tự vượt qua router để tới DHCP server ở subnet khác nếu không có cấu hình đặc biệt?",
+    "optionA": "Vì DHCP Discover là gói broadcast, mà router mặc định không chuyển tiếp broadcast sang subnet khác",
+    "optionB": "Vì router luôn chặn toàn bộ traffic UDP port 67/68 theo mặc định trên mọi interface",
+    "optionC": "Vì DHCP Discover chỉ hoạt động được trong phạm vi một VLAN duy nhất theo thiết kế",
+    "optionD": "Vì DHCP Discover luôn được mã hóa nên router không thể đọc được nội dung gói tin",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 15,
+    "question": "Area 0 (Backbone Area) trong OSPF có vai trò bắt buộc như thế nào đối với các Area khác?",
+    "optionA": "Area 0 bắt buộc phải tồn tại và mọi Area khác phải kết nối trực tiếp hoặc gián tiếp về Area 0",
+    "optionB": "Area 0 chỉ là một lựa chọn tùy chọn, có thể thay thế bằng bất kỳ Area nào khác tùy ý",
+    "optionC": "Area 0 chỉ áp dụng cho các mạng chạy RIP, không áp dụng cho OSPF hiện đại",
+    "optionD": "Mỗi Area trong OSPF hoàn toàn độc lập và không cần kết nối với Area 0 bao giờ",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 16,
+    "question": "De-encapsulation là quá trình gì diễn ra ở thiết bị nhận dữ liệu?",
+    "optionA": "Bóc từng lớp header ra theo thứ tự ngược lại để lấy được dữ liệu gốc ban đầu",
+    "optionB": "Mã hóa toàn bộ dữ liệu nhận được trước khi hiển thị cho ứng dụng người dùng",
+    "optionC": "Xóa bỏ hoàn toàn dữ liệu nếu phát hiện có bất kỳ lỗi truyền nào xảy ra",
+    "optionD": "Thêm các lớp header mới vào dữ liệu trước khi chuyển tiếp ra tầng vật lý",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 17,
+    "question": "Vì sao Dynamic Routing được ưu tiên hơn Static Route trong các mạng lớn thường xuyên thay đổi?",
+    "optionA": "Vì Dynamic Routing không cần bất kỳ router nào tham gia trao đổi thông tin định tuyến",
+    "optionB": "Vì Dynamic Routing tự động cập nhật khi mạng thay đổi, trong khi Static Route cần cấu hình tay dễ gây lỗi",
+    "optionC": "Vì Static Route luôn nhanh hơn Dynamic Routing trong mọi kích thước mạng khác nhau",
+    "optionD": "Vì Static Route không thể cấu hình được trên router chạy hệ điều hành Cisco IOS",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 18,
+    "question": "OSPF thuộc nhóm giao thức định tuyến nào và điều đó mang lại lợi thế gì?",
+    "optionA": "Distance Vector, mỗi router chỉ biết thông tin từ hàng xóm trực tiếp nên hội tụ rất nhanh",
+    "optionB": "Path Vector, chỉ dùng cho định tuyến giữa các mạng lớn liên tổ chức như BGP",
+    "optionC": "Hybrid, kết hợp cả Distance Vector và Link-State trong cùng một cơ chế duy nhất",
+    "optionD": "Link-State, mỗi router có bản đồ toàn bộ topology mạng nên hội tụ nhanh hơn nhóm Distance Vector",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 19,
+    "question": "Trong cấu hình DHCP pool trên router Cisco, lệnh excluded-address dùng để làm gì?",
+    "optionA": "Tăng thời gian lease mặc định của địa chỉ IP được cấp cho từng client",
+    "optionB": "Xóa toàn bộ địa chỉ IP đã cấp phát trước đó để cấp lại từ đầu cho client",
+    "optionC": "Chỉ định dải IP duy nhất được phép cấp phát cho toàn bộ client trong pool",
+    "optionD": "Loại các IP đã gán tĩnh như IP gateway ra khỏi vùng cấp phát tự động của DHCP pool",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 20,
+    "question": "Vì sao Congestion Control trong TCP lại cần thiết dù đã có Windowing để kiểm soát luồng?",
+    "optionA": "Vì Windowing và Congestion Control là hai tên gọi khác nhau của cùng một cơ chế duy nhất",
+    "optionB": "Vì Windowing chỉ kiểm soát tốc độ theo khả năng bên nhận, còn Congestion Control điều chỉnh theo tình trạng nghẽn thực tế của mạng khi phát hiện mất gói",
+    "optionC": "Vì TCP không thực sự cần bất kỳ cơ chế điều chỉnh tốc độ gửi nào trong thực tế",
+    "optionD": "Vì Congestion Control chỉ hoạt động khi Windowing đã bị vô hiệu hóa hoàn toàn trên kết nối",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 21,
+    "question": "LSA (Link State Advertisement) trong OSPF có vai trò gì đối với việc xây dựng LSDB?",
+    "optionA": "LSA thay thế hoàn toàn vai trò của Hello packet trong quá trình hình thành neighbor",
+    "optionB": "LSA chỉ dùng để trao đổi mật khẩu xác thực giữa các router trong cùng một Area",
+    "optionC": "LSA chỉ được gửi một lần duy nhất khi router khởi động và không bao giờ cập nhật lại",
+    "optionD": "Mỗi router quảng bá thông tin về các link của mình qua LSA để mọi router trong Area có LSDB giống hệt nhau",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 22,
+    "question": "Thứ tự đúng của quy trình DORA khi client xin cấp IP từ DHCP server là gì?",
+    "optionA": "Discover, Request, Offer, rồi cuối cùng Acknowledge để hoàn tất cấp phát",
+    "optionB": "Offer, Discover, Acknowledge, rồi cuối cùng Request để xác nhận địa chỉ",
+    "optionC": "Discover, Offer, Request, rồi cuối cùng Acknowledge để hoàn tất cấp phát",
+    "optionD": "Request, Discover, Offer, rồi cuối cùng Acknowledge để hoàn tất cấp phát",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 23,
+    "question": "Class B trong hệ thống phân lớp địa chỉ IPv4 truyền thống có dải địa chỉ nào?",
+    "optionA": "192.0.0.0 đến 223.255.255.255 với subnet mask mặc định /24 phổ biến trong LAN nhỏ",
+    "optionB": "128.0.0.0 đến 191.255.255.255 với subnet mask mặc định /16",
+    "optionC": "224.0.0.0 đến 239.255.255.255, dải này được dùng riêng cho Multicast",
+    "optionD": "1.0.0.0 đến 126.255.255.255 với subnet mask mặc định /8 dành cho mạng cực lớn",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 24,
+    "question": "Một Layer 3 Switch dùng SVI để định tuyến liên VLAN có ưu thế nào so với Router-on-a-stick về mặt tốc độ xử lý?",
+    "optionA": "Router-on-a-stick luôn nhanh hơn SVI vì chỉ cần một cổng vật lý duy nhất để xử lý toàn bộ traffic",
+    "optionB": "SVI không cần xử lý bất kỳ VLAN nào nên tốc độ luôn nhanh hơn tuyệt đối trong mọi trường hợp",
+    "optionC": "Routing được thực hiện bằng phần cứng ASIC trực tiếp trên switch nên nhanh hơn nhiều so với đi qua cổng vật lý duy nhất của router",
+    "optionD": "Cả hai phương án có tốc độ xử lý hoàn toàn giống nhau, không có sự khác biệt đáng kể nào",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 25,
+    "question": "Trong 7 tầng OSI, tầng Presentation (Layer 6) chịu trách nhiệm chính cho việc gì?",
+    "optionA": "Đóng gói dữ liệu thành frame và đánh địa chỉ vật lý MAC cho thiết bị",
+    "optionB": "Định dạng, mã hóa và nén dữ liệu như SSL/TLS encryption hoặc chuẩn JPEG trước khi gửi đi",
+    "optionC": "Thiết lập, duy trì và kết thúc phiên làm việc giữa hai ứng dụng đang giao tiếp",
+    "optionD": "Phân đoạn dữ liệu thành các segment và quản lý số hiệu cổng nguồn đích",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 26,
+    "question": "Trên mạng Ethernet đa truy cập, router nào sẽ được bầu làm DR (Designated Router) trong OSPF?",
+    "optionA": "Router có địa chỉ MAC nhỏ nhất trong toàn bộ segment mạng đang xét",
+    "optionB": "Router khởi động sớm nhất bất kể giá trị Priority được cấu hình là bao nhiêu",
+    "optionC": "Router có OSPF Priority cao nhất, nếu bằng nhau thì Router ID cao nhất sẽ thắng",
+    "optionD": "Router có số lượng cổng vật lý đang hoạt động nhiều nhất tại thời điểm bầu chọn",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 27,
+    "question": "Công thức tính Cost trong OSPF dựa trên yếu tố nào của interface?",
+    "optionA": "Cost = độ trễ trung bình đo được giữa router nguồn và router đích tương ứng",
+    "optionB": "Cost = kích thước tối đa của Frame có thể truyền qua interface đó (MTU)",
+    "optionC": "Cost = Reference Bandwidth chia cho Bandwidth của interface, mặc định Reference Bandwidth là 100Mbps",
+    "optionD": "Cost = số lượng router trung gian cần đi qua để tới được đích cuối cùng",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 28,
+    "question": "Khi thiết kế VLSM cho một công ty có nhiều phòng ban với số lượng host khác nhau, nguyên tắc nào cần tuân theo?",
+    "optionA": "Chia từ subnet cần nhiều host nhất trước rồi xuống dần tới subnet nhỏ nhất cuối cùng",
+    "optionB": "Không cần theo thứ tự nào cụ thể vì VLSM tự động tối ưu hóa việc phân chia",
+    "optionC": "Luôn bắt đầu chia từ subnet nhỏ nhất trước để tiết kiệm được nhiều địa chỉ IP hơn",
+    "optionD": "Chia đều tất cả các subnet có cùng kích thước bất kể số lượng host thực tế cần dùng",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 29,
+    "question": "Lệnh nào dùng để kiểm tra danh sách neighbor mà một router OSPF đã hình thành adjacency?",
+    "optionA": "show ip ospf neighbor, hiển thị danh sách router lân cận cùng trạng thái adjacency hiện tại",
+    "optionB": "show running-config, hiển thị toàn bộ cấu hình hiện đang chạy trên router",
+    "optionC": "show ip interface brief, hiển thị trạng thái hoạt động của các interface trên router",
+    "optionD": "show ip route ospf, hiển thị các route học được thông qua giao thức OSPF",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 30,
+    "question": "Outside Local trong thuật ngữ NAT là khái niệm chỉ điều gì?",
+    "optionA": "Địa chỉ Public đại diện cho thiết bị nội bộ khi giao tiếp ra ngoài Internet",
+    "optionB": "Địa chỉ của thiết bị bên ngoài Internet, được nhìn từ góc độ mạng nội bộ đang xét",
+    "optionC": "Địa chỉ Private gốc của thiết bị nội bộ trước khi được NAT xử lý",
+    "optionD": "Địa chỉ thật của thiết bị nội bộ khi giao tiếp trong chính mạng LAN của nó",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 31,
+    "question": "NAT (Network Address Translation) được tạo ra chủ yếu để giải quyết vấn đề gì?",
+    "optionA": "Mã hóa toàn bộ traffic đi ra Internet nhằm tăng cường bảo mật cho hệ thống",
+    "optionB": "Tăng tốc độ truyền dữ liệu giữa các thiết bị trong cùng một mạng nội bộ LAN",
+    "optionC": "Thiếu hụt địa chỉ IPv4 Public bằng cách cho nhiều thiết bị dùng Private IP chia sẻ chung địa chỉ Public",
+    "optionD": "Thay thế hoàn toàn vai trò của DNS trong việc phân giải tên miền thành địa chỉ IP",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 32,
+    "question": "Vì sao Broadcast Storm có thể xảy ra khi mạng có nhiều đường kết nối dự phòng giữa các switch mà không chạy STP?",
+    "optionA": "Vì Broadcast Storm chỉ xảy ra khi mạng dùng router thay vì switch để kết nối các thiết bị",
+    "optionB": "Vì frame Broadcast có thể bị lặp vô hạn giữa các switch qua các đường dự phòng, gây nghẽn mạng hoàn toàn",
+    "optionC": "Vì switch sẽ tự động ngắt kết nối dự phòng ngay khi phát hiện có nhiều hơn một đường đi",
+    "optionD": "Vì các đường dự phòng luôn tự động được đặt ở chế độ Blocking mà không cần STP xử lý",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 33,
+    "question": "Địa chỉ Unique Local Address (ULA) trong IPv6 tương đương với khái niệm nào trong IPv4?",
+    "optionA": "Private IP, dùng cho địa chỉ nội bộ không định tuyến được trên Internet công cộng",
+    "optionB": "Broadcast IP, dùng để gửi dữ liệu tới toàn bộ thiết bị trong subnet",
+    "optionC": "Loopback IP, dùng riêng để kiểm tra chính thiết bị đang cấu hình đó",
+    "optionD": "Public IP, dùng cho địa chỉ định tuyến toàn cầu trên Internet công cộng",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 34,
+    "question": "Với một mạng cần tối thiểu 100 host trên một subnet, subnet mask nào là phù hợp nhất để tiết kiệm địa chỉ IP?",
+    "optionA": "255.255.255.0 (/24), cho phép 254 host khả dụng đủ đáp ứng yêu cầu 100 host",
+    "optionB": "255.255.255.128 (/25), chỉ cho phép 126 host nhưng vẫn đủ đáp ứng yêu cầu tối thiểu",
+    "optionC": "255.255.255.192 (/26), chỉ cho phép 62 host nên không đủ đáp ứng yêu cầu 100 host",
+    "optionD": "255.255.255.224 (/27), chỉ cho phép 30 host nên hoàn toàn không đủ dùng",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 35,
+    "question": "Physical Topology và Logical Topology khác nhau như thế nào trong một hệ thống mạng?",
+    "optionA": "Physical là cách dây cáp nối vật lý thực tế, còn Logical là cách dữ liệu thực sự di chuyển, có thể khác physical",
+    "optionB": "Physical Topology luôn thay đổi liên tục còn Logical Topology thì cố định vĩnh viễn",
+    "optionC": "Cả hai khái niệm hoàn toàn giống nhau và luôn phải trùng khớp với nhau tuyệt đối",
+    "optionD": "Logical Topology chỉ áp dụng cho mạng không dây, không áp dụng cho mạng có dây",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 36,
+    "question": "Hai router OSPF chỉ trở thành neighbor khi các thông số nào khớp nhau?",
+    "optionA": "Area ID, Hello/Dead timer, Subnet, và Authentication phải khớp giữa hai router",
+    "optionB": "Chỉ cần Router ID giống nhau là đủ để hai router trở thành neighbor của nhau",
+    "optionC": "Chỉ cần cùng chạy chung một phiên bản hệ điều hành Cisco IOS là đủ điều kiện",
+    "optionD": "Không cần bất kỳ thông số nào khớp nhau, OSPF tự động chấp nhận mọi router lân cận",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 37,
+    "question": "Vì sao IPv6 không còn khái niệm Broadcast như IPv4?",
+    "optionA": "Vì Broadcast trong IPv6 được đổi tên thành Anycast nhưng bản chất hoạt động giống hệt",
+    "optionB": "Vì IPv6 chỉ hỗ trợ giao tiếp Unicast giữa hai thiết bị duy nhất mà thôi",
+    "optionC": "Vì IPv6 thay thế hoàn toàn bằng cơ chế Multicast để gửi dữ liệu tới một nhóm thiết bị xác định",
+    "optionD": "Vì IPv6 không hỗ trợ gửi dữ liệu tới nhiều thiết bị cùng lúc dưới bất kỳ hình thức nào",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 38,
+    "question": "Static NAT phù hợp nhất trong tình huống nào sau đây?",
+    "optionA": "Một server nội bộ cần được truy cập từ ngoài Internet theo một địa chỉ Public cố định",
+    "optionB": "Một dải lớn PC nội bộ cần chia sẻ chung một địa chỉ Public duy nhất khi ra Internet",
+    "optionC": "Một mạng nhỏ không có nhu cầu kết nối ra Internet dưới bất kỳ hình thức nào",
+    "optionD": "Một thiết bị di động thường xuyên thay đổi địa chỉ IP nội bộ theo từng phiên kết nối",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 39,
+    "question": "Khi chưa cấu hình VLAN nào, toàn bộ cổng trên switch Cisco mặc định thuộc VLAN nào?",
+    "optionA": "Không có VLAN nào cho tới khi quản trị viên cấu hình thủ công đầu tiên",
+    "optionB": "VLAN 99, VLAN thường được dùng làm chuẩn quản trị trong nhiều tài liệu",
+    "optionC": "VLAN 1, VLAN mặc định mà mọi cổng switch được gán sẵn khi chưa cấu hình",
+    "optionD": "VLAN 0, VLAN dự phòng dùng riêng cho mục đích quản lý nội bộ của switch",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 40,
+    "question": "Bước Acknowledge (ACK) cuối cùng trong DORA có ý nghĩa gì đối với client?",
+    "optionA": "Client xác nhận đã nhận đủ bốn bước và tự động ngắt kết nối với DHCP server",
+    "optionB": "Client gửi phản hồi cuối cùng để từ chối địa chỉ IP mà server vừa đề xuất",
+    "optionC": "Server xác nhận cấp phát chính thức địa chỉ IP đó, client bắt đầu sử dụng địa chỉ vừa nhận được",
+    "optionD": "Server yêu cầu client gửi lại toàn bộ quy trình DORA từ đầu để xác thực lại",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 41,
+    "question": "Cáp Cat6a khác Cat6 như thế nào về khả năng hỗ trợ tốc độ truyền dữ liệu?",
+    "optionA": "Cat6a chỉ dùng được cho cáp quang, không áp dụng được cho cáp đồng UTP thông thường",
+    "optionB": "Cat6a chỉ hỗ trợ tối đa 1Gbps, thấp hơn hẳn so với khả năng của Cat6 tiêu chuẩn",
+    "optionC": "Cat6a hỗ trợ đầy đủ 10Gbps ở khoảng cách 100m, còn Cat6 chỉ đạt 10Gbps ở khoảng cách ngắn hơn nhiều",
+    "optionD": "Cả hai loại cáp có khả năng hỗ trợ tốc độ hoàn toàn giống hệt nhau ở mọi khoảng cách",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 42,
+    "question": "Một ứng dụng DNS query thường sử dụng giao thức tầng Transport nào và tại sao?",
+    "optionA": "ICMP, vì đây là giao thức duy nhất phù hợp cho các truy vấn phân giải tên miền",
+    "optionB": "UDP, vì DNS query thường ngắn gọn và cần tốc độ phản hồi nhanh hơn là đảm bảo tin cậy tuyệt đối",
+    "optionC": "TCP, vì DNS luôn cần thiết lập handshake ba bước trước khi truyền bất kỳ dữ liệu nào",
+    "optionD": "Cả TCP và UDP đều không được dùng cho DNS vì đây là giao thức tầng Application riêng biệt",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 43,
+    "question": "Bước đầu tiên trong cơ chế hoạt động của OSPF khi router mới khởi động là gì?",
+    "optionA": "Trao đổi LSA với toàn bộ router trong mạng mà không cần thiết lập neighbor trước",
+    "optionB": "Bầu chọn Router ID trước tiên rồi mới bắt đầu gửi bất kỳ gói tin nào ra ngoài",
+    "optionC": "Gửi Hello packet định kỳ tới địa chỉ multicast 224.0.0.5 để tìm kiếm neighbor xung quanh",
+    "optionD": "Xây dựng ngay bảng Routing Table dựa trên cấu hình tĩnh được cấu hình sẵn",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 44,
+    "question": "Một mạng OSPF có hai đường đi tới cùng một đích với Cost khác nhau, router sẽ chọn đường nào để đưa vào Routing Table?",
+    "optionA": "Đường có Cost cao hơn, vì Cost cao hơn nghĩa là băng thông interface tốt hơn",
+    "optionB": "Cả hai đường sẽ được đưa vào Routing Table đồng thời để cân bằng tải traffic",
+    "optionC": "Router sẽ chọn ngẫu nhiên một trong hai đường bất kể giá trị Cost là bao nhiêu",
+    "optionD": "Đường có Cost thấp hơn, vì Cost thấp hơn tương ứng với đường đi được ưu tiên hơn trong SPF",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 45,
+    "question": "PAT được xem là loại NAT phổ biến nhất trong thực tế vì lý do gì?",
+    "optionA": "Yêu cầu mỗi thiết bị nội bộ phải có riêng một địa chỉ Public cố định để hoạt động",
+    "optionB": "Cho phép rất nhiều thiết bị nội bộ cùng chia sẻ một địa chỉ Public duy nhất, tiết kiệm địa chỉ IP hiệu quả",
+    "optionC": "Chỉ hoạt động được với số lượng rất ít thiết bị trong mạng nội bộ nhỏ",
+    "optionD": "Không cần bất kỳ cấu hình nào trên router mà tự động hoạt động ngay từ đầu",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 46,
+    "question": "Một hệ thống dùng Dynamic NAT với pool gồm 10 địa chỉ Public cho 10 PC nội bộ, khi PC thứ 11 cần ra Internet thì điều gì xảy ra?",
+    "optionA": "PC thứ 11 sẽ được ưu tiên hơn các PC khác và chiếm luôn địa chỉ đang được PC khác sử dụng",
+    "optionB": "PC thứ 11 sẽ tự động dùng chung địa chỉ Public với một PC khác đang hoạt động nhờ phân biệt port",
+    "optionC": "Router sẽ tự động mở rộng thêm pool địa chỉ Public mà không cần cấu hình gì thêm",
+    "optionD": "PC thứ 11 sẽ không được cấp địa chỉ Public vì pool đã hết, trừ khi có PC khác giải phóng địa chỉ đang dùng",
+    "correctAnswer": "D",
+    "points": 4
+  },
+  {
+    "id": 47,
+    "question": "Trong cấu hình DHCP pool, lệnh default-router dùng để chỉ định thông số gì cho client?",
+    "optionA": "Địa chỉ IP của DNS server mà client sẽ dùng để phân giải tên miền",
+    "optionB": "Địa chỉ mạng và subnet mask của dải IP mà pool này sẽ cấp phát",
+    "optionC": "Thời gian lease tối đa mà client được phép giữ địa chỉ IP đã cấp",
+    "optionD": "Địa chỉ IP của default gateway mà client sẽ sử dụng để ra khỏi subnet của mình",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 48,
+    "question": "EUI-64 là cơ chế được dùng để làm gì trong IPv6?",
+    "optionA": "Sinh ra Interface ID cho địa chỉ IPv6 dựa trên địa chỉ MAC của thiết bị khi dùng SLAAC",
+    "optionB": "Xác định số lượng bit mạng cần dùng cho một Prefix length cụ thể",
+    "optionC": "Đồng bộ thời gian giữa các thiết bị IPv6 trong cùng một mạng nội bộ",
+    "optionD": "Mã hóa toàn bộ nội dung gói tin IPv6 trước khi truyền qua mạng công cộng",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 49,
+    "question": "Cờ RST trong TCP Segment được dùng khi nào?",
+    "optionA": "Khi cần xác nhận đã nhận được dữ liệu từ phía đối tác trong phiên truyền",
+    "optionB": "Khi cần reset một kết nối một cách đột ngột, thường do lỗi hoặc kết nối không hợp lệ",
+    "optionC": "Khi cần kết thúc kết nối một cách bình thường theo đúng trình tự bốn bước",
+    "optionD": "Khi cần khởi tạo một kết nối mới giữa client và server lần đầu tiên",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 50,
+    "question": "Một công ty có 5 router cùng Area 0 chạy OSPF, khi thêm 1 subnet mới vào một router, các router khác học được route mới bằng cách nào?",
+    "optionA": "Subnet mới sẽ tự động được quảng bá qua giao thức RIP song song chạy cùng OSPF",
+    "optionB": "Các router khác sẽ không bao giờ biết được subnet mới trừ khi khởi động lại toàn bộ hệ thống",
+    "optionC": "Router đó gửi LSA quảng bá thông tin subnet mới, các router khác cập nhật LSDB và chạy lại SPF để có route mới",
+    "optionD": "Quản trị viên phải thủ công cấu hình lại static route trên toàn bộ 5 router còn lại",
+    "correctAnswer": "C",
+    "points": 4
+  },
+  {
+    "id": 51,
+    "question": "Vì sao GLBP được xem là có khả năng tận dụng tài nguyên tốt hơn HSRP truyền thống trong một số kịch bản triển khai?",
+    "optionA": "Vì GLBP không hỗ trợ Virtual IP nên giảm được độ phức tạp khi cấu hình hệ thống",
+    "optionB": "Vì GLBP chỉ cần một router duy nhất trong toàn bộ nhóm để hoạt động bình thường",
+    "optionC": "Vì GLBP cho phép nhiều router cùng xử lý traffic song song thay vì để router dự phòng nhàn rỗi chờ sẵn như HSRP",
+    "optionD": "Vì GLBP có tốc độ failover chậm hơn nên phù hợp hơn với mạng ít quan trọng",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 52,
+    "question": "Vì sao bước Request trong DORA lại được gửi dưới dạng broadcast thay vì unicast trực tiếp tới server đã Offer?",
+    "optionA": "Vì broadcast luôn nhanh hơn unicast trong mọi tình huống truyền dữ liệu qua mạng",
+    "optionB": "Vì DHCP server không hỗ trợ nhận gói tin unicast dưới bất kỳ hình thức nào",
+    "optionC": "Vì Request bắt buộc phải đi qua toàn bộ router trong mạng trước khi tới đích",
+    "optionD": "Vì có thể có nhiều DHCP server cùng gửi Offer, broadcast giúp các server khác biết client đã chọn server nào",
+    "correctAnswer": "D",
+    "points": 4
+  },
+  {
+    "id": 53,
+    "question": "Bước Offer trong DORA thể hiện hành động gì từ phía DHCP server?",
+    "optionA": "Server phản hồi đề xuất một địa chỉ IP khả dụng cho client sau khi nhận được Discover",
+    "optionB": "Server yêu cầu client xác nhận lại địa chỉ MAC trước khi cấp phát IP chính thức",
+    "optionC": "Server broadcast tìm kiếm client nào đang cần được cấp phát địa chỉ IP mới",
+    "optionD": "Server gửi thông báo từ chối cấp phát IP nếu không còn địa chỉ khả dụng trong pool",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 54,
+    "question": "Trong LSDB (Link-State Database), các router thuộc cùng một Area sẽ có đặc điểm gì về nội dung cơ sở dữ liệu?",
+    "optionA": "LSDB chỉ chứa thông tin về chính router đó, không chứa thông tin từ router khác",
+    "optionB": "Có LSDB hoàn toàn khác nhau tùy theo vị trí vật lý của từng router trong mạng",
+    "optionC": "Có LSDB giống hệt nhau vì mỗi router đều nhận đầy đủ LSA từ mọi router khác trong cùng Area",
+    "optionD": "LSDB chỉ được lưu trữ tại DR duy nhất, các router khác không cần lưu trữ riêng",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 55,
+    "question": "Trong VTP, chế độ Transparent xử lý thông tin VLAN như thế nào khi nhận được thông báo VTP từ switch khác?",
+    "optionA": "Chỉ chuyển tiếp thông tin VTP qua cho switch kế tiếp mà không tham gia đồng bộ hay cập nhật VLAN của chính mình",
+    "optionB": "Tự động cập nhật toàn bộ VLAN của mình theo đúng thông tin nhận được từ switch Server",
+    "optionC": "Từ chối hoàn toàn việc chuyển tiếp bất kỳ thông tin VTP nào nhận được từ switch khác",
+    "optionD": "Chỉ hoạt động được khi switch đó không có bất kỳ VLAN nào được cấu hình sẵn",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 56,
+    "question": "Vì sao nguyên tắc Peer-to-peer Communication trong OSI vẫn đúng dù dữ liệu phải đi qua nhiều thiết bị trung gian như switch, router?",
+    "optionA": "Vì mỗi tầng chỉ cần hiểu đúng thông tin của tầng tương ứng trên máy nhận, các thiết bị trung gian chỉ xử lý tới tầng cần thiết chứ không cần hiểu toàn bộ nội dung ứng dụng",
+    "optionB": "Vì các thiết bị trung gian không hề tham gia vào quá trình truyền dữ liệu giữa hai máy đầu cuối",
+    "optionC": "Vì nguyên tắc này chỉ áp dụng đúng khi hai máy nằm trong cùng một mạng LAN duy nhất",
+    "optionD": "Vì switch và router luôn phải giải mã toàn bộ nội dung Application layer trước khi chuyển tiếp gói tin đi tiếp",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 57,
+    "question": "Chuẩn Wi-Fi nào chỉ hoạt động trên băng tần 5GHz và đạt tốc độ tối đa khoảng 54Mbps?",
+    "optionA": "802.11ax, chuẩn mới nhất hỗ trợ hiệu năng cao khi nhiều thiết bị kết nối",
+    "optionB": "802.11b, chuẩn cũ chỉ hỗ trợ băng tần 2.4GHz với tốc độ thấp hơn",
+    "optionC": "802.11a, chuẩn cũ chỉ hỗ trợ băng tần 5GHz duy nhất",
+    "optionD": "802.11n, chuẩn hỗ trợ đồng thời cả hai băng tần 2.4GHz và 5GHz",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 58,
+    "question": "Trong STP, trạng thái Listening khác trạng thái Learning ở điểm nào?",
+    "optionA": "Listening đã học MAC và forward data bình thường còn Learning thì hoàn toàn không xử lý gì cả",
+    "optionB": "Listening bắt đầu tham gia bầu chọn Root/Designated Port nhưng chưa học MAC, còn Learning đã bắt đầu học MAC nhưng chưa forward data",
+    "optionC": "Cả hai trạng thái hoàn toàn giống nhau về chức năng, chỉ khác tên gọi trong tài liệu",
+    "optionD": "Learning luôn diễn ra trước Listening trong toàn bộ quy trình chuyển đổi trạng thái STP",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 59,
+    "question": "Trong mô hình 3-tier, Access Layer thực hiện những nhiệm vụ chính nào?",
+    "optionA": "Đảm nhiệm việc kết nối liên tòa nhà bằng cáp quang single-mode tốc độ cao",
+    "optionB": "Chỉ chuyển tiếp traffic tốc độ cao nhất, không xử lý bất kỳ policy nào cả",
+    "optionC": "Nơi end device kết nối vào, thực hiện VLAN và Port Security ngay tại các cổng switch",
+    "optionD": "Tổng hợp traffic từ nhiều switch Access và áp dụng chính sách QoS phức tạp",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 60,
+    "question": "Một công ty có DHCP server đặt ở VLAN Server riêng biệt với các VLAN client khác, giải pháp nào giúp client ở VLAN khác vẫn nhận được IP tự động?",
+    "optionA": "Cấu hình ip helper-address trỏ về IP DHCP server trên interface (SVI) của từng VLAN client",
+    "optionB": "Cấu hình lại toàn bộ VLAN client thành cùng một VLAN với DHCP server duy nhất",
+    "optionC": "Không cần làm gì thêm vì DHCP Discover luôn tự động vượt qua mọi router trong mạng",
+    "optionD": "Di chuyển vật lý DHCP server sang đúng VLAN của từng client để tránh phải relay",
+    "correctAnswer": "A",
+    "points": 4
+  },
+  {
+    "id": 61,
+    "question": "Một hệ thống có 2 switch nối với nhau bằng 4 dây cáp riêng lẻ để tăng băng thông, giải pháp nào giúp STP không block bớt 3 trong 4 đường đó?",
+    "optionA": "Tắt hoàn toàn giao thức STP trên cả hai switch để tất cả đường dây đều được sử dụng đồng thời",
+    "optionB": "Cấu hình EtherChannel gộp 4 liên kết vật lý thành một logical link duy nhất để STP chỉ xem đó là một đường",
+    "optionC": "Không có giải pháp nào khả thi, STP sẽ luôn block bớt các đường dây dư thừa",
+    "optionD": "Đặt Priority của cả 4 cổng bằng nhau để STP tự động cho phép cả 4 đường cùng hoạt động",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 62,
+    "question": "Hello packet trong OSPF được gửi định kỳ với chu kỳ mặc định là bao lâu trên mạng Ethernet?",
+    "optionA": "30 giây, gửi định kỳ tương tự như thời gian hội tụ mặc định của STP",
+    "optionB": "1 giây, gửi liên tục để đảm bảo phát hiện lỗi tức thời trên mọi loại mạng",
+    "optionC": "60 giây, gửi định kỳ để giảm tải xử lý cho các router có cấu hình thấp",
+    "optionD": "10 giây, gửi định kỳ để tìm kiếm và duy trì trạng thái neighbor xung quanh",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 63,
+    "question": "Floating Static Route cần được cấu hình với Administrative Distance như thế nào so với route chính để chỉ hoạt động khi cần dự phòng?",
+    "optionA": "Không cần quan tâm tới Administrative Distance vì Floating tự động nhận diện được",
+    "optionB": "Cao hơn route chính, để route chính luôn được ưu tiên trước và Floating chỉ được dùng khi route chính mất",
+    "optionC": "Thấp hơn route chính, để Floating luôn được ưu tiên sử dụng ngay từ đầu",
+    "optionD": "Bằng đúng với route chính để cả hai cùng hoạt động song song đồng thời",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 64,
+    "question": "Cách switch xử lý MAC Address Table timeout hoạt động ra sao khi không còn traffic mới từ một thiết bị?",
+    "optionA": "Sau khoảng thời gian mặc định (thường 300 giây), mục MAC đó sẽ bị xóa khỏi bảng nếu không có traffic mới",
+    "optionB": "Bảng MAC Address Table không bao giờ có cơ chế timeout dưới bất kỳ điều kiện nào",
+    "optionC": "Mục MAC đó sẽ tồn tại vĩnh viễn trong bảng cho tới khi switch được khởi động lại hoàn toàn",
+    "optionD": "Switch sẽ ngay lập tức gửi broadcast hỏi lại địa chỉ MAC đó có còn tồn tại hay không",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 65,
+    "question": "Route học được qua OSPF trong bảng định tuyến Cisco IOS được đánh dấu bằng ký hiệu chữ cái nào?",
+    "optionA": "Chữ O, đứng đầu dòng route để phân biệt với các loại route khác như Static hay Connected",
+    "optionB": "Chữ R, đứng đầu dòng route dùng chung cho cả OSPF lẫn RIP không phân biệt",
+    "optionC": "Chữ C, đứng đầu dòng route giống với ký hiệu dùng cho Directly Connected",
+    "optionD": "Chữ S, đứng đầu dòng route giống với ký hiệu dùng cho Static route thông thường",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 66,
+    "question": "Khi một gói tin từ PC nội bộ đi qua router có cấu hình PAT để ra Internet, router sẽ thay đổi thông tin gì trong gói tin đó?",
+    "optionA": "Chỉ thay đổi địa chỉ MAC nguồn mà không thay đổi bất kỳ thông tin nào ở tầng IP",
+    "optionB": "Địa chỉ IP nguồn và số port nguồn, chuyển từ Private IP:port sang Public IP:port tương ứng đã ánh xạ",
+    "optionC": "Thay đổi toàn bộ nội dung payload của gói tin nhằm mã hóa dữ liệu trước khi gửi đi",
+    "optionD": "Chỉ thay đổi số port đích trong khi giữ nguyên toàn bộ địa chỉ IP nguồn và đích ban đầu",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 67,
+    "question": "Địa chỉ Broadcast trong Ethernet được biểu diễn bằng dãy MAC nào?",
+    "optionA": "AA:AA:AA:AA:AA:AA, địa chỉ dự phòng dùng cho kết nối Unicast đặc biệt",
+    "optionB": "00:00:00:00:00:00, địa chỉ mặc định khi thiết bị chưa được cấu hình",
+    "optionC": "01:00:5E:00:00:00, dùng riêng cho lưu lượng Multicast của IPv4",
+    "optionD": "FF:FF:FF:FF:FF:FF, gửi tới tất cả thiết bị trong cùng một broadcast domain",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 68,
+    "question": "Named ACL trong ngữ cảnh VLAN và switch có ưu điểm gì so với Numbered VLAN truyền thống khi cần sửa cấu hình?",
+    "optionA": "VLAN Numbered không thể đặt tên còn VLAN Named thì bắt buộc phải có ít nhất hai tên gọi",
+    "optionB": "VLAN Named luôn nhanh hơn về tốc độ xử lý so với VLAN Numbered trong mọi trường hợp",
+    "optionC": "Named VLAN chỉ hoạt động được trên switch Layer 3, không dùng được cho switch Layer 2",
+    "optionD": "Đây là khái niệm dùng cho ACL chứ không áp dụng cho VLAN, VLAN chỉ dùng số hiệu ID hoặc tên gợi nhớ để quản lý",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 69,
+    "question": "Prefix length /64 phổ biến trong IPv6 LAN có ý nghĩa tương đương gì với khái niệm CIDR của IPv4?",
+    "optionA": "Không có ý nghĩa tương đương nào vì IPv6 không sử dụng khái niệm CIDR",
+    "optionB": "Xác định 64 bit đầu là phần network, phần còn lại 64 bit dùng làm Interface ID cho thiết bị",
+    "optionC": "Xác định chỉ 8 bit đầu thuộc phần network, tương tự Class A của IPv4 truyền thống",
+    "optionD": "Xác định toàn bộ 128 bit đều thuộc phần network, không còn bit nào cho host",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 70,
+    "question": "Router-on-a-stick yêu cầu router có tối thiểu bao nhiêu cổng vật lý để định tuyến giữa nhiều VLAN?",
+    "optionA": "Không cần cổng vật lý nào vì router có thể định tuyến hoàn toàn qua sóng không dây",
+    "optionB": "Một cổng vật lý duy nhất, được chia thành nhiều subinterface tương ứng với từng VLAN",
+    "optionC": "Tối thiểu hai cổng vật lý, mỗi cổng phụ trách một nửa số lượng VLAN",
+    "optionD": "Số cổng vật lý phải bằng đúng số lượng VLAN cần định tuyến trong hệ thống",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 71,
+    "question": "Một tổ chức được cấp dải 10.0.0.0/24, muốn tạo 4 subnet bằng nhau, mỗi subnet cần mượn bao nhiêu bit host?",
+    "optionA": "2 bit, vì hai lũy thừa hai bằng bốn nên tạo ra đúng bốn subnet theo yêu cầu",
+    "optionB": "3 bit, vì cần dư ra một số subnet phòng trường hợp mở rộng thêm sau này",
+    "optionC": "4 bit, vì cần đảm bảo mỗi subnet có đủ số lượng host tối đa có thể",
+    "optionD": "1 bit, vì đây là cách chia nhanh nhất dù chỉ tạo ra được hai subnet",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 72,
+    "question": "Mô hình xác thực Enterprise (802.1X) trong wireless phù hợp với môi trường nào hơn cả?",
+    "optionA": "Mạng thử nghiệm tạm thời không quan tâm tới vấn đề bảo mật",
+    "optionB": "Doanh nghiệp cần xác thực riêng từng người dùng và truy vết được hoạt động cá nhân",
+    "optionC": "Gia đình nhỏ chỉ cần một mật khẩu chung đơn giản cho vài thiết bị",
+    "optionD": "Quán cà phê công cộng không cần bất kỳ hình thức xác thực nào",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 73,
+    "question": "Router ID trong OSPF được chọn theo thứ tự ưu tiên nào nếu không cấu hình thủ công?",
+    "optionA": "Chỉ có thể xác định Router ID bằng cách cấu hình thủ công, không có cơ chế tự động nào",
+    "optionB": "IP thấp nhất trên interface vật lý luôn được chọn làm Router ID mặc định",
+    "optionC": "IP cao nhất trên Loopback interface được ưu tiên trước, sau đó mới tới IP cao nhất trên interface vật lý",
+    "optionD": "Router ID luôn được chọn ngẫu nhiên bởi hệ điều hành Cisco IOS khi khởi động",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 74,
+    "question": "Increment (block size) của subnet mask 255.255.255.240 (/28) là bao nhiêu?",
+    "optionA": "8, tương ứng với một nửa giá trị increment của subnet mask /27 liền trước",
+    "optionB": "28, lấy trực tiếp từ số bit mạng theo ký hiệu CIDR của subnet mask đang xét",
+    "optionC": "16, tính theo công thức 256 trừ đi giá trị octet thay đổi là 240 trong subnet mask",
+    "optionD": "32, tương ứng với giá trị increment của subnet mask /27 liền trước đó",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 75,
+    "question": "Trong kiến trúc Lightweight AP kết hợp WLC, vai trò chính của AP là gì?",
+    "optionA": "Chỉ hoạt động khi không có bất kỳ WLC nào được kết nối trong toàn bộ mạng",
+    "optionB": "Tự cấu hình hoàn toàn độc lập mà không cần bất kỳ sự phối hợp nào từ WLC trung tâm",
+    "optionC": "Chỉ đóng vai trò chân tay thực thi, toàn bộ cấu hình và quản lý được xử lý tập trung tại WLC",
+    "optionD": "Đảm nhiệm luôn vai trò định tuyến Layer 3 thay cho router chính trong hệ thống",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 76,
+    "question": "Cú pháp cấu hình PAT trên router Cisco IOS đúng nhất là dạng nào?",
+    "optionA": "ip nat translate list [ACL] interface [inside interface] overload",
+    "optionB": "ip pat inside source [ACL] interface [outside interface] enable",
+    "optionC": "ip nat inside source list [ACL] interface [outside interface] overload",
+    "optionD": "ip nat outside source list [ACL] interface [inside interface] overload",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 77,
+    "question": "PAT (Port Address Translation) khác Dynamic NAT như thế nào về tỷ lệ ánh xạ địa chỉ?",
+    "optionA": "Cả hai loại NAT đều ánh xạ theo tỷ lệ 1-1 hoàn toàn giống nhau không có khác biệt",
+    "optionB": "PAT cho phép nhiều Private IP dùng chung một Public IP nhờ phân biệt bằng số port khác nhau, trong khi Dynamic NAT vẫn theo tỷ lệ 1-1 tại một thời điểm",
+    "optionC": "Dynamic NAT cho phép nhiều Private IP dùng chung một Public IP còn PAT chỉ ánh xạ theo tỷ lệ 1-1",
+    "optionD": "PAT chỉ dùng được cho địa chỉ IPv6 trong khi Dynamic NAT chỉ dùng cho IPv4",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 78,
+    "question": "Vì sao Link-State routing (như OSPF) hội tụ nhanh hơn Distance Vector routing (như RIP)?",
+    "optionA": "Vì Link-State không cần trao đổi bất kỳ thông tin nào giữa các router trong toàn bộ mạng",
+    "optionB": "Vì Distance Vector luôn có tốc độ hội tụ nhanh hơn Link-State trong mọi kích thước mạng",
+    "optionC": "Vì cả hai loại giao thức có tốc độ hội tụ hoàn toàn giống nhau không có sự khác biệt",
+    "optionD": "Vì mỗi router Link-State có bản đồ đầy đủ topology và tự tính toán đường đi thay vì chỉ dựa vào thông tin từ hàng xóm như Distance Vector",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 79,
+    "question": "VLAN ID hợp lệ trong dải normal range của Cisco IOS nằm trong khoảng nào?",
+    "optionA": "1 đến 99, dải này dành riêng cho VLAN mặc định của switch",
+    "optionB": "100 đến 199, dải riêng biệt chỉ dùng cho VLAN quản lý hệ thống",
+    "optionC": "1 đến 4094, toàn bộ dải này đều được xem là normal range duy nhất",
+    "optionD": "1 đến 1005, gọi là normal range còn 1006 đến 4094 gọi là extended range",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 80,
+    "question": "DR và BDR được bầu chọn trên mạng multi-access nhằm mục đích gì?",
+    "optionA": "Chỉ áp dụng cho mạng point-to-point chứ không áp dụng cho mạng multi-access",
+    "optionB": "Tăng số lượng adjacency lên mức tối đa để đảm bảo dự phòng toàn diện hơn",
+    "optionC": "Giảm số lượng adjacency cần thiết lập, vì các router chỉ cần đồng bộ với DR/BDR thay vì với nhau",
+    "optionD": "Thay thế hoàn toàn vai trò của Area 0 trong toàn bộ hệ thống OSPF đang chạy",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 81,
+    "question": "Khái niệm Inside Local trong thuật ngữ NAT dùng để chỉ điều gì?",
+    "optionA": "Địa chỉ IP nội bộ (Private) của thiết bị trong LAN, nhìn từ góc độ nội bộ trước khi NAT xử lý",
+    "optionB": "Địa chỉ của thiết bị bên ngoài Internet, nhìn từ góc độ mạng nội bộ đang xét",
+    "optionC": "Địa chỉ thật (Public) của thiết bị bên ngoài Internet mà nội bộ đang kết nối tới",
+    "optionD": "Địa chỉ IP Public đại diện cho thiết bị đó khi đã ra ngoài Internet sau khi NAT",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 82,
+    "question": "Nguyên tắc chọn thiết bị mạng cho một hệ thống mới cần cân nhắc những yếu tố nào là chính?",
+    "optionA": "Chỉ cần quan tâm duy nhất tới màu sắc và kiểu dáng bên ngoài của thiết bị",
+    "optionB": "Không cần cân nhắc gì thêm ngoài thương hiệu sản xuất thiết bị đó là ai",
+    "optionC": "Số lượng cổng cần dùng, tốc độ yêu cầu, và có cần hỗ trợ PoE cho thiết bị hay không",
+    "optionD": "Chỉ cần chọn thiết bị đắt tiền nhất để đảm bảo hiệu năng tốt nhất có thể",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 83,
+    "question": "Trong cấu hình NAT trên router, việc xác định đúng interface nào là ip nat inside và interface nào là ip nat outside có ý nghĩa gì?",
+    "optionA": "Giúp router tự động chọn loại NAT (Static/Dynamic/PAT) phù hợp mà không cần cấu hình thêm",
+    "optionB": "Giúp router biết chính xác hướng traffic nào cần áp dụng NAT khi đi từ nội bộ ra ngoài Internet",
+    "optionC": "Chỉ cần thiết khi cấu hình Static NAT, không cần thiết với Dynamic NAT hay PAT",
+    "optionD": "Chỉ mang tính hình thức, không ảnh hưởng gì tới việc router có NAT đúng traffic hay không",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 84,
+    "question": "Vì sao Static NAT thường được dùng cho server cần truy cập từ bên ngoài theo địa chỉ cố định thay vì Dynamic NAT hoặc PAT?",
+    "optionA": "Vì Static NAT cho phép nhiều thiết bị dùng chung một địa chỉ Public duy nhất hiệu quả hơn PAT",
+    "optionB": "Vì Static NAT có tốc độ xử lý nhanh hơn hẳn so với Dynamic NAT và PAT trong mọi trường hợp",
+    "optionC": "Vì Dynamic NAT và PAT không thể áp dụng được cho bất kỳ loại server nào trong thực tế",
+    "optionD": "Vì Static NAT ánh xạ cố định 1-1 nên địa chỉ Public của server luôn không đổi, giúp người dùng ngoài truy cập ổn định",
+    "correctAnswer": "D",
+    "points": 4
+  },
+  {
+    "id": 85,
+    "question": "Thiết bị nào có thể đóng vai trò DHCP server trong một mạng doanh nghiệp nhỏ sử dụng thiết bị Cisco?",
+    "optionA": "Switch Layer 2 thông thường, vì đây là thiết bị duy nhất hỗ trợ chức năng DHCP",
+    "optionB": "Access Point không dây, vì đây là thiết bị bắt buộc phải cấp IP cho client",
+    "optionC": "Router Cisco, có thể cấu hình ip dhcp pool để cấp phát địa chỉ IP tự động cho client",
+    "optionD": "Chỉ có máy chủ Windows Server mới có khả năng đóng vai trò DHCP server hợp lệ",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 86,
+    "question": "Vì sao PC không cần biết router vật lý nào trong nhóm HSRP đang đóng vai Active?",
+    "optionA": "Vì HSRP yêu cầu PC phải cấu hình lại gateway thủ công mỗi khi router đổi vai trò",
+    "optionB": "Vì PC phải tự động dò quét toàn bộ subnet để tìm ra router đang hoạt động",
+    "optionC": "Vì toàn bộ PC chỉ cần trỏ default gateway về một Virtual IP cố định của cả nhóm",
+    "optionD": "Vì mỗi PC được gán một router Active riêng biệt không trùng với PC khác",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 87,
+    "question": "Thuật toán SPF (Shortest Path First) trong OSPF dựa trên nguyên lý toán học nào để tính đường đi ngắn nhất?",
+    "optionA": "Thuật toán sắp xếp nhanh Quicksort, dùng để sắp xếp các route theo thứ tự ưu tiên",
+    "optionB": "Thuật toán tìm kiếm nhị phân, dùng để tra cứu nhanh bảng định tuyến hiện có",
+    "optionC": "Thuật toán Dijkstra, mỗi router tự tính cây đường đi ngắn nhất tới mọi đích dựa trên LSDB",
+    "optionD": "Thuật toán Bellman-Ford, tính toán đường đi dựa trên số hop tới từng đích cụ thể",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 88,
+    "question": "Nếu Router ID được cấu hình thủ công bằng lệnh router-id, giá trị này có được ưu tiên hơn IP Loopback không?",
+    "optionA": "Có, Router ID cấu hình thủ công luôn được ưu tiên cao nhất so với các cách xác định tự động khác",
+    "optionB": "Không, IP Loopback luôn được ưu tiên hơn bất kể có cấu hình thủ công Router ID hay không",
+    "optionC": "Router ID cấu hình thủ công chỉ có hiệu lực sau khi router khởi động lại hoàn toàn hệ thống",
+    "optionD": "Cả hai giá trị được dùng đồng thời và router sẽ chọn ngẫu nhiên giữa hai lựa chọn này",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 89,
+    "question": "PDU tại tầng Network (Layer 3) trong quá trình đóng gói dữ liệu được gọi là gì?",
+    "optionA": "Bits, chuỗi tín hiệu điện hoặc quang được truyền qua đường vật lý",
+    "optionB": "Packet, đơn vị chứa địa chỉ IP nguồn và đích được thêm vào ở tầng mạng",
+    "optionC": "Frame, đơn vị chứa địa chỉ MAC nguồn đích cùng trailer kiểm tra lỗi FCS",
+    "optionD": "Segment, đơn vị được tầng Transport tạo ra khi chia nhỏ dữ liệu ứng dụng",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 90,
+    "question": "Trong phạm vi kiến thức CCNA, loại hình OSPF nào được học chủ yếu?",
+    "optionA": "OSPF không thuộc phạm vi kiến thức CCNA mà chỉ xuất hiện ở CCNP",
+    "optionB": "Single-area OSPF, với toàn bộ router nằm trong Area 0 duy nhất",
+    "optionC": "OSPFv3 nâng cao dành riêng cho mạng IPv6 quy mô lớn của doanh nghiệp",
+    "optionD": "Multi-area OSPF, với nhiều Area khác nhau kết nối phức tạp qua Area 0",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 91,
+    "question": "Khi hai router OSPF có Area ID khác nhau trên cùng một segment mạng, điều gì sẽ xảy ra?",
+    "optionA": "Chỉ có router có Area ID nhỏ hơn được phép trở thành neighbor với router còn lại",
+    "optionB": "OSPF sẽ tự động đồng bộ lại Area ID của cả hai router giống nhau mà không cần cấu hình",
+    "optionC": "Hai router vẫn hình thành neighbor bình thường vì Area ID không ảnh hưởng gì tới việc kết nối",
+    "optionD": "Hai router sẽ không thể hình thành neighbor adjacency với nhau vì Area ID không khớp",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 92,
+    "question": "Trong nhóm FHRP, thuật ngữ nào chỉ router đang xử lý traffic thực tế cho subnet tại một thời điểm?",
+    "optionA": "Backup, router chỉ tham gia đồng bộ thông tin nhưng không xử lý traffic",
+    "optionB": "Standby, router đang chờ sẵn để thay thế khi router chính gặp sự cố",
+    "optionC": "Passive, router chỉ lắng nghe trạng thái nhóm mà không đóng vai trò gì khác",
+    "optionD": "Active, router đang trực tiếp forward traffic thay mặt cho Virtual IP của nhóm",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 93,
+    "question": "802.1Q Tagging thực hiện chức năng gì khi frame đi qua đường trunk?",
+    "optionA": "Xóa bỏ hoàn toàn thông tin VLAN của frame trước khi chuyển sang switch khác",
+    "optionB": "Gắn thêm 4 byte chứa VLAN ID vào frame Ethernet để switch nhận biết frame thuộc VLAN nào",
+    "optionC": "Chuyển đổi frame Ethernet thành gói tin IP để định tuyến qua router trung gian",
+    "optionD": "Mã hóa toàn bộ nội dung payload của frame trước khi truyền qua đường trunk",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 94,
+    "question": "Duplex mismatch xảy ra khi nào và gây hậu quả gì cho kết nối mạng?",
+    "optionA": "Khi cả hai đầu kết nối đều cấu hình full-duplex giống nhau hoàn toàn không gây ra vấn đề gì",
+    "optionB": "Khi một đầu cấu hình half-duplex còn đầu kia full-duplex, gây collision và giảm hiệu năng đáng kể",
+    "optionC": "Khi cáp mạng bị đứt giữa chừng khiến hai thiết bị hoàn toàn mất kết nối với nhau",
+    "optionD": "Khi switch không còn đủ dung lượng bảng CAM để học thêm địa chỉ MAC mới",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 95,
+    "question": "DHCP Relay được dùng khi nào và cần cấu hình lệnh gì trên router?",
+    "optionA": "Khi cần tăng tốc độ cấp phát IP, cấu hình ip dhcp relay trên toàn bộ router trong mạng",
+    "optionB": "Khi client và DHCP server nằm chung một subnet, cần cấu hình ip helper-address trên switch",
+    "optionC": "DHCP Relay không cần cấu hình gì thêm vì router tự động relay mọi gói broadcast",
+    "optionD": "Khi DHCP server ở subnet khác với client, cần cấu hình ip helper-address trên interface router phía client",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 96,
+    "question": "Switch Layer 3 (Multilayer Switch) khác Switch Layer 2 thông thường ở điểm nào?",
+    "optionA": "Luôn có ít cổng vật lý hơn hẳn so với switch Layer 2 cùng phân khúc giá",
+    "optionB": "Vừa switch vừa có khả năng routing thông qua SVI, thường đặt ở tầng Distribution hoặc Core",
+    "optionC": "Không thể học địa chỉ MAC vào bảng CAM như switch Layer 2 truyền thống",
+    "optionD": "Chỉ hoạt động dựa trên địa chỉ MAC và hoàn toàn không có khả năng định tuyến nào khác",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 97,
+    "question": "Cú pháp cấu hình OSPF cơ bản trên router Cisco IOS đúng nhất là dạng nào?",
+    "optionA": "router ospf area 0, sau đó network [ip mạng] [wildcard mask]",
+    "optionB": "ospf enable area 0, sau đó network [ip mạng] [subnet mask]",
+    "optionC": "router ospf 1, sau đó ip route [ip mạng] [subnet mask] area 0",
+    "optionD": "router ospf 1, sau đó network [ip mạng] [wildcard mask] area 0",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 98,
+    "question": "Trong bốn bước TCP Termination, ai là bên gửi FIN thứ hai trong quy trình?",
+    "optionA": "Bên B, sau khi đã gửi ACK xác nhận FIN đầu tiên từ bên A thì tiếp tục gửi FIN của chính mình",
+    "optionB": "Không bên nào cần gửi FIN thứ hai vì một FIN duy nhất là đủ để kết thúc kết nối",
+    "optionC": "Cả hai bên cùng gửi FIN đồng thời ngay từ bước đầu tiên của quy trình kết thúc",
+    "optionD": "Bên A, ngay sau khi nhận được ACK từ bên B mà không cần chờ thêm bất kỳ bước nào",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 99,
+    "question": "Voice VLAN được thiết kế nhằm mục đích gì trên cổng switch nối với điện thoại IP?",
+    "optionA": "Thay thế hoàn toàn vai trò của VLAN Management trong hệ thống mạng doanh nghiệp",
+    "optionB": "Tách biệt traffic thoại VoIP cần độ trễ thấp khỏi traffic dữ liệu thông thường trên cùng một cổng",
+    "optionC": "Cho phép cổng switch đó hoạt động như một Access Point không dây tạm thời",
+    "optionD": "Tăng số lượng địa chỉ MAC tối đa được phép học trên cổng đó lên gấp đôi",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 100,
+    "question": "Một doanh nghiệp chỉ được cấp một địa chỉ Public duy nhất từ ISP nhưng có hàng trăm PC nội bộ cần ra Internet, giải pháp NAT nào phù hợp nhất?",
+    "optionA": "PAT (NAT Overload), cho phép toàn bộ PC dùng chung một địa chỉ Public nhờ phân biệt bằng số port",
+    "optionB": "Không có giải pháp NAT nào phù hợp, doanh nghiệp bắt buộc phải xin thêm địa chỉ Public",
+    "optionC": "Dynamic NAT, ánh xạ từ dải Private sang dải Public theo tỷ lệ 1-1 tại một thời điểm",
+    "optionD": "Static NAT, ánh xạ cố định 1-1 giữa từng PC và một địa chỉ Public riêng biệt",
+    "correctAnswer": "A",
+    "points": 4
+  }
+]
