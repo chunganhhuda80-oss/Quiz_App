@@ -4013,4 +4013,784 @@ body.auth-mode .app-container {
   }
 }
 
+/* ==========================================================================
+   BẢNG VINH DANH & XẾP HẠNG TOP 5 HỌC SINH (LEADERBOARD & RANKING)
+   ========================================================================== */
+
+/* 1. Sidebar tab icon ranking */
+.sidebar-nav-item.active .ranking-icon-box {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4) !important;
+}
+
+.sidebar-chip-pill.ranking-chip-pill {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+/* 2. Widget Vinh danh Top 5 trên Trang chủ (#start-screen) */
+.ranking-home-widget {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 20px 22px;
+  margin-bottom: 24px;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04);
+  transition: all var(--transition-fast);
+}
+
+.ranking-home-widget:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 26px rgba(15, 23, 42, 0.08);
+}
+
+.ranking-widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.ranking-widget-title-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ranking-widget-trophy {
+  font-size: 1.8rem;
+  line-height: 1;
+  animation: bounceTrophy 2.5s infinite;
+}
+
+@keyframes bounceTrophy {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px) scale(1.08); }
+}
+
+.ranking-widget-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 0 2px 0;
+  letter-spacing: -0.01em;
+}
+
+.ranking-widget-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+  font-weight: 600;
+}
+
+.btn-open-ranking-modal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  color: var(--primary);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-open-ranking-modal:hover {
+  background: var(--primary-light);
+  border-color: #c7d2fe;
+  transform: translateY(-1px);
+}
+
+/* Lưới 5 thẻ Top học sinh trên Trang chủ */
+.ranking-top5-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .ranking-top5-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
+  .ranking-top5-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ranking-card-mini {
+  background: #f8fafc;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.ranking-card-mini:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Thẻ Top 1 Vàng */
+.ranking-card-mini.rank-top-1 {
+  background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%);
+  border-color: #fde68a;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.12);
+}
+
+/* Thẻ Top 2 Bạc */
+.ranking-card-mini.rank-top-2 {
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px rgba(100, 116, 139, 0.1);
+}
+
+/* Thẻ Top 3 Đồng */
+.ranking-card-mini.rank-top-3 {
+  background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%);
+  border-color: #fed7aa;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.1);
+}
+
+.rank-badge-pill {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rank-top-1 .rank-badge-pill {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fcd34d;
+}
+
+.rank-top-2 .rank-badge-pill {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.rank-top-3 .rank-badge-pill {
+  background: #ffedd5;
+  color: #c2410c;
+  border: 1px solid #fdba74;
+}
+
+.rank-card-mini-other .rank-badge-pill {
+  background: #e0e7ff;
+  color: var(--primary);
+  border: 1px solid #c7d2fe;
+}
+
+.rank-avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #ffffff;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.rank-top-1 .rank-avatar-circle {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.rank-top-2 .rank-avatar-circle {
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+}
+
+.rank-top-3 .rank-avatar-circle {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+}
+
+.rank-card-mini-other .rank-avatar-circle {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+}
+
+.rank-user-fullname {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  margin-bottom: 2px;
+}
+
+.rank-user-class {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.rank-score-pill {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #059669;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.rank-card-empty {
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  grid-column: 1 / -1;
+}
+
+/* ==========================================================================
+   3. MODAL BẢNG XẾP HẠNG TOÀN DIỆN (#ranking-modal)
+   ========================================================================== */
+.ranking-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.ranking-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: fadeIn 0.25s ease;
+}
+
+.ranking-modal-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 860px;
+  max-height: 92vh;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUpModal {
+  from { transform: translateY(24px) scale(0.97); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.ranking-modal-header {
+  padding: 20px 24px 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+
+.ranking-modal-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ranking-trophy-badge {
+  font-size: 2rem;
+  line-height: 1;
+  animation: bounceTrophy 2s infinite;
+}
+
+.ranking-modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.ranking-modal-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 2px 0 0 0;
+  font-weight: 500;
+}
+
+.ranking-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.ranking-close-btn:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Thẻ Thành Tích Cá Nhân của Học Sinh Đang Đăng Nhập */
+.user-achievement-card {
+  margin: 16px 24px 8px 24px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.user-achievement-card.status-ranked {
+  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+  border: 1.5px solid #a7f3d0;
+  color: #065f46;
+}
+
+.user-achievement-card.status-pending {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1.5px solid #fde68a;
+  color: #92400e;
+}
+
+.user-achievement-card.status-guest {
+  background: #f1f5f9;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+}
+
+.achievement-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.achievement-icon {
+  font-size: 1.6rem;
+}
+
+.achievement-text-title {
+  font-size: 0.92rem;
+  font-weight: 800;
+  margin: 0 0 2px 0;
+}
+
+.achievement-text-desc {
+  font-size: 0.78rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.achievement-rank-tag {
+  font-size: 0.9rem;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Dòng giải thích Quy Chế */
+.ranking-rules-hint {
+  margin: 0 24px 14px 24px;
+  padding: 8px 14px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px dashed #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.ranking-rules-hint svg {
+  flex-shrink: 0;
+  color: var(--primary);
+}
+
+/* Bục Vinh Danh Top 3 Podium */
+.ranking-podium-section {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  align-items: flex-end;
+  gap: 14px;
+  margin: 6px 24px 18px 24px;
+  padding-bottom: 6px;
+}
+
+.podium-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.podium-avatar-wrap {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.podium-crown {
+  position: absolute;
+  top: -14px;
+  font-size: 1.3rem;
+  animation: floatOrb 3s ease-in-out infinite alternate;
+}
+
+.podium-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  border: 3px solid #ffffff;
+}
+
+.podium-item.podium-rank-1 .podium-avatar {
+  width: 62px;
+  height: 62px;
+  font-size: 1.25rem;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border-color: #fef3c7;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
+.podium-item.podium-rank-2 .podium-avatar {
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  border-color: #f1f5f9;
+}
+
+.podium-item.podium-rank-3 .podium-avatar {
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  border-color: #fff7ed;
+}
+
+.podium-name {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-main);
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.podium-class {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.podium-pillar {
+  width: 100%;
+  border-radius: 16px 16px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 8px;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.podium-rank-1 .podium-pillar {
+  height: 110px;
+  background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+}
+
+.podium-rank-2 .podium-pillar {
+  height: 85px;
+  background: linear-gradient(180deg, #64748b 0%, #334155 100%);
+}
+
+.podium-rank-3 .podium-pillar {
+  height: 70px;
+  background: linear-gradient(180deg, #ea580c 0%, #9a3412 100%);
+}
+
+.podium-pillar-rank {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.podium-pillar-score {
+  font-size: 0.82rem;
+  font-weight: 700;
+  opacity: 0.95;
+  margin-top: 2px;
+}
+
+/* Bộ lọc Tab: Xếp Hạng vs Pending */
+.ranking-table-header-tabs {
+  display: flex;
+  gap: 10px;
+  margin: 0 24px 10px 24px;
+}
+
+.ranking-tab-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ranking-tab-filter:hover {
+  background: #e2e8f0;
+  color: var(--text-main);
+}
+
+.ranking-tab-filter.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
+.ranking-count-pill {
+  font-size: 0.72rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+
+.ranking-tab-filter:not(.active) .ranking-count-pill {
+  background: #cbd5e1;
+  color: #334155;
+}
+
+/* Thân cuộn danh sách */
+.ranking-scroll-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 24px 16px 24px;
+  max-height: 380px;
+}
+
+.ranking-list-view {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Từng hàng học sinh */
+.ranking-row-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 10px 16px;
+  transition: all var(--transition-fast);
+}
+
+.ranking-row-item:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: var(--shadow-sm);
+  transform: translateX(2px);
+}
+
+.ranking-row-item.is-current-user {
+  background: #f0fdf4;
+  border-color: #86efac;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.15);
+}
+
+.ranking-row-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.rank-number-box {
+  width: 34px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.rank-avatar-small {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.rank-user-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rank-name-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rank-name-line strong {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tag-you {
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: #10b981;
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 6px;
+}
+
+.rank-class-text {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+/* Các badge tuần */
+.rank-weeks-badges {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.week-score-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #e0e7ff;
+  color: var(--primary);
+}
+
+.week-score-tag.uncompleted {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.ranking-row-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.total-score-text {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #059669;
+}
+
+.avg-score-text {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* Pending Badge */
+.pending-badge {
+  font-size: 0.74rem;
+  font-weight: 800;
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+/* Footer Modal */
+.ranking-modal-footer {
+  padding: 14px 24px;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  background: #f8fafc;
+}
+
+.btn-ranking-close-sub {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-ranking-close-sub:hover {
+  background: #e2e8f0;
+  color: var(--text-main);
+}
+
+
 

@@ -186,6 +186,11 @@ function saveOfficialAttempt(username, weekId, data) {
       };
       localStorage.setItem(key, JSON.stringify(attempts));
       console.log(`[Quiz History] Đã khóa điểm chính thức lần 1 cho tài khoản '${username}' - Tuần ${weekId}: ${data.score} điểm`);
+
+      // Tự động cập nhật bảng xếp hạng tức thì
+      if (typeof renderHomeRankingWidget === "function") {
+        renderHomeRankingWidget();
+      }
     }
   } catch (e) {
     console.error("Lỗi lưu lịch sử thi:", e);
@@ -2010,6 +2015,8 @@ async function handleLoginSubmit(e) {
       showScreen("start-screen");
       if (usernameInput) usernameInput.value = "";
       if (passwordInput) passwordInput.value = "";
+      if (typeof renderHomeRankingWidget === "function") renderHomeRankingWidget();
+      if (typeof openRankingModal === "function") openRankingModal(true);
     }, 450);
     return;
   }
@@ -2019,7 +2026,9 @@ async function handleLoginSubmit(e) {
   const foundUser = accounts.find(u => u.username.toLowerCase() === username);
 
   if (foundUser) {
-    if (foundUser.password !== password) {
+    const isMockUser = ["nguyen_van_an", "tran_thi_mai", "le_hoang_nam", "pham_minh_duc", "vu_hai_yen", "hoang_thu_trang"].includes(foundUser.username.toLowerCase());
+    const passMatch = foundUser.password === password || (isMockUser && (password === "123" || password === "123456"));
+    if (!passMatch) {
       showAuthAlert("Mật khẩu không chính xác! Vui lòng thử lại.", "error");
       return;
     }
@@ -2040,6 +2049,8 @@ async function handleLoginSubmit(e) {
       showScreen("start-screen");
       if (usernameInput) usernameInput.value = "";
       if (passwordInput) passwordInput.value = "";
+      if (typeof renderHomeRankingWidget === "function") renderHomeRankingWidget();
+      if (typeof openRankingModal === "function") openRankingModal(true);
     }, 450);
     return;
   }
@@ -2195,6 +2206,8 @@ async function handleRegisterSubmit(e) {
     if (usernameInput) usernameInput.value = "";
     if (passwordInput) passwordInput.value = "";
     if (confirmPwdInput) confirmPwdInput.value = "";
+    if (typeof renderHomeRankingWidget === "function") renderHomeRankingWidget();
+    if (typeof openRankingModal === "function") openRankingModal(true);
   }, 600);
 }
 
@@ -2463,6 +2476,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 9. Khởi tạo tính năng 2 Tab: Bài Kiểm Tra & Lộ Trình (Mindmap 15 Tuần)
   initRoadmapFeature();
+
+  // 10. Khởi tạo Bảng Thành Tích & Xếp Hạng Top 5
+  initRankingFeature();
 });
 
 // ==============================================================================
@@ -3447,6 +3463,586 @@ function initSidebarNavigation() {
         backdrop.classList.remove("active");
         setTimeout(() => { backdrop.style.display = "none"; }, 200);
       }
+    });
+  }
+
+  const tabRanking = document.getElementById("sidebar-tab-ranking");
+  if (tabRanking) {
+    tabRanking.addEventListener("click", () => {
+      openRankingModal();
+      sidebar.classList.remove("is-hovered");
+      if (backdrop) {
+        backdrop.classList.remove("active");
+        setTimeout(() => { backdrop.style.display = "none"; }, 200);
+      }
+    });
+  }
+}
+
+// ==============================================================================
+// HỆ THỐNG BẢNG XẾP HẠNG (LEADERBOARD RANKING) & MOCK TEST USERS
+// ==============================================================================
+
+/**
+ * Danh sách 6 tài khoản mẫu phục vụ kiểm thử (Mật khẩu: 123456 hoặc 123)
+ * - 5 tài khoản hoàn thành đủ 4/4 tuần đã mở để xếp Top 1 -> Top 5
+ * - 1 tài khoản mới hoàn thành 2/4 tuần để hiển thị trạng thái "Pending"
+ */
+const MOCK_TEST_ACCOUNTS = [
+  {
+    username: "nguyen_van_an",
+    password: "123",
+    fullName: "Nguyễn Văn An",
+    className: "CNTT-K18A",
+    attempts: {
+      1: { score: 98, correct: 49, total: 50, percent: 98, durationText: "14:15" },
+      2: { score: 96, correct: 67, total: 70, percent: 96, durationText: "19:40" },
+      3: { score: 96, correct: 67, total: 70, percent: 96, durationText: "21:10" },
+      4: { score: 98, correct: 69, total: 70, percent: 98, durationText: "20:05" }
+    }
+  },
+  {
+    username: "tran_thi_mai",
+    password: "123",
+    fullName: "Trần Thị Mai",
+    className: "ATTT-K18B",
+    attempts: {
+      1: { score: 94, correct: 47, total: 50, percent: 94, durationText: "15:20" },
+      2: { score: 96, correct: 67, total: 70, percent: 96, durationText: "18:50" },
+      3: { score: 92, correct: 64, total: 70, percent: 92, durationText: "22:30" },
+      4: { score: 94, correct: 66, total: 70, percent: 94, durationText: "21:15" }
+    }
+  },
+  {
+    username: "le_hoang_nam",
+    password: "123",
+    fullName: "Lê Hoàng Nam",
+    className: "KTPM-K18",
+    attempts: {
+      1: { score: 92, correct: 46, total: 50, percent: 92, durationText: "16:05" },
+      2: { score: 90, correct: 63, total: 70, percent: 90, durationText: "23:10" },
+      3: { score: 94, correct: 66, total: 70, percent: 94, durationText: "19:45" },
+      4: { score: 88, correct: 62, total: 70, percent: 88, durationText: "24:00" }
+    }
+  },
+  {
+    username: "pham_minh_duc",
+    password: "123",
+    fullName: "Phạm Minh Đức",
+    className: "DTVT-K18",
+    attempts: {
+      1: { score: 88, correct: 44, total: 50, percent: 88, durationText: "17:10" },
+      2: { score: 90, correct: 63, total: 70, percent: 90, durationText: "22:15" },
+      3: { score: 86, correct: 60, total: 70, percent: 86, durationText: "25:30" },
+      4: { score: 88, correct: 62, total: 70, percent: 88, durationText: "23:45" }
+    }
+  },
+  {
+    username: "vu_hai_yen",
+    password: "123",
+    fullName: "Vũ Hải Yến",
+    className: "CNTT-K18B",
+    attempts: {
+      1: { score: 86, correct: 43, total: 50, percent: 86, durationText: "18:20" },
+      2: { score: 84, correct: 59, total: 70, percent: 84, durationText: "24:50" },
+      3: { score: 88, correct: 62, total: 70, percent: 88, durationText: "22:10" },
+      4: { score: 84, correct: 59, total: 70, percent: 84, durationText: "25:10" }
+    }
+  },
+  {
+    username: "hoang_thu_trang",
+    password: "123",
+    fullName: "Hoàng Thu Trang",
+    className: "CNTT-K18A",
+    attempts: {
+      1: { score: 96, correct: 48, total: 50, percent: 96, durationText: "14:50" },
+      2: { score: 94, correct: 66, total: 70, percent: 94, durationText: "19:10" }
+      // Tuần 3 và 4 chưa làm -> Rơi vào Pending!
+    }
+  }
+];
+
+/**
+ * Tự động chèn 6 tài khoản mẫu vào LocalStorage nếu chưa tồn tại
+ */
+function seedMockTestUsersIfEmpty() {
+  try {
+    const existingAccounts = getLocalAccounts();
+    const existingUsernames = new Set(existingAccounts.map(a => a.username.toLowerCase()));
+    let hasAccountChanges = false;
+
+    MOCK_TEST_ACCOUNTS.forEach(mock => {
+      // 1. Thêm tài khoản nếu chưa có
+      if (!existingUsernames.has(mock.username.toLowerCase())) {
+        existingAccounts.push({
+          username: mock.username,
+          password: mock.password,
+          fullName: mock.fullName,
+          className: mock.className,
+          createdAt: new Date().toISOString()
+        });
+        hasAccountChanges = true;
+      }
+
+      // 2. Thêm lịch sử điểm thi lần 1 chính thức cho tài khoản
+      const historyKey = getUserHistoryKey(mock.username);
+      const existingHistory = getUserOfficialAttempts(mock.username);
+      let historyChanged = false;
+
+      Object.keys(mock.attempts).forEach(weekId => {
+        if (!existingHistory[weekId]) {
+          existingHistory[weekId] = {
+            ...mock.attempts[weekId],
+            firstRecordedAt: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })
+          };
+          historyChanged = true;
+        }
+      });
+
+      if (historyChanged) {
+        localStorage.setItem(historyKey, JSON.stringify(existingHistory));
+      }
+    });
+
+    if (hasAccountChanges) {
+      saveLocalAccounts(existingAccounts);
+    }
+  } catch (e) {
+    console.warn("Lỗi khi tạo dữ liệu kiểm thử Mock Users:", e);
+  }
+}
+
+/**
+ * Tính toán dữ liệu Bảng Xếp Hạng & Phân loại:
+ * - Ranked: Những tài khoản ĐÃ HOÀN THÀNH TẤT CẢ các tuần đã mở
+ * - Pending: Những tài khoản chưa làm đủ số tuần đã mở
+ */
+function calculateLeaderboardData() {
+  const unlockedWeeks = (CONFIG.WEEKS || []).filter(w => isWeekUnlocked(w));
+  const totalUnlocked = unlockedWeeks.length;
+
+  const accounts = getLocalAccounts();
+  const rankedUsers = [];
+  const pendingUsers = [];
+
+  accounts.forEach(account => {
+    if (account.role === "admin") return;
+
+    const attempts = getUserOfficialAttempts(account.username);
+    let totalScore = 0;
+    let completedWeeksCount = 0;
+    const weekScores = {};
+
+    unlockedWeeks.forEach(w => {
+      const attempt = attempts[w.id];
+      if (attempt && typeof attempt.score === "number") {
+        weekScores[w.id] = attempt.score;
+        totalScore += attempt.score;
+        completedWeeksCount++;
+      } else {
+        weekScores[w.id] = null;
+      }
+    });
+
+    const isFullyCompleted = totalUnlocked > 0 && completedWeeksCount === totalUnlocked;
+    const avgScore = completedWeeksCount > 0 ? Math.round((totalScore / completedWeeksCount) * 10) / 10 : 0;
+
+    const userStats = {
+      username: account.username,
+      fullName: account.fullName || account.username,
+      className: account.className || "Chưa phân lớp",
+      totalScore: totalScore,
+      avgScore: avgScore,
+      completedWeeksCount: completedWeeksCount,
+      totalUnlocked: totalUnlocked,
+      weekScores: weekScores,
+      isFullyCompleted: isFullyCompleted
+    };
+
+    if (isFullyCompleted) {
+      rankedUsers.push(userStats);
+    } else {
+      pendingUsers.push(userStats);
+    }
+  });
+
+  // Sắp xếp Ranked: Điểm cao nhất lên đầu, bằng điểm thì xét điểm TB
+  rankedUsers.sort((a, b) => {
+    if (b.totalScore !== a.totalScore) return b.totalScore - a.totalScore;
+    return b.avgScore - a.avgScore;
+  });
+
+  // Sắp xếp Pending: Ưu tiên ai làm nhiều tuần hơn, sau đó xét tổng điểm
+  pendingUsers.sort((a, b) => {
+    if (b.completedWeeksCount !== a.completedWeeksCount) return b.completedWeeksCount - a.completedWeeksCount;
+    return b.totalScore - a.totalScore;
+  });
+
+  return {
+    unlockedWeeks,
+    totalUnlocked,
+    rankedUsers,
+    pendingUsers
+  };
+}
+
+/**
+ * Hiển thị widget Top 5 vinh danh trên màn hình chính (#start-screen)
+ */
+function renderHomeRankingWidget() {
+  const container = document.getElementById("ranking-top5-home-list");
+  const condText = document.getElementById("ranking-widget-condition-text");
+  if (!container) return;
+
+  const { unlockedWeeks, totalUnlocked, rankedUsers } = calculateLeaderboardData();
+
+  if (condText) {
+    const weekNames = unlockedWeeks.map(w => w.name).join(", ");
+    condText.innerHTML = `Điều kiện xét duyệt: Đã hoàn thành tất cả <strong>${totalUnlocked} tuần đã mở</strong> (${weekNames}) • Cập nhật tức thì`;
+  }
+
+  const top5 = rankedUsers.slice(0, 5);
+  if (top5.length === 0) {
+    container.innerHTML = `
+      <div class="rank-card-empty">
+        Chưa có học sinh nào hoàn thành toàn bộ ${totalUnlocked} tuần đã mở. Hãy làm bài thi để là người đầu tiên ghi danh Top 1! 🚀
+      </div>
+    `;
+    return;
+  }
+
+  const badges = [
+    { class: "rank-top-1", label: "🥇 Quán Quân" },
+    { class: "rank-top-2", label: "🥈 Á Quân" },
+    { class: "rank-top-3", label: "🥉 Quý Quân" },
+    { class: "rank-card-mini-other", label: "🎖️ Top 4" },
+    { class: "rank-card-mini-other", label: "🎖️ Top 5" }
+  ];
+
+  container.innerHTML = top5.map((user, idx) => {
+    const meta = badges[idx] || { class: "rank-card-mini-other", label: `Hạng #${idx + 1}` };
+    const initial = (user.fullName || "H").trim().charAt(0).toUpperCase();
+
+    return `
+      <div class="ranking-card-mini ${meta.class}" title="Nhấn để xem chi tiết bảng thành tích" onclick="openRankingModal();">
+        <span class="rank-badge-pill">${meta.label}</span>
+        <div class="rank-avatar-circle">${initial}</div>
+        <div class="rank-user-fullname" title="${escapeHtml(user.fullName)}">${escapeHtml(user.fullName)}</div>
+        <div class="rank-user-class">${escapeHtml(user.className)}</div>
+        <div class="rank-score-pill">
+          <strong>${user.totalScore} đ</strong> <span style="font-size: 0.7rem; opacity: 0.85;">(TB: ${user.avgScore})</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/**
+ * Hiển thị Modal Bảng Xếp Hạng & Bảng Thành Tích Cá Nhân Toàn Diện
+ */
+function renderRankingModal() {
+  const { unlockedWeeks, totalUnlocked, rankedUsers, pendingUsers } = calculateLeaderboardData();
+  const currentUser = AuthState.currentUser;
+
+  // 1. Cập nhật thẻ Thành Tích Cá Nhân (#user-achievement-card)
+  const userCard = document.getElementById("user-achievement-card");
+  if (userCard) {
+    if (currentUser) {
+      const rankedIndex = rankedUsers.findIndex(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
+      if (rankedIndex !== -1) {
+        const rankNum = rankedIndex + 1;
+        const userStat = rankedUsers[rankedIndex];
+        const medal = rankNum === 1 ? "🥇" : rankNum === 2 ? "🥈" : rankNum === 3 ? "🥉" : "🎖️";
+        userCard.className = "user-achievement-card status-ranked";
+        userCard.innerHTML = `
+          <div class="achievement-left">
+            <span class="achievement-icon">${medal}</span>
+            <div>
+              <div class="achievement-text-title">Chúc mừng ${escapeHtml(currentUser.fullName)}! Bạn đang xếp HẠNG #${rankNum}</div>
+              <div class="achievement-text-desc">
+                Đã hoàn thành xuất sắc <strong>${totalUnlocked}/${totalUnlocked}</strong> tuần thi đã mở • Tổng điểm: <strong>${userStat.totalScore} điểm</strong> (TB: ${userStat.avgScore}đ)
+              </div>
+            </div>
+          </div>
+          <div class="achievement-rank-tag">🏆 Hạng #${rankNum} Toàn Hệ Thống</div>
+        `;
+      } else {
+        const pendingStat = pendingUsers.find(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
+        const doneCount = pendingStat ? pendingStat.completedWeeksCount : 0;
+        const currentScore = pendingStat ? pendingStat.totalScore : 0;
+        const remaining = totalUnlocked - doneCount;
+
+        userCard.className = "user-achievement-card status-pending";
+        userCard.innerHTML = `
+          <div class="achievement-left">
+            <span class="achievement-icon">⏳</span>
+            <div>
+              <div class="achievement-text-title">Tài khoản: ${escapeHtml(currentUser.fullName)} • Trạng thái: Chờ Xét Duyệt (Pending)</div>
+              <div class="achievement-text-desc">
+                Bạn đã hoàn thành <strong>${doneCount}/${totalUnlocked} tuần mở</strong> (Tổng: ${currentScore} điểm). Bạn cần thi tiếp <strong>${remaining} tuần còn lại</strong> để chính thức lọt vào Bảng Xếp Hạng!
+              </div>
+            </div>
+          </div>
+          <div class="achievement-rank-tag" style="color: #b45309; border-color: #fde68a;">⏳ Chờ (${doneCount}/${totalUnlocked} tuần)</div>
+        `;
+      }
+    } else {
+      userCard.className = "user-achievement-card status-guest";
+      userCard.innerHTML = `
+        <div class="achievement-left">
+          <span class="achievement-icon">👤</span>
+          <div>
+            <div class="achievement-text-title">Bạn đang truy cập ở chế độ Khách</div>
+            <div class="achievement-text-desc">Đăng nhập tài khoản học sinh để hệ thống lưu điểm và vinh danh bạn trên Bảng Xếp Hạng!</div>
+          </div>
+        </div>
+        <button type="button" class="btn-primary" style="padding: 7px 16px; font-size: 0.82rem;" onclick="closeRankingModal(); openAuthModal('login');">
+          Đăng Nhập Ngay
+        </button>
+      `;
+    }
+  }
+
+  // 2. Cập nhật bục Vinh Danh Top 3 Podium (#ranking-podium-section)
+  const podiumSection = document.getElementById("ranking-podium-section");
+  if (podiumSection) {
+    const top1 = rankedUsers[0] || null;
+    const top2 = rankedUsers[1] || null;
+    const top3 = rankedUsers[2] || null;
+
+    const renderPodiumCol = (user, rank, crown, label) => {
+      if (!user) {
+        return `
+          <div class="podium-item podium-rank-${rank}">
+            <div class="podium-avatar-wrap">
+              <span class="podium-crown">${crown}</span>
+              <div class="podium-avatar" style="background: #e2e8f0; color: #94a3b8;">--</div>
+            </div>
+            <div class="podium-name" style="color: #94a3b8;">Đang chờ...</div>
+            <div class="podium-class" style="color: #cbd5e1;">--</div>
+            <div class="podium-pillar">
+              <span class="podium-pillar-rank">${label}</span>
+              <span class="podium-pillar-score">--</span>
+            </div>
+          </div>
+        `;
+      }
+
+      const initial = (user.fullName || "H").trim().charAt(0).toUpperCase();
+      return `
+        <div class="podium-item podium-rank-${rank}">
+          <div class="podium-avatar-wrap">
+            <span class="podium-crown">${crown}</span>
+            <div class="podium-avatar">${initial}</div>
+          </div>
+          <div class="podium-name" title="${escapeHtml(user.fullName)}">${escapeHtml(user.fullName)}</div>
+          <div class="podium-class">${escapeHtml(user.className)}</div>
+          <div class="podium-pillar">
+            <span class="podium-pillar-rank">${label}</span>
+            <span class="podium-pillar-score">${user.totalScore} đ (TB: ${user.avgScore})</span>
+          </div>
+        </div>
+      `;
+    };
+
+    // Thứ tự hiển thị: Hạng 2 (trái) -> Hạng 1 (giữa, cao nhất) -> Hạng 3 (phải)
+    podiumSection.innerHTML = `
+      ${renderPodiumCol(top2, 2, "🥈", "TOP 2")}
+      ${renderPodiumCol(top1, 1, "👑", "TOP 1")}
+      ${renderPodiumCol(top3, 3, "🥉", "TOP 3")}
+    `;
+  }
+
+  // 3. Cập nhật số đếm trên Tab
+  const pillRanked = document.getElementById("count-pill-ranked");
+  const pillPending = document.getElementById("count-pill-pending");
+  if (pillRanked) pillRanked.textContent = rankedUsers.length;
+  if (pillPending) pillPending.textContent = pendingUsers.length;
+
+  // 4. Render danh sách Xếp Hạng Chính Thức (#ranking-list-ranked)
+  const rankedContainer = document.getElementById("ranking-list-ranked");
+  if (rankedContainer) {
+    if (rankedUsers.length === 0) {
+      rankedContainer.innerHTML = `
+        <div class="rank-card-empty" style="background: #f8fafc; border-radius: 12px; padding: 28px 16px;">
+          Chưa có học sinh nào hoàn thành đủ ${totalUnlocked} tuần đã mở để xếp hạng chính thức. Hãy làm bài thi ngay! 🎯
+        </div>
+      `;
+    } else {
+      rankedContainer.innerHTML = rankedUsers.map((user, idx) => {
+        const rankNum = idx + 1;
+        const isSelf = currentUser && user.username.toLowerCase() === currentUser.username.toLowerCase();
+        const initial = (user.fullName || "H").trim().charAt(0).toUpperCase();
+
+        const rankIcon = rankNum === 1 ? "🥇" : rankNum === 2 ? "🥈" : rankNum === 3 ? "🥉" : `#${rankNum}`;
+
+        const weekBadgesHtml = unlockedWeeks.map(w => {
+          const score = user.weekScores[w.id];
+          return `<span class="week-score-tag" title="${w.name}: ${w.title}">${w.name}: ${score}đ</span>`;
+        }).join("");
+
+        return `
+          <div class="ranking-row-item ${isSelf ? 'is-current-user' : ''}">
+            <div class="ranking-row-left">
+              <div class="rank-number-box">${rankIcon}</div>
+              <div class="rank-avatar-small">${initial}</div>
+              <div class="rank-user-info">
+                <div class="rank-name-line">
+                  <strong>${escapeHtml(user.fullName)}</strong>
+                  ${isSelf ? '<span class="tag-you">BẠN</span>' : ''}
+                </div>
+                <div class="rank-class-text">${escapeHtml(user.className)}</div>
+                <div class="rank-weeks-badges">${weekBadgesHtml}</div>
+              </div>
+            </div>
+            <div class="ranking-row-right">
+              <div class="total-score-text">${user.totalScore} đ</div>
+              <div class="avg-score-text">TB: ${user.avgScore} đ/tuần</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+  }
+
+  // 5. Render danh sách Chờ Pending (#ranking-list-pending)
+  const pendingContainer = document.getElementById("ranking-list-pending");
+  if (pendingContainer) {
+    if (pendingUsers.length === 0) {
+      pendingContainer.innerHTML = `
+        <div class="rank-card-empty" style="background: #f8fafc; border-radius: 12px; padding: 28px 16px;">
+          Hiện tại không có học sinh nào ở trạng thái chờ (Tất cả học sinh đều đã làm đủ tuần hoặc chưa đăng ký).
+        </div>
+      `;
+    } else {
+      pendingContainer.innerHTML = pendingUsers.map(user => {
+        const isSelf = currentUser && user.username.toLowerCase() === currentUser.username.toLowerCase();
+        const initial = (user.fullName || "H").trim().charAt(0).toUpperCase();
+
+        const weekBadgesHtml = unlockedWeeks.map(w => {
+          const score = user.weekScores[w.id];
+          if (score !== null && score !== undefined) {
+            return `<span class="week-score-tag" title="${w.name}: ${w.title}">${w.name}: ${score}đ</span>`;
+          }
+          return `<span class="week-score-tag uncompleted" title="${w.name}: Chưa thi">${w.name}: --</span>`;
+        }).join("");
+
+        return `
+          <div class="ranking-row-item ${isSelf ? 'is-current-user' : ''}">
+            <div class="ranking-row-left">
+              <div class="rank-number-box">⏳</div>
+              <div class="rank-avatar-small" style="background: #94a3b8;">${initial}</div>
+              <div class="rank-user-info">
+                <div class="rank-name-line">
+                  <strong>${escapeHtml(user.fullName)}</strong>
+                  ${isSelf ? '<span class="tag-you">BẠN</span>' : ''}
+                </div>
+                <div class="rank-class-text">${escapeHtml(user.className)}</div>
+                <div class="rank-weeks-badges">${weekBadgesHtml}</div>
+              </div>
+            </div>
+            <div class="ranking-row-right">
+              <span class="pending-badge">Chờ (${user.completedWeeksCount}/${totalUnlocked} tuần)</span>
+              <div class="avg-score-text" style="margin-top: 4px;">Hiện có: ${user.totalScore} đ</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+  }
+}
+
+/**
+ * Mở Modal Bảng Xếp Hạng & Bảng Thành Tích
+ */
+function openRankingModal(isAutoAfterLogin = false) {
+  const modal = document.getElementById("ranking-modal");
+  if (!modal) return;
+
+  renderRankingModal();
+  modal.style.display = "flex";
+
+  // Mặc định luôn active tab 'ranked' (Xếp hạng chính thức)
+  const btnRanked = document.getElementById("filter-btn-ranked");
+  const btnPending = document.getElementById("filter-btn-pending");
+  const listRanked = document.getElementById("ranking-list-ranked");
+  const listPending = document.getElementById("ranking-list-pending");
+
+  if (btnRanked && btnPending && listRanked && listPending) {
+    btnRanked.classList.add("active");
+    btnPending.classList.remove("active");
+    listRanked.style.display = "flex";
+    listPending.style.display = "none";
+  }
+}
+
+/**
+ * Đóng Modal Bảng Xếp Hạng
+ */
+function closeRankingModal() {
+  const modal = document.getElementById("ranking-modal");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+/**
+ * Khởi tạo tính năng Bảng Xếp Hạng & Thiết lập các sự kiện tương tác
+ */
+function initRankingFeature() {
+  // 1. Tự động thêm 6 tài khoản mẫu và điểm thi mẫu nếu chưa có
+  seedMockTestUsersIfEmpty();
+
+  // 2. Render widget Top 5 ngoài trang chủ
+  renderHomeRankingWidget();
+
+  // 3. Thiết lập nút đóng modal
+  const btnClose = document.getElementById("btn-close-ranking-modal");
+  const backdrop = document.getElementById("ranking-modal-backdrop");
+  const btnDismiss = document.getElementById("btn-ranking-dismiss");
+
+  if (btnClose) btnClose.addEventListener("click", closeRankingModal);
+  if (backdrop) backdrop.addEventListener("click", closeRankingModal);
+  if (btnDismiss) btnDismiss.addEventListener("click", closeRankingModal);
+
+  // 4. Thiết lập nút mở modal từ widget trang chủ
+  const btnHomeOpen = document.getElementById("btn-home-open-ranking");
+  if (btnHomeOpen) {
+    btnHomeOpen.addEventListener("click", () => openRankingModal());
+  }
+
+  // 5. Thiết lập nút "Vào Làm Bài Thi Ngay" trong modal
+  const btnGoQuiz = document.getElementById("btn-ranking-go-quiz");
+  if (btnGoQuiz) {
+    btnGoQuiz.addEventListener("click", () => {
+      closeRankingModal();
+      switchToQuizTab();
+      const startCard = document.querySelector(".card");
+      if (startCard) {
+        startCard.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  }
+
+  // 6. Chuyển đổi tab: Xếp Hạng Chính Thức vs Danh Sách Chờ (Pending)
+  const filterBtnRanked = document.getElementById("filter-btn-ranked");
+  const filterBtnPending = document.getElementById("filter-btn-pending");
+  const listRanked = document.getElementById("ranking-list-ranked");
+  const listPending = document.getElementById("ranking-list-pending");
+
+  if (filterBtnRanked && filterBtnPending && listRanked && listPending) {
+    filterBtnRanked.addEventListener("click", () => {
+      filterBtnRanked.classList.add("active");
+      filterBtnPending.classList.remove("active");
+      listRanked.style.display = "flex";
+      listPending.style.display = "none";
+    });
+
+    filterBtnPending.addEventListener("click", () => {
+      filterBtnPending.classList.add("active");
+      filterBtnRanked.classList.remove("active");
+      listPending.style.display = "flex";
+      listRanked.style.display = "none";
     });
   }
 }

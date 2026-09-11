@@ -62,6 +62,20 @@
         <span class="nav-item-label">Lộ Trình (Mindmap)</span>
         <span class="sidebar-chip-pill">Mới</span>
       </button>
+
+      <button type="button" class="sidebar-nav-item" id="sidebar-tab-ranking" title="Bảng Xếp Hạng">
+        <div class="nav-item-icon ranking-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+            <path d="M4 22h16"/>
+            <path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"/>
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/>
+          </svg>
+        </div>
+        <span class="nav-item-label">Bảng Xếp Hạng</span>
+        <span class="sidebar-chip-pill ranking-chip-pill">Top 5</span>
+      </button>
     </nav>
 
     <div class="sidebar-footer">
@@ -282,6 +296,28 @@
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
           </svg>
           <span id="auth-hint-text">Đã có tài khoản? <a href="#" id="link-prompt-login">Đăng nhập</a> để tự động điền họ tên, lớp và lưu điểm danh.</span>
+        </div>
+      </div>
+
+      <!-- BẢNG VINH DANH TOP 5 HỌC SINH XUẤT SẮC TRÊN TRANG CHỦ -->
+      <div class="ranking-home-widget" id="ranking-home-widget">
+        <div class="ranking-widget-header">
+          <div class="ranking-widget-title-box">
+            <span class="ranking-widget-trophy">🏆</span>
+            <div>
+              <h3 class="ranking-widget-title">BẢNG VINH DANH TOP 5 HỌC SINH XUẤT SẮC</h3>
+              <p class="ranking-widget-sub" id="ranking-widget-condition-text">Đang tải xếp hạng...</p>
+            </div>
+          </div>
+          <button type="button" class="btn-open-ranking-modal" id="btn-home-open-ranking">
+            <span>Xem Bảng Xếp Hạng Đầy Đủ</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        </div>
+        <div class="ranking-top5-container" id="ranking-top5-home-list">
+          <!-- Render danh sách 5 thẻ Top học sinh -->
         </div>
       </div>
 
@@ -869,6 +905,79 @@
         </div>
         <button type="button" class="btn-drawer-quiz" id="btn-drawer-quiz">
           <span>📝 Làm Bài Thi Tuần Này</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- MODAL BẢNG XẾP HẠNG & THÀNH TÍCH TOP 5 HỌC SINH (RANKING MODAL)      -->
+  <!-- =================================================================== -->
+  <div id="ranking-modal" class="ranking-modal-overlay" style="display: none;">
+    <div class="ranking-modal-backdrop" id="ranking-modal-backdrop"></div>
+    <div class="ranking-modal-container">
+      <!-- Header Modal -->
+      <div class="ranking-modal-header">
+        <div class="ranking-modal-title-group">
+          <div class="ranking-trophy-badge">🏆</div>
+          <div>
+            <h2>BẢNG VINH DANH & XẾP HẠNG HỌC SINH</h2>
+            <p class="ranking-modal-subtitle">Thành tích xuất sắc các tuần kiểm tra trắc nghiệm</p>
+          </div>
+        </div>
+        <button type="button" class="ranking-close-btn" id="btn-close-ranking-modal" title="Đóng bảng xếp hạng">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Thẻ thành tích cá nhân của tài khoản đang đăng nhập -->
+      <div id="user-achievement-card" class="user-achievement-card"></div>
+
+      <!-- Dòng quy chế xếp hạng chính thức -->
+      <div class="ranking-rules-hint">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <span id="ranking-rules-text">Quy chế: Chỉ xét thứ hạng chính thức cho học sinh đã <strong>hoàn thành tất cả các tuần thi đã mở</strong>. Học sinh chưa làm đủ số tuần sẽ hiển thị ở danh sách <strong>Chờ (Pending)</strong>.</span>
+      </div>
+
+      <!-- Bục vinh danh Top 3 Podium (Top 1 Gold, Top 2 Silver, Top 3 Bronze) -->
+      <div class="ranking-podium-section" id="ranking-podium-section"></div>
+
+      <!-- Bộ lọc Tab: Xếp Hạng Chính Thức vs Danh Sách Chờ Pending -->
+      <div class="ranking-table-header-tabs">
+        <button type="button" class="ranking-tab-filter active" id="filter-btn-ranked" data-tab="ranked">
+          <span>🏆 Xếp Hạng Chính Thức</span>
+          <span class="ranking-count-pill" id="count-pill-ranked">0</span>
+        </button>
+        <button type="button" class="ranking-tab-filter" id="filter-btn-pending" data-tab="pending">
+          <span>⏳ Danh Sách Chờ (Pending)</span>
+          <span class="ranking-count-pill pending-pill" id="count-pill-pending">0</span>
+        </button>
+      </div>
+
+      <!-- Danh sách bảng xếp hạng -->
+      <div class="ranking-scroll-body">
+        <div class="ranking-list-view" id="ranking-list-ranked">
+          <!-- Dynamic rendered ranked table rows -->
+        </div>
+        <div class="ranking-list-view" id="ranking-list-pending" style="display: none;">
+          <!-- Dynamic rendered pending table rows -->
+        </div>
+      </div>
+
+      <!-- Footer Modal -->
+      <div class="ranking-modal-footer">
+        <button type="button" class="btn-ranking-close-sub" id="btn-ranking-dismiss">
+          <span>Để Sau</span>
+        </button>
+        <button type="button" class="btn-primary" id="btn-ranking-go-quiz">
+          <span>Vào Làm Bài Thi Ngay</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
         </button>
       </div>
     </div>
