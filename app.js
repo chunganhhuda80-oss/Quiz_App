@@ -1955,6 +1955,29 @@ function updateAuthUI() {
     initWeeksSelector();
     updateOfficialScoreDisplay(QuizState.selectedWeekId || 1);
   }
+
+  // Quản lý quyền hiển thị nút Đồng Bộ Sheet: Chỉ Quản Trị Viên mới nhìn thấy và bấm được
+  updateSyncButtonsVisibility();
+}
+
+/**
+ * Quản lý hiển thị nút "Đồng Bộ Sheet":
+ * CHỈ duy nhất Quản Trị Viên mới được nhìn thấy và bấm nút này để cập nhật Bảng Xếp Hạng
+ */
+function updateSyncButtonsVisibility() {
+  const btnHomeSync = document.getElementById("btn-home-sync-sheet");
+  const btnModalSync = document.getElementById("btn-sync-ranking-sheet");
+
+  const isAdmin = AuthState.currentUser && (
+    AuthState.currentUser.role === "admin" ||
+    AuthState.currentUser.username === ((CONFIG.ADMIN && CONFIG.ADMIN.username) || "rappergaming")
+  );
+
+  [btnHomeSync, btnModalSync].forEach(btn => {
+    if (btn) {
+      btn.style.display = isAdmin ? "inline-flex" : "none";
+    }
+  });
 }
 
 /**
@@ -3592,9 +3615,21 @@ function calculateLeaderboardData() {
   const accounts = getLocalAccounts();
   const rankedUsers = [];
   const pendingUsers = [];
+  const adminUname = ((CONFIG.ADMIN && CONFIG.ADMIN.username) || "rappergaming").toLowerCase().trim();
 
   accounts.forEach(account => {
-    if (account.role === "admin") return;
+    const uname = (account.username || "").toLowerCase().trim();
+    // BỎ QUA HOÀN TOÀN: Tuyệt đối không xếp hạng hoặc đưa Quản Trị Viên vào Bảng Xếp Hạng/Chờ
+    if (
+      account.role === "admin" ||
+      uname === adminUname ||
+      uname === "admin" ||
+      uname === "admin_root" ||
+      account.fullName === "Quản Trị Viên" ||
+      (account.className || "").includes("Quản Trị Hệ Thống")
+    ) {
+      return;
+    }
 
     const attempts = getUserOfficialAttempts(account.username);
     let totalScore = 0;
@@ -3958,6 +3993,9 @@ function openRankingModal(isAutoAfterLogin = false) {
     listRanked.style.display = "flex";
     listPending.style.display = "none";
   }
+
+  // Đảm bảo nút đồng bộ chỉ hiện cho tài khoản Quản Trị Viên
+  updateSyncButtonsVisibility();
 }
 
 /**
@@ -3974,11 +4012,14 @@ function closeRankingModal() {
  * Khởi tạo tính năng Bảng Xếp Hạng & Thiết lập các sự kiện tương tác
  */
 function initRankingFeature() {
-  // 1. Tự động thêm 6 tài khoản mẫu và điểm thi mẫu nếu chưa có
+  // 1. Tự động dọn dẹp các tài khoản mẫu cũ nếu chưa có
   seedMockTestUsersIfEmpty();
 
   // 2. Render widget Top 5 ngoài trang chủ
   renderHomeRankingWidget();
+
+  // 3. Cập nhật quyền hiển thị nút Đồng bộ Sheet (Chỉ Admin)
+  updateSyncButtonsVisibility();
 
   // 3. Thiết lập nút đóng modal
   const btnClose = document.getElementById("btn-close-ranking-modal");
@@ -4053,6 +4094,21 @@ function initRankingFeature() {
 async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
   if (!CONFIG.GOOGLE_APPS_SCRIPT_URL || !CONFIG.GOOGLE_APPS_SCRIPT_URL.startsWith("http")) return;
 
+  const isAdmin = AuthState.currentUser && (
+    AuthState.currentUser.role === "admin" ||
+    AuthState.currentUser.username === ((CONFIG.ADMIN && CONFIG.ADMIN.username) || "rappergaming")
+  );
+
+  // Nếu người dùng thường bấm nút đồng bộ (notifyUser = true mà không phải admin) -> Chặn lại
+  if (notifyUser && !isAdmin) {
+    if (typeof showAdminToast === "function") {
+      showAdminToast("⚠️ Chỉ tài khoản Quản Trị Viên mới có quyền đồng bộ dữ liệu từ Google Sheet!", "error");
+    } else {
+      alert("⚠️ Chỉ tài khoản Quản Trị Viên mới có quyền đồng bộ dữ liệu từ Google Sheet!");
+    }
+    return;
+  }
+
   const btnSyncHome = document.getElementById("btn-home-sync-sheet");
   const btnSyncModal = document.getElementById("btn-sync-ranking-sheet");
 
@@ -4088,6 +4144,11 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
         localStorage.removeItem(getUserHistoryKey(oldUname));
       });
 
+      // Dọn dẹp sạch lịch sử của Admin để không dính vào xếp hạng
+      const adminUname = ((CONFIG.ADMIN && CONFIG.ADMIN.username) || "rappergaming").toLowerCase().trim();
+      localStorage.removeItem(getUserHistoryKey(adminUname));
+      localStorage.removeItem(getUserHistoryKey("rappergaming"));
+
       let existingAccounts = getLocalAccounts().filter(a => !OBSOLETE_MOCK_USERNAMES.includes(a.username.toLowerCase()));
       const accountMap = new Map();
       existingAccounts.forEach(a => accountMap.set(a.username.toLowerCase(), a));
@@ -4099,6 +4160,17 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
       json.results.forEach(r => {
         let uname = (r.username || "").toLowerCase().trim();
         if (!uname || uname.includes("khách")) return;
+
+        // TUYỆT ĐỐI BỎ QUA QUẢN TRỊ VIÊN: Không đưa vào danh sách xếp hạng học sinh
+        if (
+          uname === adminUname ||
+          uname === "admin" ||
+          uname === "admin_root" ||
+          r.studentName === "Quản Trị Viên" ||
+          (r.studentClass || "").includes("Quản Trị Hệ Thống")
+        ) {
+          return;
+        }
 
         // Chuẩn hóa tài khoản Quán Quân nếu trên Google Sheet đặt tên username là aaaaaa hoặc nguyen_van_an
         if (uname === "aaaaaa" || uname === "nguyen_van_an") {
