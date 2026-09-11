@@ -4161,6 +4161,9 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
       existingAccounts.forEach(a => accountMap.set(a.username.toLowerCase(), a));
       let hasChanges = false;
 
+      // Tập hợp danh sách các lần thi ĐẦU TIÊN duy nhất từ Google Sheet (Bỏ qua các lần thi lại/nộp đè)
+      const sheetFirstAttemptsByUser = new Map(); // username -> Map(weekId -> attemptData)
+
       json.results.forEach(r => {
         let uname = (r.username || "").toLowerCase().trim();
         if (!uname || uname.includes("khách")) return;
@@ -4196,11 +4199,14 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
           weekId = parseInt(match[1], 10);
         }
 
-        const historyKey = getUserHistoryKey(uname);
-        const history = getUserOfficialAttempts(uname);
+        if (!sheetFirstAttemptsByUser.has(uname)) {
+          sheetFirstAttemptsByUser.set(uname, new Map());
+        }
+        const userWeekMap = sheetFirstAttemptsByUser.get(uname);
 
-        // Lưu điểm vào lịch sử thi chính thức
-        if (!history[weekId] || (typeof r.scaledScore === "number" && r.scaledScore > 0)) {
+        // QUY TẮC BẤT DI BẤT DỊCH: CHỈ LẤY LẦN THI ĐẦU TIÊN (Hàng đầu tiên xuất hiện trên Sheet)
+        // Các lần thi sau (thi lại / nộp lại) tuyệt đối không được ghi đè
+        if (!userWeekMap.has(weekId)) {
           let durationFormatted = r.timeSpent || "15:00";
           if (typeof durationFormatted === "string" && durationFormatted.includes("T") && durationFormatted.includes("Z")) {
             try {
@@ -4213,16 +4219,34 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
             } catch (_) {}
           }
 
-          history[weekId] = {
+          userWeekMap.set(weekId, {
             score: r.scaledScore,
             correct: r.correctCount,
             total: r.totalQuestions,
             percent: r.accuracy,
             durationText: durationFormatted,
             firstRecordedAt: r.timestamp
-          };
+          });
+        }
+      });
+
+      // Lưu lần thi đầu tiên vào lịch sử thi chính thức
+      sheetFirstAttemptsByUser.forEach((weekMap, uname) => {
+        const historyKey = getUserHistoryKey(uname);
+        const history = getUserOfficialAttempts(uname);
+        let userHistoryChanged = false;
+
+        weekMap.forEach((attemptData, weekId) => {
+          // Chỉ lưu nếu trong bộ nhớ máy chưa có điểm của tuần này
+          if (!history[weekId]) {
+            history[weekId] = attemptData;
+            userHistoryChanged = true;
+            hasChanges = true;
+          }
+        });
+
+        if (userHistoryChanged) {
           localStorage.setItem(historyKey, JSON.stringify(history));
-          hasChanges = true;
         }
       });
 

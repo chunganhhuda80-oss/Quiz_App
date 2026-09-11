@@ -256,19 +256,7 @@ function doPost(e) {
 
       const rows = resultSheet.getDataRange().getValues();
       const dataRows = rows.slice(1);
-
-      const results = dataRows.map(r => ({
-        timestamp: r[0],
-        studentName: r[1],
-        username: (r[2] || "").toString().toLowerCase().trim(),
-        studentClass: r[3],
-        scaledScore: Number(r[4]) || 0,
-        rawScore: r[5],
-        correctCount: Number(r[6]) || 0,
-        totalQuestions: Number(r[7]) || 0,
-        accuracy: r[8],
-        timeSpent: r[9]
-      }));
+      const results = extractFirstAttemptsFromRows(dataRows);
 
       return ContentService.createTextOutput(
         JSON.stringify({ status: "success", count: results.length, results: results })
@@ -295,14 +283,54 @@ function doPost(e) {
 }
 
 /**
- * Xử lý GET request: Trả về Bảng Xếp Hạng & Danh sách điểm thi dạng JSON
+ * Hàm hỗ trợ: Lọc CHỈ LẤY LẦN THI ĐẦU TIÊN của mỗi học sinh theo từng tuần
+ * Bất kỳ lần thi sau nào (thi lại / nộp đè) sẽ được tự động bỏ qua để đảm bảo tính công bằng
+ */
+function extractFirstAttemptsFromRows(dataRows) {
+  const results = [];
+  const seenStudentWeek = {};
+
+  for (let i = 0; i < dataRows.length; i++) {
+    const r = dataRows[i];
+    const username = (r[2] || "").toString().toLowerCase().trim();
+    if (!username || username.includes("khách")) continue;
+
+    const studentClass = (r[3] || "").toString();
+    const match = studentClass.match(/Tuần\s*(\d+)/i);
+    const weekId = match ? match[1] : "1";
+    const uniqueKey = username + "_w" + weekId;
+
+    // QUY TẮC: Chỉ lấy hàng đầu tiên xuất hiện trên Google Sheet cho tuần đó
+    if (!seenStudentWeek[uniqueKey]) {
+      seenStudentWeek[uniqueKey] = true;
+      results.push({
+        timestamp: r[0],
+        studentName: r[1],
+        username: username,
+        studentClass: studentClass,
+        scaledScore: Number(r[4]) || 0,
+        rawScore: r[5],
+        correctCount: Number(r[6]) || 0,
+        totalQuestions: Number(r[7]) || 0,
+        accuracy: r[8],
+        timeSpent: r[9],
+        isOfficialFirstAttempt: true
+      });
+    }
+  }
+
+  return results;
+}
+
+/**
+ * Xử lý GET request: Trả về Bảng Xếp Hạng & Danh sách điểm thi dạng JSON (Chỉ lấy lần thi đầu)
  */
 function doGet(e) {
   try {
     const action = e && e.parameter ? e.parameter.action : "";
     const ss = SpreadsheetApp.getActiveSpreadsheet();
 
-    // 1. API Lấy toàn bộ kết quả bài thi từ sheet KetQuaThi
+    // 1. API Lấy toàn bộ kết quả bài thi từ sheet KetQuaThi (Đã lọc chỉ lần thi đầu tiên)
     if (action === "get_leaderboard" || action === "get_results") {
       const resultSheet = ss.getSheetByName(SHEET_NAME_RESULTS);
       if (!resultSheet || resultSheet.getLastRow() <= 1) {
@@ -313,19 +341,7 @@ function doGet(e) {
 
       const rows = resultSheet.getDataRange().getValues();
       const dataRows = rows.slice(1);
-
-      const results = dataRows.map(r => ({
-        timestamp: r[0],
-        studentName: r[1],
-        username: (r[2] || "").toString().toLowerCase().trim(),
-        studentClass: r[3],
-        scaledScore: Number(r[4]) || 0,
-        rawScore: r[5],
-        correctCount: Number(r[6]) || 0,
-        totalQuestions: Number(r[7]) || 0,
-        accuracy: r[8],
-        timeSpent: r[9]
-      }));
+      const results = extractFirstAttemptsFromRows(dataRows);
 
       return ContentService.createTextOutput(
         JSON.stringify({ status: "success", count: results.length, results: results })
