@@ -3332,12 +3332,9 @@ function renderMindmap() {
     <span class="mindmap-root-badge">${domainLabel} • TUẦN ${week.weekId}</span>
     <div class="mindmap-root-title">${escapeHtml(week.title)}</div>
   `;
-  treeContainer.appendChild(rootNode);
 
-  // 2. Branches Grid (Các nhánh chủ đề của tuần)
-  const branchesGrid = document.createElement("div");
-  branchesGrid.className = "mindmap-branches-grid";
-  branchesGrid.id = "mindmap-branches-grid";
+  // 2. Gom toàn bộ các nhánh chủ đề (Groups) và nhánh Lab Thực hành
+  const allBranches = [];
 
   // Render các nhóm chủ đề
   week.groups.forEach((group, gIdx) => {
@@ -3394,7 +3391,7 @@ function renderMindmap() {
       topicsList.appendChild(topicNode);
     });
 
-    branchesGrid.appendChild(branch);
+    allBranches.push(branch);
   });
 
   // Render nhánh Lab Thực hành nếu tuần có Lab
@@ -3438,10 +3435,46 @@ function renderMindmap() {
       labList.appendChild(labNode);
     });
 
-    branchesGrid.appendChild(labBranch);
+    allBranches.push(labBranch);
   }
 
-  treeContainer.appendChild(branchesGrid);
+  // 3. BỐ CỤC CHUẨN CÂN ĐỐI (Balanced Mindmap Hub Layout):
+  // - Nếu tuần có <= 3 nhánh (Tuần 1-8): Tiêu đề tuần ở trên, 1 hàng các nhánh ở dưới.
+  // - Nếu tuần có > 3 nhánh (Tuần 9-12): Tiêu đề chính nằm ở CHÍNH GIỮA (Center Hub),
+  //   Nửa đầu các nhóm nằm ở hàng TRÊN (Top Row), nửa sau ở hàng DƯỚI (Bottom Row).
+  //   Dây nối sẽ đi từ trung tâm tiêu đề tỏa lên trên và tỏa xuống dưới, tuyệt đối không nối từ nhóm này sang nhóm kia!
+  if (allBranches.length <= 3) {
+    treeContainer.appendChild(rootNode);
+
+    const branchesRow = document.createElement("div");
+    branchesRow.className = "mindmap-branches-row single-row";
+    allBranches.forEach(b => {
+      b.dataset.rowType = "bottom";
+      branchesRow.appendChild(b);
+    });
+    treeContainer.appendChild(branchesRow);
+  } else {
+    const topCount = Math.ceil(allBranches.length / 2);
+
+    const topRow = document.createElement("div");
+    topRow.className = "mindmap-branches-row top-row";
+    for (let i = 0; i < topCount; i++) {
+      allBranches[i].dataset.rowType = "top";
+      topRow.appendChild(allBranches[i]);
+    }
+    treeContainer.appendChild(topRow);
+
+    // Tiêu đề chính nằm ở CHÍNH GIỮA 2 hàng
+    treeContainer.appendChild(rootNode);
+
+    const bottomRow = document.createElement("div");
+    bottomRow.className = "mindmap-branches-row bottom-row";
+    for (let i = topCount; i < allBranches.length; i++) {
+      allBranches[i].dataset.rowType = "bottom";
+      bottomRow.appendChild(allBranches[i]);
+    }
+    treeContainer.appendChild(bottomRow);
+  }
 
   // Áp dụng bộ lọc tìm kiếm nếu đang có từ khóa
   if (RoadmapState.searchQuery) {
@@ -3456,6 +3489,8 @@ function renderMindmap() {
 
 /**
  * Vẽ các đường nối SVG mềm mại (Cubic Bezier Curves) kết nối Root Node với các Nhánh
+ * - Tự động nhận diện nhánh ở Hàng Trên (Top) hoặc Hàng Dưới (Bottom)
+ * - Tỏa đường cong mượt mà từ Node Gốc đến từng ô nhánh tương ứng
  */
 function drawMindmapConnections() {
   const container = document.getElementById("mindmap-canvas-container");
@@ -3479,41 +3514,78 @@ function drawMindmapConnections() {
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
   const rootX = (rootRect.left + rootRect.right) / 2 - containerRect.left;
-  const rootY = rootRect.bottom - containerRect.top;
+  const rootTopY = rootRect.top - containerRect.top;
+  const rootBottomY = rootRect.bottom - containerRect.top;
 
   let svgContent = `
     <defs>
-      <linearGradient id="mindmapLineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.75"/>
-        <stop offset="100%" stop-color="#818cf8" stop-opacity="0.3"/>
+      <linearGradient id="mindmapLineGradUp" x1="0%" y1="100%" x2="0%" y2="0%">
+        <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.85"/>
+        <stop offset="100%" stop-color="#818cf8" stop-opacity="0.4"/>
+      </linearGradient>
+      <linearGradient id="mindmapLineGradDown" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.85"/>
+        <stop offset="100%" stop-color="#818cf8" stop-opacity="0.4"/>
       </linearGradient>
     </defs>
   `;
 
+  let hasTopBranches = false;
+  let hasBottomBranches = false;
+
   branches.forEach(branch => {
+    if (branch.style.display === "none") return;
+
     const branchRect = branch.getBoundingClientRect();
     const branchX = (branchRect.left + branchRect.right) / 2 - containerRect.left;
-    const branchY = branchRect.top - containerRect.top;
+    const isTop = branch.dataset.rowType === "top" || branchRect.bottom <= rootRect.top + 20;
 
-    const deltaY = Math.max(35, branchY - rootY);
-    const cp1x = rootX;
-    const cp1y = rootY + deltaY * 0.55;
-    const cp2x = branchX;
-    const cp2y = rootY + deltaY * 0.55;
+    if (isTop) {
+      hasTopBranches = true;
+      const branchY = branchRect.bottom - containerRect.top;
+      const deltaY = Math.max(25, rootTopY - branchY);
+      const cp1x = rootX;
+      const cp1y = rootTopY - deltaY * 0.55;
+      const cp2x = branchX;
+      const cp2y = branchY + deltaY * 0.45;
 
-    svgContent += `
-      <path d="M ${rootX} ${rootY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${branchX} ${branchY}"
-            fill="none"
-            stroke="url(#mindmapLineGrad)"
-            stroke-width="2.5"
-            stroke-dasharray="4 3"
-            stroke-linecap="round"/>
-      <circle cx="${branchX}" cy="${branchY}" r="4.5" fill="#6366f1"/>
-    `;
+      svgContent += `
+        <path d="M ${rootX} ${rootTopY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${branchX} ${branchY}"
+              fill="none"
+              stroke="url(#mindmapLineGradUp)"
+              stroke-width="2.5"
+              stroke-dasharray="5 3.5"
+              stroke-linecap="round"/>
+        <circle cx="${branchX}" cy="${branchY}" r="4.5" fill="#6366f1"/>
+      `;
+    } else {
+      hasBottomBranches = true;
+      const branchY = branchRect.top - containerRect.top;
+      const deltaY = Math.max(25, branchY - rootBottomY);
+      const cp1x = rootX;
+      const cp1y = rootBottomY + deltaY * 0.55;
+      const cp2x = branchX;
+      const cp2y = branchY - deltaY * 0.45;
+
+      svgContent += `
+        <path d="M ${rootX} ${rootBottomY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${branchX} ${branchY}"
+              fill="none"
+              stroke="url(#mindmapLineGradDown)"
+              stroke-width="2.5"
+              stroke-dasharray="5 3.5"
+              stroke-linecap="round"/>
+        <circle cx="${branchX}" cy="${branchY}" r="4.5" fill="#6366f1"/>
+      `;
+    }
   });
 
-  // Điểm chốt tại đáy của Node Gốc
-  svgContent += `<circle cx="${rootX}" cy="${rootY}" r="5" fill="#312e81"/>`;
+  // Điểm chốt tại đỉnh hoặc đáy của Node Gốc
+  if (hasTopBranches) {
+    svgContent += `<circle cx="${rootX}" cy="${rootTopY}" r="5" fill="#312e81"/>`;
+  }
+  if (hasBottomBranches) {
+    svgContent += `<circle cx="${rootX}" cy="${rootBottomY}" r="5" fill="#312e81"/>`;
+  }
 
   svg.innerHTML = svgContent;
 }
@@ -3828,6 +3900,10 @@ function applyMindmapSearch(query) {
   if (firstMatch && RoadmapState.searchQuery.length >= 2) {
     firstMatch.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
+
+  requestAnimationFrame(() => {
+    drawMindmapConnections();
+  });
 }
 
 /**
