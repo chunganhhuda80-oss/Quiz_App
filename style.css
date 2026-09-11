@@ -132,7 +132,7 @@ body {
   left: 0;
   height: 100vh;
   width: 72px; /* Trạng thái thu gọn mặc định */
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-right: 1.5px solid rgba(226, 232, 240, 0.85);
@@ -140,10 +140,11 @@ body {
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
   overflow: hidden;
   white-space: nowrap;
   user-select: none;
+  box-sizing: border-box;
 }
 
 /* Rê chuột vào hoặc active: Sidebar mở rộng ra */
@@ -154,15 +155,17 @@ body {
 }
 
 .sidebar-header {
-  padding: 22px 14px;
+  padding: 20px 14px;
   border-bottom: 1px solid #f1f5f9;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .sidebar-logo-box {
   display: flex;
   align-items: center;
   gap: 14px;
+  width: 100%;
 }
 
 .sidebar-icon-wrap {
@@ -186,6 +189,7 @@ body {
   transform: translateX(-8px);
   transition: opacity 0.25s ease, transform 0.25s ease;
   pointer-events: none;
+  min-width: 160px;
 }
 
 .app-sidebar:hover .sidebar-brand-text,
@@ -211,19 +215,22 @@ body {
 }
 
 .sidebar-nav {
-  padding: 18px 10px;
+  padding: 16px 14px; /* 14px mỗi bên, đúng bằng padding của header! */
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   flex: 1;
+  box-sizing: border-box;
 }
 
+/* Nút tab: khi thu gọn có kích thước đúng 44x44px, căn giữa hoàn hảo */
 .sidebar-nav-item {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 10px;
-  width: 100%;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
   border-radius: 12px;
   border: 1.5px solid transparent;
   background: transparent;
@@ -232,11 +239,21 @@ body {
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
   text-align: left;
   position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
+/* Khi sidebar bung rộng */
+.app-sidebar:hover .sidebar-nav-item,
+.app-sidebar.is-hovered .sidebar-nav-item {
+  width: 100%;
+  padding-right: 12px;
+}
+
+/* Khung icon: đúng chuẩn 44x44px đồng bộ với icon logo phía trên */
 .sidebar-nav-item .nav-item-icon {
   width: 44px;
   height: 44px;
@@ -244,18 +261,42 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 11px;
-  background: #f8fafc;
-  color: var(--text-muted);
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: #64748b;
   transition: all var(--transition-fast);
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
+.sidebar-nav-item:hover .nav-item-icon {
+  background: var(--primary-light);
+  color: var(--primary);
+  transform: scale(1.05);
+}
+
+/* Trạng thái tab đang chọn (Active) */
+.sidebar-nav-item.active .nav-item-icon {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+
+/* Viền và màu nền khi mở rộng sidebar cho tab Active */
+.app-sidebar:hover .sidebar-nav-item.active,
+.app-sidebar.is-hovered .sidebar-nav-item.active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(79, 70, 229, 0.14) 100%);
+  border-color: rgba(99, 102, 241, 0.3);
+  color: var(--primary);
+}
+
+/* Chữ nhãn tab */
 .sidebar-nav-item .nav-item-label {
   opacity: 0;
-  transform: translateX(-8px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transform: translateX(-6px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
   white-space: nowrap;
+  margin-left: 12px;
 }
 
 .app-sidebar:hover .sidebar-nav-item .nav-item-label,
@@ -273,7 +314,8 @@ body {
   padding: 2px 8px;
   border-radius: 999px;
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.22s ease;
+  flex-shrink: 0;
 }
 
 .app-sidebar:hover .sidebar-chip-pill,
@@ -281,52 +323,34 @@ body {
   opacity: 1;
 }
 
-.sidebar-nav-item:hover {
-  background: #f1f5f9;
-  color: var(--primary);
-}
-
-.sidebar-nav-item:hover .nav-item-icon {
-  background: var(--primary-light);
-  color: var(--primary);
-  transform: scale(1.05);
-}
-
-.sidebar-nav-item.active {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(79, 70, 229, 0.16) 100%);
-  color: var(--primary);
-  border-color: rgba(99, 102, 241, 0.3);
-}
-
-.sidebar-nav-item.active .nav-item-icon {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.35);
-}
-
 .sidebar-footer {
-  padding: 16px 12px;
+  padding: 16px 14px;
   border-top: 1px solid #f1f5f9;
   flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .sidebar-hint {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   color: var(--text-light);
   font-size: 0.75rem;
-  padding: 6px 8px;
+  padding: 6px 0;
+  width: 100%;
 }
 
 .sidebar-hint svg {
-  min-width: 15px;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  margin-left: 13px; /* (44px - 18px)/2 = 13px: tâm icon thẳng hàng tuyệt đối với tâm 36px */
   flex-shrink: 0;
 }
 
 .sidebar-hint-text {
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.22s ease;
   white-space: nowrap;
 }
 
@@ -3959,16 +3983,16 @@ body.auth-mode .app-container {
   }
 
   .app-sidebar {
-    width: 60px;
+    width: 68px;
   }
 
   .app-sidebar:hover,
   .app-sidebar.is-hovered {
-    width: 240px;
+    width: 250px;
   }
 
   .app-container {
-    padding: 18px 18px 36px 78px;
+    padding: 18px 18px 36px 84px;
   }
 }
 
