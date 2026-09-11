@@ -20,152 +20,152 @@ const CONFIG = {
     {
       id: 1,
       name: "Tuần 1",
-      title: "Mạng Máy Tính - Tổng Quan & Mô Hình OSI",
+      title: "Nền Tảng Mạng & Mô Hình OSI / TCP-IP",
       file: "questions_tuan1.json",
       durationMinutes: 20,
       totalQuestions: 50,
       isUnlocked: true,
-      description: "50 câu trắc nghiệm (Layer 1 - Layer 7, Encapsulation, Thiết bị mạng)"
+      description: "50 câu trắc nghiệm (Mô hình OSI 7 tầng, TCP/IP, Encapsulation & Thiết bị mạng)"
     },
     {
       id: 2,
       name: "Tuần 2",
-      title: "Mô Hình TCP/IP & Giao Thức Mạng Nâng Cao",
+      title: "Tầng Data Link (Ethernet) & Địa Chỉ IPv4 / Subnetting",
       file: "questions_tuan2.json",
       durationMinutes: 30,
       totalQuestions: 70,
       isUnlocked: true,
-      description: "70 câu trắc nghiệm (TCP/UDP, Cáp mạng, Bảng MAC, Giao thức Internet)"
+      description: "70 câu trắc nghiệm (Khung Ethernet II, Địa chỉ MAC, Bảng CAM, Chia mạng con IPv4, CIDR & VLSM)"
     },
     {
       id: 3,
       name: "Tuần 3",
-      title: "Tầng Ứng Dụng (HTTP, DNS, DHCP, FTP, ICMP)",
+      title: "Địa Chỉ IPv6 & Tầng Giao Vận (TCP/UDP)",
       file: "questions_tuan3.json",
       durationMinutes: 30,
       totalQuestions: 70,
       isUnlocked: true,
-      description: "70 câu trắc nghiệm (FTP, ICMP, TCP 3-Way Handshake, Tầng Ứng dụng & Transport)"
+      description: "70 câu trắc nghiệm (Cấu trúc IPv6, SLAAC, TCP 3-Way Handshake, Flow Control & Cổng dịch vụ UDP)"
     },
     {
       id: 4,
       name: "Tuần 4",
-      title: "Tầng Giao Vận & Mạng (Flow Control, Subnetting, IPv6)",
+      title: "Chuyển Mạch Switch (VLAN, Trunking & STP/EtherChannel)",
       file: "questions_tuan4.json",
       durationMinutes: 35,
       totalQuestions: 80,
       isUnlocked: true,
-      description: "80 câu trắc nghiệm (TCP Flow Control, Ethernet Frame, Chia mạng con Subnetting, IPv6 SLAAC)"
+      description: "80 câu trắc nghiệm (Cấu hình Switch, 802.1Q VLAN Trunking, Spanning Tree Protocol & LACP EtherChannel)"
     },
     {
       id: 5,
       name: "Tuần 5",
-      title: "FHRP/Wireless & Định Tuyến Tĩnh (Static Routing)",
+      title: "Dự Phòng Gateway (FHRP/Wireless) & Định Tuyến Tĩnh",
       file: "questions_tuan5.json",
       durationMinutes: 40,
       totalQuestions: 90,
       isUnlocked: true,
-      description: "90 câu trắc nghiệm (HSRP/VRRP, Wi-Fi 802.11, WLC, Static Routing, Longest Prefix Match, Summarization)"
+      description: "90 câu trắc nghiệm (HSRP/VRRP, Chuẩn Wi-Fi 802.11, Bộ điều khiển WLC, Định tuyến tĩnh & Default Route)"
     },
     {
       id: 6,
       name: "Tuần 6",
-      title: "Định Tuyến OSPF, DHCP DORA & Chuyển Mạch Layer 3",
+      title: "Định Tuyến Động OSPF & Dịch Vụ Mạng (DHCP / NAT)",
       file: "questions_tuan6.json",
       durationMinutes: 45,
       totalQuestions: 100,
       isUnlocked: true,
-      description: "100 câu trắc nghiệm (STP Forwarding, OSPF DR/BDR, LSA, Metric Cost, DHCP DORA, NAT, SVI Layer 3)"
+      description: "100 câu trắc nghiệm (Giao thức OSPF đơn vùng, LSA, Bầu chọn DR/BDR, DHCP DORA, NAT & PAT)"
     },
     {
       id: 7,
       name: "Tuần 7",
-      title: "Định Tuyến Tĩnh & Động (Static & Dynamic Routing)",
+      title: "Bảo Mật Mạng (ACL) & Quản Trị Hệ Thống (IP Services)",
       file: "",
       durationMinutes: 30,
       totalQuestions: 0,
       isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      description: "Chưa mở khóa - Đang cập nhật nội dung (Bảo mật ACL, Port Security, DHCP Snooping, NTP, DNS, SNMP & Syslog)"
     },
     {
       id: 8,
       name: "Tuần 8",
-      title: "Giao Thức Định Tuyến OSPF Đơn Vùng",
+      title: "Tự Động Hóa Mạng (Automation & APIs) & Ôn Tập Capstone",
       file: "",
       durationMinutes: 30,
       totalQuestions: 0,
       isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      description: "Chưa mở khóa - Đang cập nhật nội dung (Kiến trúc SDN, REST APIs, JSON/YAML, Ansible & Dự án Lab CCNA tổng hợp)"
     },
     {
       id: 9,
       name: "Tuần 9",
-      title: "Tầng Liên Kết Dữ Liệu & Chuyển Mạch Switch",
+      title: "Toán Nền Tảng Cho AI & Tiền Xử Lý Dữ Liệu",
       file: "",
       durationMinutes: 30,
       totalQuestions: 0,
       isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      description: "Chưa mở khóa - Đang cập nhật nội dung (Đại số tuyến tính, Xác suất thống kê, Giải tích, Pipeline ML & Làm sạch dữ liệu)"
     },
     {
       id: 10,
       name: "Tuần 10",
-      title: "Cấu Hình VLAN & Định Tuyến Inter-VLAN",
+      title: "Các Thuật Toán Machine Learning Cốt Lõi",
       file: "",
       durationMinutes: 35,
       totalQuestions: 0,
       isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      description: "Chưa mở khóa - Đang cập nhật nội dung (Hồi quy Linear/Logistic, Decision Tree, Random Forest, SVM, K-Means & Đánh giá mô hình)"
     },
     {
       id: 11,
       name: "Tuần 11",
-      title: "Giao Thức Spanning Tree (STP & RSTP)",
+      title: "Nền Tảng Deep Learning (Neural Networks & CNN)",
       file: "",
       durationMinutes: 30,
       totalQuestions: 0,
       isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      description: "Chưa mở khóa - Đang cập nhật nội dung (Kiến trúc mạng nơ-ron đa tầng MLP, Backpropagation, Optimizer & Mạng tích chập CNN)"
     },
     {
       id: 12,
       name: "Tuần 12",
-      title: "Biên Dịch Địa Chỉ Mạng (NAT / PAT)",
+      title: "Xử Lý Chuỗi (RNN/LSTM), NLP Cơ Bản & Autoencoder / GAN",
       file: "",
       durationMinutes: 30,
       totalQuestions: 0,
       isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      description: "Chưa mở khóa - Đang cập nhật nội dung (Mạng hồi quy RNN, LSTM, Xử lý ngôn ngữ tự nhiên, Autoencoder phát hiện bất thường & GAN)"
     },
     {
       id: 13,
       name: "Tuần 13",
-      title: "Bảo Mật Mạng Cơ Bản & Danh Sách Điều Khiển (ACL)",
+      title: "Mô Hình Transformers, LLM & Kỹ Nghệ Prompt (RAG)",
       file: "",
       durationMinutes: 30,
       totalQuestions: 0,
       isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      description: "Chưa mở khóa - Đang cập nhật nội dung (Cơ chế Self-Attention, Mô hình ngôn ngữ lớn LLM, RAG & Kỹ nghệ Prompt trong An toàn thông tin)"
     },
     {
       id: 14,
       name: "Tuần 14",
-      title: "Mạng Cục Bộ Không Dây (WLAN / Wi-Fi)",
+      title: "Trí Tuệ Nhân Tạo Trong An Ninh Mạng (AI & NIDS)",
       file: "",
       durationMinutes: 30,
       totalQuestions: 0,
       isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      description: "Chưa mở khóa - Đang cập nhật nội dung (Ứng dụng AI/ML phát hiện xâm nhập mạng NIDS, Phân tích mã độc & Phòng thủ đối kháng)"
     },
     {
       id: 15,
       name: "Tuần 15",
-      title: "Ôn Tập Tổng Hợp & Thi Kết Thúc Học Phần",
+      title: "Dự Án Tốt Nghiệp Capstone: AI Phòng Thủ Mạng Toàn Diện",
       file: "",
       durationMinutes: 60,
       totalQuestions: 0,
       isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      description: "Chưa mở khóa - Đang cập nhật nội dung (Hạ tầng mạng phân tầng kết hợp mô hình AI giám sát, phát hiện tấn công và tự động phản ứng sự cố)"
     }
   ],
 

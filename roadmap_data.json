@@ -2022,29 +2022,185 @@
   },
   {
     "weekId": 13,
-    "hasData": false,
-    "title": "Tuần 13",
-    "fullTitle": "Tuần 13",
+    "hasData": true,
+    "title": "Mô hình Transformers, LLM & Kỹ nghệ Prompt (RAG)",
+    "fullTitle": "Tuần 13: Mô hình Transformers, LLM & Kỹ nghệ Prompt (RAG)",
     "domain": "ML/DL",
-    "groups": [],
-    "lab": null
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "Kiến trúc Transformers & Cơ chế Attention",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Cơ chế Self-Attention & Multi-Head Attention:",
+            "details": [
+              "- Hạn chế của RNN/LSTM: tính toán tuần tự, khó song song hóa, suy giảm thông tin trên chuỗi dài",
+              "- Self-Attention: cơ chế cho phép mô hình tính toán trọng số liên hệ giữa mọi từ trong câu với nhau đồng thời (Query, Key, Value vectors)",
+              "- Multi-Head Attention: chia không gian biểu diễn thành nhiều head độc lập để mô hình học nhiều mối quan hệ ngữ nghĩa cùng lúc",
+              "- Positional Encoding: bổ sung thông tin vị trí vào vector từ khi xử lý song song"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Kiến trúc Encoder-Decoder & Họ mô hình ngôn ngữ lớn:",
+            "details": [
+              "- Transformer gốc (Vaswani et al., 2017): Encoder trích xuất ngữ cảnh, Decoder sinh chuỗi đầu ra",
+              "- Encoder-only (BERT, RoBERTa): chuyên cho tác vụ phân loại, trích xuất thực thể, hiểu ngữ cảnh 2 chiều",
+              "- Decoder-only (GPT-3, GPT-4, Llama): chuyên cho tác vụ sinh văn bản tự hồi quy (Autoregressive Generation)",
+              "- Quy trình huấn luyện: Pre-training trên khối lượng dữ liệu khổng lồ, sau đó Fine-tuning hoặc RLHF cho mục tiêu cụ thể"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "Kỹ nghệ Prompt & Ứng dụng RAG",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Kỹ nghệ Prompt (Prompt Engineering):",
+            "details": [
+              "- Kỹ thuật Zero-shot, Few-shot Prompting: đưa ví dụ mẫu trực tiếp vào prompt để dẫn dắt kết quả",
+              "- Chain-of-Thought (CoT): yêu cầu mô hình suy luận từng bước logic trước khi đưa ra kết luận",
+              "- System Prompt & Guardrails: thiết lập vai trò, ranh giới an toàn, chống Prompt Injection"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Kiến trúc RAG (Retrieval-Augmented Generation):",
+            "details": [
+              "- Khái niệm RAG: kết hợp Vector Database để truy xuất thông tin tài liệu nội bộ và đưa vào context cho LLM",
+              "- Quy trình RAG: Chunking tài liệu -> Embedding -> Lưu trữ Vector DB -> Tìm kiếm tương đồng (Cosine Similarity) -> Đưa vào LLM trả lời",
+              "- Ưu điểm: giảm thiểu hiện tượng ảo giác (hallucination), cập nhật tri thức mới mà không cần train lại model"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Xây dựng pipeline RAG cơ bản tích hợp Vector Database để tra cứu cơ sở tri thức về an ninh mạng",
+      "Thực hành kiểm thử tấn công Prompt Injection và thiết lập hệ thống phòng thủ Guardrails cho LLM"
+    ]
   },
   {
     "weekId": 14,
-    "hasData": false,
-    "title": "Tuần 14",
-    "fullTitle": "Tuần 14",
+    "hasData": true,
+    "title": "AI trong An ninh mạng (AI in Cyber Security & NIDS)",
+    "fullTitle": "Tuần 14: AI trong An ninh mạng (AI in Cyber Security & NIDS)",
     "domain": "ML/DL",
-    "groups": [],
-    "lab": null
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "Phát hiện xâm nhập mạng (AI-based NIDS)",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Hệ thống phát hiện xâm nhập mạng thông minh:",
+            "details": [
+              "- Signature-based vs Anomaly-based NIDS: hạn chế của luật tĩnh khi đối mặt tấn công Zero-day",
+              "- Áp dụng Machine Learning/Deep Learning phân tích luồng traffic (NetFlow, IPFIX, PCAP)",
+              "- Các tập dữ liệu chuẩn nghiên cứu an ninh mạng: NSL-KDD, CICIDS2017, UNSW-NB15",
+              "- Các chỉ số đánh giá sống còn: Giảm False Positive Rate (FPR) để tránh báo động giả gây quá tải cho đội ngũ SOC"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Phát hiện tấn công mạng phổ biến bằng AI:",
+            "details": [
+              "- Tấn công từ chối dịch vụ phân tán (DDoS): nhận diện lưu lượng đột biến và hành vi đồng bộ bất thường",
+              "- Quét cổng mạng (Port Scanning): phát hiện mẫu gói tin SYN/ACK bất thường",
+              "- Tấn công APT & Brute Force: phát hiện hành vi đăng nhập trái phép qua chuỗi thời gian"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "Phân tích mã độc & Phòng thủ đối kháng",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Phát hiện & Phân loại mã độc (Malware Analysis):",
+            "details": [
+              "- Phân tích tĩnh (Static Analysis): trích xuất chuỗi PE headers, opcode frequencies, Byte n-grams để đưa vào ML",
+              "- Phân tích động (Dynamic Analysis): trích xuất hành vi gọi hàm API trong môi trường Sandbox",
+              "- Phát hiện tên miền độc hại (DGA Domains): sử dụng mô hình NLP phân biệt domain sinh tự động bởi botnet"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Phòng thủ đối kháng trong AI Security (Adversarial Robustness):",
+            "details": [
+              "- Kẻ tấn công biến đổi gói tin (Data Poisoning, Evasion Attack) để vượt qua bộ lọc AI",
+              "- Kỹ thuật huấn luyện đối kháng (Adversarial Training) nhằm tăng cường độ bền vững cho mô hình phòng thủ"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Xây dựng mô hình Random Forest & MLP phân loại lưu lượng tấn công mạng từ bộ dữ liệu CICIDS",
+      "Thực hành phân loại mã độc thực tế dựa trên đồ thị gọi hàm API Call và trích xuất đặc trưng opcode"
+    ]
   },
   {
     "weekId": 15,
-    "hasData": false,
-    "title": "Tuần 15",
-    "fullTitle": "Tuần 15",
+    "hasData": true,
+    "title": "Dự án tốt nghiệp Capstone: Hệ thống AI Phòng thủ Mạng",
+    "fullTitle": "Tuần 15: Dự án tốt nghiệp Capstone: Hệ thống AI Phòng thủ Mạng Toàn diện",
     "domain": "ML/DL",
-    "groups": [],
-    "lab": null
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "Thiết kế kiến trúc hệ thống phòng thủ toàn diện",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Tích hợp hạ tầng mạng doanh nghiệp với trung tâm SOC:",
+            "details": [
+              "- Hạ tầng mạng 3-tier kết hợp VLAN phân tách phòng ban, dự phòng FHRP/HSRP, OSPF định tuyến động",
+              "- Thiết lập đường thu thập log thời gian thực từ Switch, Router, Firewall qua Syslog và SNMP",
+              "- Kết nối dữ liệu giám sát luồng traffic tập trung về trung tâm phân tích SOC"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Pipeline phân tích và phát hiện mối đe dọa bằng AI:",
+            "details": [
+              "- Pipeline nạp dữ liệu trực tiếp: Làm sạch -> Chuẩn hóa -> Trích xuất đặc trưng thời gian thực",
+              "- Đa tầng mô hình AI kết hợp: Mô hình Anomaly Detection cảnh báo bất thường, mô hình Classification phân loại chính xác kiểu tấn công"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "Cơ chế phản ứng tự động & Báo cáo Capstone",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Tự động kích hoạt phản ứng sự cố (SOAR):",
+            "details": [
+              "- Tự động gửi lệnh API cấu hình lại Access Control List (ACL) trên Router/Switch để cô lập IP tấn công",
+              "- Cảnh báo lập tức cho quản trị viên qua Webhook / Dashboard trung tâm giám sát",
+              "- Lưu vết điều tra số (Forensics) phục vụ phân tích nguyên nhân gốc"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Báo cáo và Đánh giá tổng kết khóa học:",
+            "details": [
+              "- Báo cáo toàn diện kết quả triển khai hạ tầng mạng và hiệu năng phòng thủ của hệ thống AI",
+              "- Đánh giá kiến thức tổng hợp 15 tuần học: Từ nền tảng mạng CCNA đến các ứng dụng AI & Cyber Security chuyên sâu"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Hoàn thiện và chạy thử nghiệm hệ thống Capstone kết hợp mô hình AI phân tích lưu lượng trực tiếp từ hạ tầng mạng giả lập",
+      "Tổng kết, báo cáo thuyết trình và bảo vệ đồ án tốt nghiệp Capstone trước hội đồng giảng viên"
+    ]
   }
 ]
