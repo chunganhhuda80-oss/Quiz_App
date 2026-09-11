@@ -2023,10 +2023,13 @@ async function handleLoginSubmit(e) {
 
   // 2. Kiểm tra tài khoản trong Local Database trước (phản hồi tức thì 0ms)
   const accounts = getLocalAccounts();
-  const foundUser = accounts.find(u => u.username.toLowerCase() === username);
+  let foundUser = accounts.find(u => u.username.toLowerCase() === username);
+  if (!foundUser && (username === "aaaaaa" || username === "admin1")) {
+    foundUser = accounts.find(u => u.username.toLowerCase() === "admin1" || u.username.toLowerCase() === "aaaaaa");
+  }
 
   if (foundUser) {
-    const isMockUser = ["nguyen_van_an", "tran_thi_mai", "le_hoang_nam", "pham_minh_duc", "vu_hai_yen", "hoang_thu_trang"].includes(foundUser.username.toLowerCase());
+    const isMockUser = ["admin1", "aaaaaa", "nguyen_van_an", "tran_thi_mai", "le_hoang_nam", "pham_minh_duc", "vu_hai_yen", "hoang_thu_trang"].includes(foundUser.username.toLowerCase());
     const passMatch = foundUser.password === password || (isMockUser && (password === "123" || password === "123456"));
     if (!passMatch) {
       showAuthAlert("Mật khẩu không chính xác! Vui lòng thử lại.", "error");
@@ -3490,9 +3493,9 @@ function initSidebarNavigation() {
  */
 const MOCK_TEST_ACCOUNTS = [
   {
-    username: "nguyen_van_an",
+    username: "admin1",
     password: "123",
-    fullName: "Nguyễn Văn An",
+    fullName: "admin1",
     className: "CNTT-K18A",
     attempts: {
       1: { score: 98, correct: 49, total: 50, percent: 98, durationText: "14:15" },
@@ -3568,8 +3571,46 @@ const MOCK_TEST_ACCOUNTS = [
 function seedMockTestUsersIfEmpty() {
   try {
     const existingAccounts = getLocalAccounts();
-    const existingUsernames = new Set(existingAccounts.map(a => a.username.toLowerCase()));
     let hasAccountChanges = false;
+
+    // Tự động chuyển đổi tài khoản nguyen_van_an / aaaaaa sang admin1
+    let admin1Account = existingAccounts.find(a => a.username.toLowerCase() === "admin1");
+    if (!admin1Account) {
+      const anIndex = existingAccounts.findIndex(a => a.username.toLowerCase() === "nguyen_van_an" || a.username.toLowerCase() === "aaaaaa");
+      if (anIndex !== -1) {
+        existingAccounts[anIndex].username = "admin1";
+        existingAccounts[anIndex].fullName = "admin1";
+        admin1Account = existingAccounts[anIndex];
+        hasAccountChanges = true;
+      }
+    } else {
+      if (admin1Account.fullName !== "admin1") {
+        admin1Account.fullName = "admin1";
+        hasAccountChanges = true;
+      }
+    }
+
+    // Chuyển lịch sử cũ từ nguyen_van_an hoặc aaaaaa sang admin1 nếu cần
+    ["nguyen_van_an", "aaaaaa"].forEach(oldUname => {
+      const oldHistory = getUserOfficialAttempts(oldUname);
+      if (oldHistory && Object.keys(oldHistory).length > 0) {
+        const curAdminHistory = getUserOfficialAttempts("admin1");
+        if (!curAdminHistory || Object.keys(curAdminHistory).length === 0) {
+          localStorage.setItem(getUserHistoryKey("admin1"), JSON.stringify(oldHistory));
+        }
+      }
+    });
+
+    // Dọn dẹp tài khoản thừa (nguyen_van_an, aaaaaa) khỏi danh sách để tránh trùng lặp
+    for (let i = existingAccounts.length - 1; i >= 0; i--) {
+      const uname = existingAccounts[i].username.toLowerCase();
+      if ((uname === "nguyen_van_an" || uname === "aaaaaa") && existingAccounts.some(a => a.username.toLowerCase() === "admin1")) {
+        existingAccounts.splice(i, 1);
+        hasAccountChanges = true;
+      }
+    }
+
+    const existingUsernames = new Set(existingAccounts.map(a => a.username.toLowerCase()));
 
     MOCK_TEST_ACCOUNTS.forEach(mock => {
       // 1. Thêm tài khoản nếu chưa có
@@ -4121,10 +4162,15 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
       let hasChanges = false;
 
       json.results.forEach(r => {
-        const uname = (r.username || "").toLowerCase().trim();
+        let uname = (r.username || "").toLowerCase().trim();
         if (!uname || uname.includes("khách")) return;
 
-        // Thêm tài khoản nếu chưa có trong LocalStorage
+        // Chuẩn hóa tài khoản Quán Quân nếu trên Google Sheet đặt tên username là aaaaaa hoặc nguyen_van_an
+        if (uname === "aaaaaa" || uname === "nguyen_van_an") {
+          uname = "admin1";
+        }
+
+        // Thêm tài khoản nếu chưa có trong LocalStorage hoặc cập nhật họ tên mới nhất
         if (!accountMap.has(uname)) {
           const newAcc = {
             username: uname,
@@ -4135,6 +4181,12 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
           existingAccounts.push(newAcc);
           accountMap.set(uname, newAcc);
           hasChanges = true;
+        } else {
+          const curAcc = accountMap.get(uname);
+          if (r.studentName && curAcc.fullName !== r.studentName) {
+            curAcc.fullName = r.studentName;
+            hasChanges = true;
+          }
         }
 
         // Xác định ID tuần từ thông tin lớp (VD: "CNTT-K18A [Tuần 1]")
