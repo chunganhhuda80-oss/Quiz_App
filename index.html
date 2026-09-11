@@ -932,34 +932,35 @@
         </button>
       </div>
 
-      <!-- Thẻ thành tích cá nhân của tài khoản đang đăng nhập -->
-      <div id="user-achievement-card" class="user-achievement-card"></div>
+      <!-- Vùng nội dung có thanh cuộn mượt mà toàn diện -->
+      <div class="ranking-modal-scrollable-body" id="ranking-modal-scrollable-body">
+        <!-- Thẻ thành tích cá nhân của tài khoản đang đăng nhập -->
+        <div id="user-achievement-card" class="user-achievement-card"></div>
 
-      <!-- Dòng quy chế xếp hạng chính thức -->
-      <div class="ranking-rules-hint">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
-        </svg>
-        <span id="ranking-rules-text">Quy chế: Chỉ xét thứ hạng chính thức cho học sinh đã <strong>hoàn thành tất cả các tuần thi đã mở</strong>. Học sinh chưa làm đủ số tuần sẽ hiển thị ở danh sách <strong>Chờ (Pending)</strong>.</span>
-      </div>
+        <!-- Dòng quy chế xếp hạng chính thức -->
+        <div class="ranking-rules-hint">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          <span id="ranking-rules-text">Quy chế: Chỉ xét thứ hạng chính thức cho học sinh đã <strong>hoàn thành tất cả các tuần thi đã mở</strong>. Học sinh chưa làm đủ số tuần sẽ hiển thị ở danh sách <strong>Chờ (Pending)</strong>.</span>
+        </div>
 
-      <!-- Bục vinh danh Top 3 Podium (Top 1 Gold, Top 2 Silver, Top 3 Bronze) -->
-      <div class="ranking-podium-section" id="ranking-podium-section"></div>
+        <!-- Bục vinh danh Top 3 Podium (Top 1 Gold, Top 2 Silver, Top 3 Bronze) -->
+        <div class="ranking-podium-section" id="ranking-podium-section"></div>
 
-      <!-- Bộ lọc Tab: Xếp Hạng Chính Thức vs Danh Sách Chờ Pending -->
-      <div class="ranking-table-header-tabs">
-        <button type="button" class="ranking-tab-filter active" id="filter-btn-ranked" data-tab="ranked">
-          <span>🏆 Xếp Hạng Chính Thức</span>
-          <span class="ranking-count-pill" id="count-pill-ranked">0</span>
-        </button>
-        <button type="button" class="ranking-tab-filter" id="filter-btn-pending" data-tab="pending">
-          <span>⏳ Danh Sách Chờ (Pending)</span>
-          <span class="ranking-count-pill pending-pill" id="count-pill-pending">0</span>
-        </button>
-      </div>
+        <!-- Bộ lọc Tab: Xếp Hạng Chính Thức vs Danh Sách Chờ Pending -->
+        <div class="ranking-table-header-tabs">
+          <button type="button" class="ranking-tab-filter active" id="filter-btn-ranked" data-tab="ranked">
+            <span>🏆 Xếp Hạng Chính Thức</span>
+            <span class="ranking-count-pill" id="count-pill-ranked">0</span>
+          </button>
+          <button type="button" class="ranking-tab-filter" id="filter-btn-pending" data-tab="pending">
+            <span>⏳ Danh Sách Chờ (Pending)</span>
+            <span class="ranking-count-pill pending-pill" id="count-pill-pending">0</span>
+          </button>
+        </div>
 
-      <!-- Danh sách bảng xếp hạng -->
-      <div class="ranking-scroll-body">
+        <!-- Danh sách bảng xếp hạng -->
         <div class="ranking-list-view" id="ranking-list-ranked">
           <!-- Dynamic rendered ranked table rows -->
         </div>
@@ -968,7 +969,7 @@
         </div>
       </div>
 
-      <!-- Footer Modal -->
+      <!-- Footer Modal - Cố định ở đáy, luôn hiển thị nút xanh "Vào Làm Bài Thi Ngay" -->
       <div class="ranking-modal-footer">
         <button type="button" class="btn-ranking-close-sub" id="btn-ranking-dismiss">
           <span>Để Sau</span>

@@ -3748,43 +3748,59 @@ function renderRankingModal() {
   const userCard = document.getElementById("user-achievement-card");
   if (userCard) {
     if (currentUser) {
-      const rankedIndex = rankedUsers.findIndex(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
-      if (rankedIndex !== -1) {
-        const rankNum = rankedIndex + 1;
-        const userStat = rankedUsers[rankedIndex];
-        const medal = rankNum === 1 ? "🥇" : rankNum === 2 ? "🥈" : rankNum === 3 ? "🥉" : "🎖️";
-        userCard.className = "user-achievement-card status-ranked";
+      if (currentUser.role === "admin") {
+        userCard.className = "user-achievement-card status-admin";
         userCard.innerHTML = `
           <div class="achievement-left">
-            <span class="achievement-icon">${medal}</span>
+            <span class="achievement-icon">🛡️</span>
             <div>
-              <div class="achievement-text-title">Chúc mừng ${escapeHtml(currentUser.fullName)}! Bạn đang xếp HẠNG #${rankNum}</div>
+              <div class="achievement-text-title">Tài khoản Quản Trị Viên (${escapeHtml(currentUser.fullName)})</div>
               <div class="achievement-text-desc">
-                Đã hoàn thành xuất sắc <strong>${totalUnlocked}/${totalUnlocked}</strong> tuần thi đã mở • Tổng điểm: <strong>${userStat.totalScore} điểm</strong> (TB: ${userStat.avgScore}đ)
+                Bạn đang xem Bảng Vinh Danh & Xếp Hạng thời gian thực của học sinh toàn trường.
               </div>
             </div>
           </div>
-          <div class="achievement-rank-tag">🏆 Hạng #${rankNum} Toàn Hệ Thống</div>
+          <div class="achievement-rank-tag" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecdd3;">🛡️ Quản Trị Hệ Thống</div>
         `;
       } else {
-        const pendingStat = pendingUsers.find(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
-        const doneCount = pendingStat ? pendingStat.completedWeeksCount : 0;
-        const currentScore = pendingStat ? pendingStat.totalScore : 0;
-        const remaining = totalUnlocked - doneCount;
-
-        userCard.className = "user-achievement-card status-pending";
-        userCard.innerHTML = `
-          <div class="achievement-left">
-            <span class="achievement-icon">⏳</span>
-            <div>
-              <div class="achievement-text-title">Tài khoản: ${escapeHtml(currentUser.fullName)} • Trạng thái: Chờ Xét Duyệt (Pending)</div>
-              <div class="achievement-text-desc">
-                Bạn đã hoàn thành <strong>${doneCount}/${totalUnlocked} tuần mở</strong> (Tổng: ${currentScore} điểm). Bạn cần thi tiếp <strong>${remaining} tuần còn lại</strong> để chính thức lọt vào Bảng Xếp Hạng!
+        const rankedIndex = rankedUsers.findIndex(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
+        if (rankedIndex !== -1) {
+          const rankNum = rankedIndex + 1;
+          const userStat = rankedUsers[rankedIndex];
+          const medal = rankNum === 1 ? "🥇" : rankNum === 2 ? "🥈" : rankNum === 3 ? "🥉" : "🎖️";
+          userCard.className = "user-achievement-card status-ranked";
+          userCard.innerHTML = `
+            <div class="achievement-left">
+              <span class="achievement-icon">${medal}</span>
+              <div>
+                <div class="achievement-text-title">Chúc mừng ${escapeHtml(currentUser.fullName)}! Bạn đang xếp HẠNG #${rankNum}</div>
+                <div class="achievement-text-desc">
+                  Đã hoàn thành xuất sắc <strong>${totalUnlocked}/${totalUnlocked}</strong> tuần thi đã mở • Tổng điểm: <strong>${userStat.totalScore} điểm</strong> (TB: ${userStat.avgScore}đ)
+                </div>
               </div>
             </div>
-          </div>
-          <div class="achievement-rank-tag" style="color: #b45309; border-color: #fde68a;">⏳ Chờ (${doneCount}/${totalUnlocked} tuần)</div>
-        `;
+            <div class="achievement-rank-tag">🏆 Hạng #${rankNum} Toàn Hệ Thống</div>
+          `;
+        } else {
+          const pendingStat = pendingUsers.find(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
+          const doneCount = pendingStat ? pendingStat.completedWeeksCount : 0;
+          const currentScore = pendingStat ? pendingStat.totalScore : 0;
+          const remaining = totalUnlocked - doneCount;
+
+          userCard.className = "user-achievement-card status-pending";
+          userCard.innerHTML = `
+            <div class="achievement-left">
+              <span class="achievement-icon">⏳</span>
+              <div>
+                <div class="achievement-text-title">Tài khoản: ${escapeHtml(currentUser.fullName)} • Trạng thái: Chờ Xét Duyệt (Pending)</div>
+                <div class="achievement-text-desc">
+                  Bạn đã hoàn thành <strong>${doneCount}/${totalUnlocked} tuần mở</strong> (Tổng: ${currentScore} điểm). Bạn cần thi tiếp <strong>${remaining} tuần còn lại</strong> để chính thức lọt vào Bảng Xếp Hạng!
+                </div>
+              </div>
+            </div>
+            <div class="achievement-rank-tag" style="color: #b45309; border-color: #fde68a;">⏳ Chờ (${doneCount}/${totalUnlocked} tuần)</div>
+          `;
+        }
       }
     } else {
       userCard.className = "user-achievement-card status-guest";
