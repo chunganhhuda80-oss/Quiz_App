@@ -1000,6 +1000,37 @@
     </div>
   </div>
 
+  <!-- =================================================================== -->
+  <!-- CUSTOM APP DIALOG MODAL (POPUP XÁC NHẬN & THÔNG BÁO CAO CẤP THAY THẾ ALERT/CONFIRM) -->
+  <!-- =================================================================== -->
+  <div id="app-dialog-modal" class="app-dialog-overlay" style="display: none;">
+    <div class="app-dialog-backdrop" id="app-dialog-backdrop"></div>
+    <div class="app-dialog-card" role="dialog" aria-modal="true" id="app-dialog-card">
+      <div class="app-dialog-header">
+        <div class="app-dialog-icon-box" id="app-dialog-icon-box">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <button type="button" class="app-dialog-close-btn" id="btn-app-dialog-close" title="Đóng">&times;</button>
+      </div>
+      <div class="app-dialog-body">
+        <h3 class="app-dialog-title" id="app-dialog-title">Xác nhận thao tác</h3>
+        <div class="app-dialog-message" id="app-dialog-message">Nội dung thông báo...</div>
+      </div>
+      <div class="app-dialog-footer" id="app-dialog-footer">
+        <button type="button" class="app-dialog-btn btn-cancel" id="btn-app-dialog-cancel">
+          <span id="app-dialog-cancel-text">Hủy bỏ</span>
+        </button>
+        <button type="button" class="app-dialog-btn btn-confirm theme-primary" id="btn-app-dialog-confirm">
+          <span id="app-dialog-confirm-text">Xác nhận</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST THÔNG BÁO THAO TÁC CỦA QUẢN TRỊ VIÊN -->
   <div id="admin-toast" class="admin-toast" style="display: none;"></div>
 

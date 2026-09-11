@@ -153,6 +153,279 @@ function playAlarmSound() {
 }
 
 // ==============================================================================
+// HỆ THỐNG POPUP MODAL XÁC NHẬN & THÔNG BÁO CAO CẤP (THAY THẾ CONFIRM & ALERT TRÌNH DUYỆT)
+// ==============================================================================
+let appDialogResolve = null;
+
+/**
+ * Hiển thị Popup Modal Xác Nhận (Thay thế hoàn toàn window.confirm)
+ * Trả về Promise<boolean> (true nếu người dùng bấm Xác nhận / Đồng ý, false nếu bấm Hủy)
+ * @param {Object|string} options
+ * @returns {Promise<boolean>}
+ */
+function showAppConfirm(options) {
+  if (typeof options === "string") {
+    let type = "question";
+    let title = "XÁC NHẬN THAO TÁC";
+    if (options.includes("⚠️") || options.toLowerCase().includes("cảnh báo") || options.toLowerCase().includes("khóa")) {
+      type = options.toLowerCase().includes("xóa") || options.toLowerCase().includes("khóa tất cả") ? "danger" : "warning";
+      title = "CẢNH BÁO XÁC NHẬN";
+    }
+    options = {
+      title,
+      message: options,
+      type,
+      confirmText: "Xác Nhận",
+      cancelText: "Hủy Bỏ"
+    };
+  }
+
+  const title = options.title || "XÁC NHẬN THAO TÁC";
+  const message = options.message || "";
+  const type = options.type || "question";
+  const confirmText = options.confirmText || "Xác Nhận";
+  const cancelText = options.cancelText || "Hủy Bỏ";
+
+  return openAppDialogModal({
+    isConfirm: true,
+    title,
+    message,
+    type,
+    confirmText,
+    cancelText
+  });
+}
+
+/**
+ * Hiển thị Popup Modal Thông Báo (Thay thế hoàn toàn window.alert)
+ * Trả về Promise<void>
+ * @param {Object|string} options
+ * @returns {Promise<void>}
+ */
+function showAppAlert(options) {
+  if (typeof options === "string") {
+    let type = "info";
+    let title = "THÔNG BÁO";
+    const lower = options.toLowerCase();
+    if (options.includes("✓") || lower.includes("thành công")) {
+      type = "success";
+      title = "THÀNH CÔNG";
+    } else if (options.includes("⚠️") || options.includes("🔒") || lower.includes("khóa") || lower.includes("cảnh báo")) {
+      type = "warning";
+      title = lower.includes("khóa") ? "BÀI THI ĐANG BỊ KHÓA" : "CẢNH BÁO";
+    } else if (lower.includes("lỗi") || lower.includes("thất bại")) {
+      type = "danger";
+      title = "THÔNG BÁO LỖI";
+    }
+    options = {
+      title,
+      message: options,
+      type,
+      confirmText: "Đã Hiểu"
+    };
+  }
+
+  const title = options.title || "THÔNG BÁO";
+  const message = options.message || "";
+  const type = options.type || "info";
+  const confirmText = options.confirmText || "Đã Hiểu";
+
+  return openAppDialogModal({
+    isConfirm: false,
+    title,
+    message,
+    type,
+    confirmText,
+    cancelText: ""
+  });
+}
+
+/**
+ * Mở modal popup với nội dung và cấu hình chỉ định
+ */
+function openAppDialogModal({ isConfirm, title, message, type, confirmText, cancelText }) {
+  return new Promise((resolve) => {
+    appDialogResolve = resolve;
+
+    const modal = document.getElementById("app-dialog-modal");
+    const card = document.getElementById("app-dialog-card");
+    const iconBox = document.getElementById("app-dialog-icon-box");
+    const titleEl = document.getElementById("app-dialog-title");
+    const messageEl = document.getElementById("app-dialog-message");
+    const btnCancel = document.getElementById("btn-app-dialog-cancel");
+    const btnConfirm = document.getElementById("btn-app-dialog-confirm");
+    const cancelTextEl = document.getElementById("app-dialog-cancel-text");
+    const confirmTextEl = document.getElementById("app-dialog-confirm-text");
+
+    if (!modal || !card) {
+      console.warn("app-dialog-modal element not found, falling back to native dialogs");
+      if (isConfirm) {
+        resolve(window.confirm(message.replace(/<[^>]*>?/gm, '')));
+      } else {
+        window.alert(message.replace(/<[^>]*>?/gm, ''));
+        resolve();
+      }
+      return;
+    }
+
+    // Thiết lập tiêu đề và nội dung
+    if (titleEl) titleEl.textContent = title;
+    
+    // Nếu message có chứa thẻ HTML thì render HTML, nếu không chuyển đổi \n thành <br>
+    if (messageEl) {
+      if (/<[a-z][\s\S]*>/i.test(message)) {
+        messageEl.innerHTML = message;
+      } else {
+        messageEl.innerHTML = escapeHtml(message).replace(/\n/g, "<br>");
+      }
+    }
+
+    // Thiết lập Icon theo chủ đề
+    if (iconBox) {
+      iconBox.className = `app-dialog-icon-box type-${type}`;
+      if (type === "question") {
+        iconBox.innerHTML = `
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>`;
+      } else if (type === "warning") {
+        iconBox.innerHTML = `
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>`;
+      } else if (type === "danger") {
+        iconBox.innerHTML = `
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>`;
+      } else if (type === "success") {
+        iconBox.innerHTML = `
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>`;
+      } else {
+        iconBox.innerHTML = `
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>`;
+      }
+    }
+
+    // Thiết lập các nút bấm
+    const themeClass = type === "danger" ? "theme-danger" : (type === "warning" ? "theme-warning" : (type === "success" ? "theme-success" : "theme-primary"));
+
+    if (btnConfirm) {
+      btnConfirm.className = `app-dialog-btn btn-confirm ${themeClass}`;
+      if (confirmTextEl) confirmTextEl.textContent = confirmText;
+    }
+
+    if (btnCancel) {
+      if (isConfirm) {
+        btnCancel.style.display = "inline-flex";
+        if (cancelTextEl) cancelTextEl.textContent = cancelText;
+      } else {
+        btnCancel.style.display = "none";
+      }
+    }
+
+    card.classList.remove("dialog-closing");
+    modal.style.display = "flex";
+    if (btnConfirm) btnConfirm.focus();
+  });
+}
+
+/**
+ * Đóng popup modal và trả về kết quả
+ */
+function closeAppDialog(result) {
+  const modal = document.getElementById("app-dialog-modal");
+  const card = document.getElementById("app-dialog-card");
+  if (!modal) {
+    if (appDialogResolve) {
+      const fn = appDialogResolve;
+      appDialogResolve = null;
+      fn(result);
+    }
+    return;
+  }
+
+  if (card) {
+    card.classList.add("dialog-closing");
+    setTimeout(() => {
+      modal.style.display = "none";
+      card.classList.remove("dialog-closing");
+      if (appDialogResolve) {
+        const fn = appDialogResolve;
+        appDialogResolve = null;
+        fn(result);
+      }
+    }, 180);
+  } else {
+    modal.style.display = "none";
+    if (appDialogResolve) {
+      const fn = appDialogResolve;
+      appDialogResolve = null;
+      fn(result);
+    }
+  }
+}
+
+/**
+ * Khởi tạo các sự kiện cho popup dialog
+ */
+function initAppDialogListeners() {
+  const modal = document.getElementById("app-dialog-modal");
+  const btnCancel = document.getElementById("btn-app-dialog-cancel");
+  const btnConfirm = document.getElementById("btn-app-dialog-confirm");
+  const btnClose = document.getElementById("btn-app-dialog-close");
+  const backdrop = document.getElementById("app-dialog-backdrop");
+
+  if (btnConfirm) {
+    btnConfirm.addEventListener("click", () => closeAppDialog(true));
+  }
+  if (btnCancel) {
+    btnCancel.addEventListener("click", () => closeAppDialog(false));
+  }
+  if (btnClose) {
+    btnClose.addEventListener("click", () => closeAppDialog(false));
+  }
+  if (backdrop) {
+    backdrop.addEventListener("click", () => closeAppDialog(false));
+  }
+
+  // Phím tắt bàn phím: Enter = Confirm, Esc = Cancel
+  window.addEventListener("keydown", (e) => {
+    if (modal && modal.style.display !== "none") {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeAppDialog(false);
+      } else if (e.key === "Enter" && !e.shiftKey) {
+        const active = document.activeElement;
+        if (!active || active.tagName !== "TEXTAREA") {
+          e.preventDefault();
+          closeAppDialog(true);
+        }
+      }
+    }
+  });
+
+  // Tự động chuyển hướng toàn bộ lệnh window.alert sang popup modal cao cấp
+  window.nativeAlert = window.alert;
+  window.alert = function(msg) {
+    showAppAlert(msg);
+  };
+}
+
+// ==============================================================================
 // HỆ THỐNG QUẢN LÝ LỊCH SỬ THI & BẢO LƯU ĐIỂM CHÍNH THỨC LẦN 1
 // ==============================================================================
 function getUserHistoryKey(username) {
@@ -473,15 +746,22 @@ function initWeeksSelector() {
     if (isAdmin) {
       const toggleBtn = card.querySelector(".week-card-admin-toggle");
       if (toggleBtn) {
-        toggleBtn.addEventListener("click", (e) => {
+        toggleBtn.addEventListener("click", async (e) => {
           e.stopPropagation();
           const newStatus = !unlocked;
           const actionWord = newStatus ? "MỞ KHÓA" : "KHÓA LẠI";
-          const confirmMsg = newStatus 
-            ? `❓ XÁC NHẬN MỞ KHÓA?\n\nBạn có chắc chắn muốn MỞ KHÓA ${week.name} (${week.title}) cho học sinh vào thi không?`
-            : `⚠️ CẢNH BÁO XÁC NHẬN KHÓA!\n\nBạn có chắc chắn muốn KHÓA ${week.name} (${week.title}) không?\nKhi khóa, tất cả học sinh sẽ BỊ CHẶN NGAY LẬP TỨC và không thể vào thi tuần này!`;
 
-          if (!confirm(confirmMsg)) {
+          const confirmed = await showAppConfirm({
+            title: newStatus ? "XÁC NHẬN MỞ KHÓA TUẦN THI" : "CẢNH BÁO KHÓA TUẦN THI",
+            message: newStatus
+              ? `Bạn có chắc chắn muốn <strong>MỞ KHÓA</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> cho học sinh vào thi không?`
+              : `Bạn có chắc chắn muốn <strong>KHÓA</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> không?<br><span class="dialog-highlight-warn">⚠️ Khi khóa, tất cả học sinh sẽ bị chặn ngay lập tức và không thể vào thi tuần này!</span>`,
+            type: newStatus ? "question" : "warning",
+            confirmText: newStatus ? "Mở Khóa Ngay" : "Khóa Ngay",
+            cancelText: "Hủy Bỏ"
+          });
+
+          if (!confirmed) {
             return;
           }
 
@@ -490,17 +770,25 @@ function initWeeksSelector() {
           if (QuizState.selectedWeekId === week.id) {
             selectWeek(week.id);
           }
-          alert(`✓ THÀNH CÔNG!\nĐã ${actionWord} ${week.name} (${week.title}) thành công.\nCài đặt đã có hiệu lực ngay lập tức cho toàn bộ học sinh.`);
+          await showAppAlert({
+            title: "CẬP NHẬT THÀNH CÔNG",
+            message: `Đã <strong>${actionWord}</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> thành công.<br>Cài đặt đã có hiệu lực ngay lập tức cho toàn bộ học sinh.`,
+            type: "success"
+          });
         });
       }
     }
 
-    card.addEventListener("click", () => {
+    card.addEventListener("click", async () => {
       if (unlocked || isAdmin) {
         selectWeek(week.id);
       } else {
         playWrongSound();
-        alert(`🔒 BÀI THI ĐANG BỊ KHÓA!\n${week.name} (${week.title}) hiện đang bị khóa bởi Quản trị viên.\nHọc sinh chưa thể vào làm bài tuần này.`);
+        await showAppAlert({
+          title: "BÀI THI ĐANG BỊ KHÓA",
+          message: `<strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> hiện đang bị khóa bởi Quản trị viên.<br><br>Học sinh chưa thể vào làm bài tuần này. Vui lòng quay lại sau!`,
+          type: "warning"
+        });
       }
     });
 
@@ -848,7 +1136,7 @@ function showScreen(screenId) {
 // ==============================================================================
 // BẮT ĐẦU BÀI THI
 // ==============================================================================
-function startQuiz() {
+async function startQuiz() {
   // 1. BẮT BUỘC HỌC SINH PHẢI ĐĂNG NHẬP TRƯỚC KHI LÀM BÀI
   if (!AuthState.currentUser) {
     showScreen("auth-screen");
@@ -863,21 +1151,33 @@ function startQuiz() {
   // 2. CHẶN NẾU TUẦN THI ĐANG BỊ KHÓA ĐỐI VỚI HỌC SINH
   if (!unlocked && !isAdmin) {
     playWrongSound();
-    alert(`🔒 BÀI THI ĐANG BỊ KHÓA!\n${week ? week.name : 'Tuần này'} hiện đang bị khóa bởi Quản trị viên.\nHọc sinh không thể bắt đầu làm bài thi!`);
+    await showAppAlert({
+      title: "BÀI THI ĐANG BỊ KHÓA",
+      message: `<strong>${week ? escapeHtml(week.name) : 'Tuần này'}</strong> hiện đang bị khóa bởi Quản trị viên.<br><br>Học sinh không thể bắt đầu làm bài thi!`,
+      type: "warning"
+    });
     return;
   }
 
   // 3. CHẶN NẾU TUẦN THI CHƯA CÓ FILE CÂU HỎI
   if (!week || !week.file || !week.file.trim()) {
     playWrongSound();
-    alert(`⚠️ CHƯA CÓ DỮ LIỆU ĐỀ THI!\n${week ? week.name : 'Tuần này'} chưa có bộ câu hỏi thi (giáo viên chưa tải file câu hỏi lên hệ thống).\nVui lòng chọn Tuần 1 hoặc Tuần 2 để làm bài.`);
+    await showAppAlert({
+      title: "CHƯA CÓ DỮ LIỆU ĐỀ THI",
+      message: `<strong>${week ? escapeHtml(week.name) : 'Tuần này'}</strong> chưa có bộ câu hỏi thi (giáo viên chưa tải file câu hỏi lên hệ thống).<br><br>Vui lòng chọn <strong>Tuần 1 đến Tuần 6</strong> để làm bài.`,
+      type: "info"
+    });
     return;
   }
 
   // 4. KIỂM TRA DỮ LIỆU CÂU HỎI ĐÃ ĐƯỢC NẠP THÀNH CÔNG CHƯA
   if (!QuizState.rawQuestions || QuizState.rawQuestions.length === 0) {
     playWrongSound();
-    alert(`⚠️ Không có câu hỏi nào trong đề thi của ${week ? week.name : 'tuần này'}!\nVui lòng liên hệ giáo viên hoặc chọn tuần khác.`);
+    await showAppAlert({
+      title: "ĐỀ THI TRỐNG",
+      message: `Không tìm thấy câu hỏi nào trong đề thi của <strong>${week ? escapeHtml(week.name) : 'tuần này'}</strong>.<br><br>Vui lòng liên hệ giáo viên hoặc chọn tuần khác.`,
+      type: "warning"
+    });
     return;
   }
 
@@ -905,12 +1205,6 @@ function startQuiz() {
   QuizState.officialAttempt = existingOfficialAttempt;
 
   // Cập nhật huy hiệu chế độ ôn tập trên thanh trạng thái bài thi
-  const practicePill = document.getElementById("practice-pill");
-  if (practicePill) {
-    practicePill.style.display = QuizState.isPracticeMode ? "inline-flex" : "none";
-  }
-
-  // Khởi tạo trạng thái giám sát chống gian lận (Anti-Cheat)
   QuizState.violationCount = 0;
   QuizState.isExamActive = true;
   QuizState.isAutoSubmitDueToCheat = false;
@@ -971,8 +1265,12 @@ function updateTimerUI() {
   }
 }
 
-function handleTimeExpired() {
-  alert("Hết giờ làm bài! Hệ thống sẽ tự động chấm điểm và nộp kết quả của bạn.");
+async function handleTimeExpired() {
+  await showAppAlert({
+    title: "HẾT GIỜ LÀM BÀI",
+    message: "Đã hết thời gian làm bài quy định!<br><br>Hệ thống đang tự động chấm điểm và tổng hợp kết quả của bạn...",
+    type: "info"
+  });
   finishQuiz();
 }
 
@@ -2236,8 +2534,16 @@ async function handleRegisterSubmit(e) {
   }, 600);
 }
 
-function handleLogout() {
-  if (confirm("Bạn có chắc chắn muốn đăng xuất khỏi tài khoản này không?")) {
+async function handleLogout() {
+  const confirmed = await showAppConfirm({
+    title: "XÁC NHẬN ĐĂNG XUẤT",
+    message: `Bạn có chắc chắn muốn đăng xuất khỏi tài khoản <strong>${escapeHtml(AuthState.currentUser ? AuthState.currentUser.fullName : 'này')}</strong> không?`,
+    type: "question",
+    confirmText: "Đăng Xuất",
+    cancelText: "Ở Lại"
+  });
+
+  if (confirmed) {
     AuthState.currentUser = null;
     localStorage.removeItem(AuthState.storageKeyUser);
     updateAuthUI();
@@ -2332,6 +2638,9 @@ function initAuth() {
 // GẮN SỰ KIỆN LẮNG NGHE DOMCONTENTLOADED
 // ==============================================================================
 document.addEventListener("DOMContentLoaded", () => {
+  // 0. Khởi tạo bộ lắng nghe sự kiện Popup Modal Dialog cao cấp
+  initAppDialogListeners();
+
   // 1. Khởi tạo bộ chọn 15 tuần và nạp tuần mặc định (Tuần 1)
   initWeeksSelector();
 
@@ -2376,8 +2685,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // 5. Nút nộp bài ngay (hoàn thành sớm)
   const btnSubmitEarly = document.getElementById("btn-submit-early");
   if (btnSubmitEarly) {
-    btnSubmitEarly.addEventListener("click", () => {
-      if (confirm("Bạn có chắc chắn muốn nộp bài sớm ngay bây giờ không?")) {
+    btnSubmitEarly.addEventListener("click", async () => {
+      const confirmed = await showAppConfirm({
+        title: "XÁC NHẬN NỘP BÀI SỚM",
+        message: "Bạn vẫn còn thời gian làm bài.<br><br>Bạn có chắc chắn muốn <strong>nộp bài sớm ngay bây giờ</strong> không?",
+        type: "question",
+        confirmText: "Nộp Bài Ngay",
+        cancelText: "Tiếp Tục Thi"
+      });
+      if (confirmed) {
         finishQuiz();
       }
     });
@@ -2432,36 +2748,69 @@ document.addEventListener("DOMContentLoaded", () => {
   // Presets thao tác nhanh trong Modal (Có xác nhận an toàn)
   const presetOpenAll = document.getElementById("preset-open-all");
   if (presetOpenAll) {
-    presetOpenAll.addEventListener("click", () => {
-      if (confirm("❓ XÁC NHẬN: Bạn có chắc chắn muốn MỞ KHÓA TOÀN BỘ 15 TUẦN cho học sinh không?")) {
+    presetOpenAll.addEventListener("click", async () => {
+      const ok = await showAppConfirm({
+        title: "MỞ KHÓA TOÀN BỘ 15 TUẦN",
+        message: "Bạn có chắc chắn muốn <strong>MỞ KHÓA TOÀN BỘ 15 TUẦN</strong> đề thi cho học sinh không?",
+        type: "question",
+        confirmText: "Mở Toàn Bộ",
+        cancelText: "Hủy Bỏ"
+      });
+      if (ok) {
         unlockAllWeeksGlobal();
         renderAdminWeeksModalList();
         initWeeksSelector();
-        alert("✓ Đã mở khóa toàn bộ 15 tuần học thành công!");
+        await showAppAlert({
+          title: "THÀNH CÔNG",
+          message: "Đã mở khóa toàn bộ 15 tuần học thành công!",
+          type: "success"
+        });
       }
     });
   }
 
   const presetDefault = document.getElementById("preset-default");
   if (presetDefault) {
-    presetDefault.addEventListener("click", () => {
-      if (confirm("⚡ XÁC NHẬN: Đưa về chuẩn mặc định (Chỉ mở Tuần 1 & Tuần 2, khóa các tuần 3 đến 15)?")) {
+    presetDefault.addEventListener("click", async () => {
+      const ok = await showAppConfirm({
+        title: "ĐƯA VỀ CHUẨN MẶC ĐỊNH",
+        message: "Bạn có chắc chắn muốn đưa về chuẩn mặc định:<br>• <strong>Chỉ mở Tuần 1 & Tuần 2</strong><br>• Khóa các tuần 3 đến 15 theo tiến độ?",
+        type: "question",
+        confirmText: "Đồng Ý",
+        cancelText: "Hủy Bỏ"
+      });
+      if (ok) {
         resetWeeksStatusToDefault();
         renderAdminWeeksModalList();
         initWeeksSelector();
-        alert("✓ Đã đưa về chuẩn mặc định (Mở Tuần 1 & 2) thành công!");
+        await showAppAlert({
+          title: "THÀNH CÔNG",
+          message: "Đã đưa về chuẩn mặc định (Mở Tuần 1 & 2) thành công!",
+          type: "success"
+        });
       }
     });
   }
 
   const presetLockAll = document.getElementById("preset-lock-all");
   if (presetLockAll) {
-    presetLockAll.addEventListener("click", () => {
-      if (confirm("⚠️ CẢNH BÁO: Bạn có chắc chắn muốn KHÓA TẤT CẢ 15 TUẦN THI KHÔNG?\nHọc sinh sẽ bị chặn hoàn toàn, không thể vào thi bất kỳ tuần nào!")) {
+    presetLockAll.addEventListener("click", async () => {
+      const ok = await showAppConfirm({
+        title: "CẢNH BÁO: KHÓA TẤT CẢ 15 TUẦN",
+        message: "Bạn có chắc chắn muốn <strong>KHÓA TẤT CẢ 15 TUẦN THI KHÔNG</strong>?<br><br><span class='dialog-highlight-warn'>⚠️ Học sinh sẽ bị chặn hoàn toàn, không thể vào thi bất kỳ tuần nào!</span>",
+        type: "danger",
+        confirmText: "Khóa Toàn Bộ",
+        cancelText: "Hủy Bỏ"
+      });
+      if (ok) {
         lockAllWeeksGlobal();
         renderAdminWeeksModalList();
         initWeeksSelector();
-        alert("✓ Đã khóa toàn bộ 15 tuần thi thành công!");
+        await showAppAlert({
+          title: "ĐÃ KHÓA TOÀN BỘ",
+          message: "Đã khóa toàn bộ 15 tuần thi thành công!",
+          type: "warning"
+        });
       }
     });
   }
@@ -2469,19 +2818,41 @@ document.addEventListener("DOMContentLoaded", () => {
   // Nút Mở khóa toàn bộ 15 tuần ở Dashboard ngoài
   const btnAdminUnlock = document.getElementById("btn-admin-unlock-all");
   if (btnAdminUnlock) {
-    btnAdminUnlock.addEventListener("click", () => {
+    btnAdminUnlock.addEventListener("click", async () => {
       const allOpen = (CONFIG.WEEKS || []).every(w => isWeekUnlocked(w));
       if (allOpen) {
-        if (confirm("Khóa lại các tuần 3-15, chỉ giữ mở Tuần 1 & 2 theo tiến độ?")) {
+        const ok = await showAppConfirm({
+          title: "KHÓA CÁC TUẦN 3 - 15",
+          message: "Khóa lại các tuần 3 đến 15, chỉ giữ mở Tuần 1 & Tuần 2 theo tiến độ?",
+          type: "question",
+          confirmText: "Đồng Ý",
+          cancelText: "Hủy Bỏ"
+        });
+        if (ok) {
           resetWeeksStatusToDefault();
           initWeeksSelector();
-          alert("✓ Đã đưa về chuẩn tiến độ học tập (chỉ mở Tuần 1 & 2) thành công.");
+          await showAppAlert({
+            title: "THÀNH CÔNG",
+            message: "Đã đưa về chuẩn tiến độ học tập (chỉ mở Tuần 1 & 2) thành công.",
+            type: "success"
+          });
         }
       } else {
-        if (confirm("Mở khóa toàn bộ 15 tuần đề thi cho học sinh?")) {
+        const ok = await showAppConfirm({
+          title: "MỞ KHÓA TOÀN BỘ 15 TUẦN",
+          message: "Mở khóa toàn bộ 15 tuần đề thi cho học sinh?",
+          type: "question",
+          confirmText: "Mở Toàn Bộ",
+          cancelText: "Hủy Bỏ"
+        });
+        if (ok) {
           unlockAllWeeksGlobal();
           initWeeksSelector();
-          alert("✓ Đã mở khóa toàn bộ 15 tuần đề thi thành công.");
+          await showAppAlert({
+            title: "THÀNH CÔNG",
+            message: "Đã mở khóa toàn bộ 15 tuần đề thi thành công.",
+            type: "success"
+          });
         }
       }
     });
@@ -2489,8 +2860,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnAdminReset = document.getElementById("btn-admin-reset-local");
   if (btnAdminReset) {
-    btnAdminReset.addEventListener("click", () => {
-      if (confirm("⚠️ [ADMIN] Bạn có chắc chắn muốn xóa toàn bộ lịch sử điểm thi lần 1 trên thiết bị này để kiểm tra lại từ đầu không?")) {
+    btnAdminReset.addEventListener("click", async () => {
+      const ok = await showAppConfirm({
+        title: "XÓA DỮ LIỆU THI THỬ NGHIỆM",
+        message: "⚠️ Bạn có chắc chắn muốn xóa toàn bộ lịch sử điểm thi lần 1 trên thiết bị này để kiểm tra lại từ đầu không?",
+        type: "danger",
+        confirmText: "Xóa Dữ Liệu",
+        cancelText: "Hủy Bỏ"
+      });
+      if (ok) {
         localStorage.removeItem(QuizState.storageKeyAttempts);
         initWeeksSelector();
         updateOfficialScoreDisplay(QuizState.selectedWeekId || 1);
@@ -2554,14 +2932,21 @@ function renderAdminWeeksModalList() {
 
     const switchBtn = row.querySelector(".admin-toggle-switch");
     if (switchBtn) {
-      switchBtn.addEventListener("click", () => {
+      switchBtn.addEventListener("click", async () => {
         const nextState = !isWeekUnlocked(week);
         const actionWord = nextState ? "MỞ KHÓA" : "KHÓA LẠI";
-        const confirmText = nextState 
-          ? `❓ XÁC NHẬN MỞ KHÓA?\n\nBạn có chắc chắn muốn MỞ KHÓA ${week.name} (${week.title}) cho học sinh vào thi không?`
-          : `⚠️ CẢNH BÁO XÁC NHẬN KHÓA!\n\nBạn có chắc chắn muốn KHÓA ${week.name} (${week.title}) không?\nKhi khóa, tất cả học sinh sẽ BỊ CHẶN NGAY LẬP TỨC và không thể vào thi tuần này!`;
 
-        if (!confirm(confirmText)) {
+        const confirmed = await showAppConfirm({
+          title: nextState ? "XÁC NHẬN MỞ KHÓA TUẦN THI" : "CẢNH BÁO KHÓA TUẦN THI",
+          message: nextState
+            ? `Bạn có chắc chắn muốn <strong>MỞ KHÓA</strong> <strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> cho học sinh vào thi không?`
+            : `Bạn có chắc chắn muốn <strong>KHÓA</strong> <strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> không?<br><span class="dialog-highlight-warn">⚠️ Khi khóa, tất cả học sinh sẽ BỊ CHẶN NGAY LẬP TỨC và không thể vào thi tuần này!</span>`,
+          type: nextState ? "question" : "warning",
+          confirmText: nextState ? "Mở Khóa Ngay" : "Khóa Ngay",
+          cancelText: "Hủy Bỏ"
+        });
+
+        if (!confirmed) {
           return;
         }
 
@@ -2571,7 +2956,11 @@ function renderAdminWeeksModalList() {
         if (QuizState.selectedWeekId === week.id) {
           selectWeek(week.id);
         }
-        alert(`✓ THÀNH CÔNG!\nĐã ${actionWord} ${week.name} (${week.title}) thành công.`);
+        await showAppAlert({
+          title: "CẬP NHẬT THÀNH CÔNG",
+          message: `Đã <strong>${actionWord}</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> thành công.`,
+          type: "success"
+        });
       });
     }
 
@@ -4098,11 +4487,11 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
 
   // Nếu người dùng thường bấm nút đồng bộ (notifyUser = true mà không phải admin) -> Chặn lại
   if (notifyUser && !isAdmin) {
-    if (typeof showAdminToast === "function") {
-      showAdminToast("⚠️ Chỉ tài khoản Quản Trị Viên mới có quyền đồng bộ dữ liệu từ Google Sheet!", "error");
-    } else {
-      alert("⚠️ Chỉ tài khoản Quản Trị Viên mới có quyền đồng bộ dữ liệu từ Google Sheet!");
-    }
+    await showAppAlert({
+      title: "GIỚI HẠN QUYỀN TRUY CẬP",
+      message: "Chỉ tài khoản <strong>Quản Trị Viên</strong> mới có quyền kích hoạt tính năng Đồng bộ điểm số từ Google Sheet!",
+      type: "warning"
+    });
     return;
   }
 
@@ -4290,19 +4679,22 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
       if (notifyUser) {
         if (typeof showAdminToast === "function") {
           showAdminToast(`✓ Đã đồng bộ thành công ${json.results.length} bài thi từ Google Sheet!`, "success");
-        } else {
-          alert(`✓ Đã đồng bộ thành công ${json.results.length} bài thi từ Google Sheet!`);
         }
+        await showAppAlert({
+          title: "ĐỒNG BỘ THÀNH CÔNG",
+          message: `Hệ thống đã đồng bộ thành công <strong>${json.results.length} bài thi</strong> từ Google Sheet!<br>Dữ liệu bảng xếp hạng và học sinh đã được làm mới tức thì.`,
+          type: "success"
+        });
       }
     }
   } catch (err) {
     console.warn("Lỗi đồng bộ từ Google Sheet:", err);
     if (notifyUser) {
-      if (typeof showAdminToast === "function") {
-        showAdminToast("⚠️ Không thể kết nối với Google Sheet lúc này. Vui lòng thử lại!", "error");
-      } else {
-        alert("⚠️ Không thể kết nối với Google Sheet lúc này. Vui lòng thử lại!");
-      }
+      await showAppAlert({
+        title: "LỖI KẾT NỐI GOOGLE SHEET",
+        message: "Không thể kết nối với Google Sheet lúc này.<br>Vui lòng kiểm tra lại kết nối mạng hoặc đường truyền Apps Script!",
+        type: "danger"
+      });
     }
   } finally {
     setSyncing(false);
