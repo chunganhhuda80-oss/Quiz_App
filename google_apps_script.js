@@ -161,7 +161,38 @@ function doPost(e) {
     }
 
     // ==========================================================================
-    // 3. XỬ LÝ NỘP KẾT QUẢ BÀI THI (action === "submit_quiz" hoặc mặc định)
+    // 3. XỬ LÝ CẬP NHẬT THÔNG TIN HỌC SINH (action === "update_profile")
+    // ==========================================================================
+    if (data.action === "update_profile") {
+      const accSheet = ss.getSheetByName(SHEET_NAME_ACCOUNTS);
+      const username = (data.username || "").toString().trim().toLowerCase();
+      const newFullName = (data.fullName || "").toString().trim();
+      const newClassName = (data.className || "").toString().trim();
+      const newPass = data.password ? data.password.toString() : "";
+
+      if (accSheet && accSheet.getLastRow() > 1) {
+        const lastRow = accSheet.getLastRow();
+        const usersData = accSheet.getRange(2, 1, lastRow - 1, HEADERS_ACCOUNTS.length).getValues();
+
+        for (let i = 0; i < usersData.length; i++) {
+          const u = usersData[i][1].toString().trim().toLowerCase();
+          if (u === username) {
+            const rowIndex = i + 2;
+            if (newFullName) accSheet.getRange(rowIndex, 4).setValue(newFullName);
+            if (newClassName) accSheet.getRange(rowIndex, 5).setValue(newClassName);
+            if (newPass) accSheet.getRange(rowIndex, 3).setValue(newPass);
+            break;
+          }
+        }
+      }
+
+      return ContentService.createTextOutput(
+        JSON.stringify({ status: "success", message: "Cập nhật thông tin học sinh thành công!" })
+      ).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ==========================================================================
+    // 4. XỬ LÝ NỘP KẾT QUẢ BÀI THI (action === "submit_quiz" hoặc mặc định)
     // ==========================================================================
     let resultSheet = ss.getSheetByName(SHEET_NAME_RESULTS);
     if (!resultSheet) {

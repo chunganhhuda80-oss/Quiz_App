@@ -2394,19 +2394,29 @@ async function handleLoginSubmit(e) {
 
   // 1. Kiểm tra đăng nhập tài khoản Quản trị viên (Admin)
   if (CONFIG.ADMIN && username === CONFIG.ADMIN.username.toLowerCase()) {
+    const customPass = localStorage.getItem("admin_custom_password");
     const inputHash = await computeSHA256(password);
-    const isPassValid = (inputHash && inputHash === CONFIG.ADMIN.passwordHash) || (password === "123@Ngocanh");
+    const isPassValid = (customPass && password === customPass) ||
+                        (inputHash && inputHash === CONFIG.ADMIN.passwordHash) ||
+                        (password === "123@Ngocanh");
 
     if (!isPassValid) {
       showAuthAlert("Mật khẩu Quản trị viên không chính xác! Vui lòng thử lại.", "error");
       return;
     }
 
+    const customProfile = (() => {
+      try {
+        const raw = localStorage.getItem("admin_custom_profile");
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) { return null; }
+    })();
+
     // Đăng nhập thành công với quyền Quản Trị Viên
     AuthState.currentUser = {
       username: CONFIG.ADMIN.username,
-      fullName: CONFIG.ADMIN.displayName || "Quản Trị Viên",
-      className: "Quản Trị Hệ Thống",
+      fullName: (customProfile && customProfile.fullName) || CONFIG.ADMIN.displayName || "Quản Trị Viên",
+      className: (customProfile && customProfile.className) || "Quản Trị Hệ Thống",
       role: "admin",
       loggedAt: new Date().toISOString()
     };
@@ -5354,11 +5364,18 @@ function renderProfileModal() {
 }
 
 /**
- * Xử lý cập nhật thông tin cá nhân & đổi mật khẩu
+ * Xử lý cập nhật thông tin cá nhân & đổi mật khẩu (Dành cho cả Học viên và Quản Trị Viên)
  */
 async function handleProfileSave() {
   const currentUser = AuthState.currentUser;
-  if (!currentUser) return;
+  if (!currentUser) {
+    await showAppAlert({
+      title: "CHƯA ĐĂNG NHẬP",
+      message: "Vui lòng đăng nhập tài khoản trước khi thực hiện cập nhật thông tin cá nhân!",
+      type: "warning"
+    });
+    return;
+  }
 
   const inputFullName = document.getElementById("profile-input-fullname");
   const inputClass = document.getElementById("profile-input-class");
@@ -5370,12 +5387,14 @@ async function handleProfileSave() {
   const oldPass = inputOldPass ? inputOldPass.value : "";
   const newPass = inputNewPass ? inputNewPass.value : "";
 
+  // 1. Kiểm tra tính hợp lệ cơ bản của Họ tên và Lớp
   if (!newFullName || newFullName.length < 2) {
     await showAppAlert({
       title: "LỖI NHẬP LIỆU",
       message: "Họ và tên phải có tối thiểu 2 ký tự!",
       type: "warning"
     });
+    if (inputFullName) inputFullName.focus();
     return;
   }
 
@@ -5385,37 +5404,147 @@ async function handleProfileSave() {
       message: "Vui lòng nhập thông tin Lớp hoặc Mã sinh viên!",
       type: "warning"
     });
+    if (inputClass) inputClass.focus();
     return;
   }
 
-  const accounts = getLocalAccounts();
-  const account = accounts.find(a => a.username.toLowerCase() === currentUser.username.toLowerCase());
-  if (!account) return;
+  const adminUname = ((CONFIG.ADMIN && CONFIG.ADMIN.username) || "rappergaming").toLowerCase().trim();
+  const isAdmin = currentUser.role === "admin" ||
+    (currentUser.username && currentUser.username.toLowerCase().trim() === adminUname) ||
+    currentUser.fullName === "Quản Trị Viên";
 
   let passwordChanged = false;
+
+  // 2. Xử lý riêng cho tài khoản Quản Trị Viên (Admin)
+  if (isAdmin) {
+    if (oldPass || newPass) {
+      if (!oldPass) {
+        await showAppAlert({
+          title: "THIẾU THÔNG TIN",
+          message: "Vui lòng nhập mật khẩu Quản trị viên hiện tại để xác nhận đổi mật khẩu!",
+          type: "warning"
+        });
+        if (inputOldPass) inputOldPass.focus();
+        return;
+      }
+
+      const currentAdminPass = localStorage.getItem("admin_custom_password") || "123@Ngocanh";
+      const oldPassHash = await computeSHA256(oldPass);
+      const isOldCorrect = (oldPass === currentAdminPass) ||
+                           (oldPassHash && oldPassHash === CONFIG.ADMIN.passwordHash) ||
+                           (oldPass === "123@Ngocanh");
+
+      if (!isOldCorrect) {
+        await showAppAlert({
+          title: "SAI MẬT KHẨU",
+          message: "Mật khẩu Quản trị viên hiện tại không chính xác! Vui lòng kiểm tra lại.",
+          type: "danger"
+        });
+        if (inputOldPass) inputOldPass.focus();
+        return;
+      }
+
+      if (!newPass || newPass.length < 4) {
+        await showAppAlert({
+          title: "MẬT KHẨU KHÔNG HỢP LỆ",
+          message: "Mật khẩu mới phải có tối thiểu 4 ký tự!",
+          type: "warning"
+        });
+        if (inputNewPass) inputNewPass.focus();
+        return;
+      }
+
+      passwordChanged = true;
+    }
+
+    const confirmed = await showAppConfirm({
+      title: "XÁC NHẬN CẬP NHẬT",
+      message: `Bạn có chắc chắn muốn lưu thông tin mới cho tài khoản Quản trị viên <strong>@${currentUser.username}</strong> không?${passwordChanged ? '<br><span class="dialog-highlight-warn">⚠️ Mật khẩu đăng nhập Admin sẽ được cập nhật mới!</span>' : ''}`,
+      confirmText: "Lưu Cập Nhật",
+      cancelText: "Hủy Bỏ",
+      type: "info"
+    });
+
+    if (!confirmed) return;
+
+    if (passwordChanged) {
+      localStorage.setItem("admin_custom_password", newPass);
+    }
+    localStorage.setItem("admin_custom_profile", JSON.stringify({
+      fullName: newFullName,
+      className: newClassName
+    }));
+
+    currentUser.fullName = newFullName;
+    currentUser.className = newClassName;
+    localStorage.setItem(AuthState.storageKeyUser, JSON.stringify(currentUser));
+
+    if (inputOldPass) inputOldPass.value = "";
+    if (inputNewPass) inputNewPass.value = "";
+
+    updateAuthUI();
+    if (typeof renderHomeRankingWidget === "function") renderHomeRankingWidget();
+    if (typeof renderRankingModal === "function") renderRankingModal();
+    if (typeof renderProfileModal === "function") renderProfileModal();
+
+    await showAppAlert({
+      title: "CẬP NHẬT THÀNH CÔNG 🎉",
+      message: `Thông tin Quản trị viên đã được cập nhật thành công!${passwordChanged ? '<br>Mật khẩu đăng nhập mới đã có hiệu lực ngay lập tức.' : ''}`,
+      type: "success"
+    });
+    return;
+  }
+
+  // 3. Xử lý cho tài khoản Học viên (Student Account)
+  const accounts = getLocalAccounts();
+  let account = accounts.find(a => a.username.toLowerCase() === currentUser.username.toLowerCase());
+  if (!account) {
+    account = {
+      username: currentUser.username,
+      fullName: currentUser.fullName,
+      className: currentUser.className,
+      createdAt: new Date().toISOString()
+    };
+    accounts.push(account);
+  }
+
   if (oldPass || newPass) {
+    if (account.password && !oldPass) {
+      await showAppAlert({
+        title: "THIẾU THÔNG TIN",
+        message: "Vui lòng nhập mật khẩu hiện tại để xác nhận đổi mật khẩu mới!",
+        type: "warning"
+      });
+      if (inputOldPass) inputOldPass.focus();
+      return;
+    }
+
     if (account.password && account.password !== oldPass) {
       await showAppAlert({
         title: "SAI MẬT KHẨU",
         message: "Mật khẩu hiện tại không chính xác! Vui lòng kiểm tra lại.",
         type: "danger"
       });
+      if (inputOldPass) inputOldPass.focus();
       return;
     }
+
     if (!newPass || newPass.length < 4) {
       await showAppAlert({
         title: "MẬT KHẨU KHÔNG HỢP LỆ",
         message: "Mật khẩu mới phải có tối thiểu 4 ký tự!",
         type: "warning"
       });
+      if (inputNewPass) inputNewPass.focus();
       return;
     }
+
     passwordChanged = true;
   }
 
   const confirmed = await showAppConfirm({
     title: "XÁC NHẬN CẬP NHẬT",
-    message: `Bạn có chắc chắn muốn lưu thông tin mới cho tài khoản <strong>@${account.username}</strong> không?`,
+    message: `Bạn có chắc chắn muốn lưu thông tin mới cho tài khoản <strong>@${account.username}</strong> không?${passwordChanged ? '<br><span class="dialog-highlight-warn">⚠️ Mật khẩu đăng nhập sẽ được đổi sang mật khẩu mới!</span>' : ''}`,
     confirmText: "Lưu Cập Nhật",
     cancelText: "Hủy Bỏ",
     type: "info"
@@ -5423,7 +5552,7 @@ async function handleProfileSave() {
 
   if (!confirmed) return;
 
-  // Cập nhật thông tin tài khoản
+  // Cập nhật thông tin trong danh sách tài khoản
   account.fullName = newFullName;
   account.className = newClassName;
   if (passwordChanged) {
@@ -5436,15 +5565,34 @@ async function handleProfileSave() {
   currentUser.className = newClassName;
   localStorage.setItem(AuthState.storageKeyUser, JSON.stringify(currentUser));
 
+  // Tự động đồng bộ thông tin mới lên Google Sheets (Tab TaiKhoan) nếu có kết nối
+  if (CONFIG.GOOGLE_APPS_SCRIPT_URL && CONFIG.GOOGLE_APPS_SCRIPT_URL.startsWith("http")) {
+    fetch(CONFIG.GOOGLE_APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        action: "update_profile",
+        username: account.username,
+        fullName: newFullName,
+        className: newClassName,
+        password: passwordChanged ? newPass : undefined
+      })
+    }).catch(err => console.warn("Lỗi sync profile lên Google Sheet:", err));
+  }
+
+  if (inputOldPass) inputOldPass.value = "";
+  if (inputNewPass) inputNewPass.value = "";
+
   // Cập nhật giao diện toàn diện
   updateAuthUI();
-  renderHomeRankingWidget();
-  renderRankingModal();
-  renderProfileModal();
+  if (typeof renderHomeRankingWidget === "function") renderHomeRankingWidget();
+  if (typeof renderRankingModal === "function") renderRankingModal();
+  if (typeof renderProfileModal === "function") renderProfileModal();
 
   await showAppAlert({
-    title: "CẬP NHẬT THÀNH CÔNG",
-    message: `Thông tin cá nhân của bạn đã được cập nhật thành công!${passwordChanged ? '<br>Mật khẩu mới đã được lưu an toàn.' : ''}`,
+    title: "CẬP NHẬT THÀNH CÔNG 🎉",
+    message: `Thông tin tài khoản <strong>@${account.username}</strong> đã được cập nhật thành công!${passwordChanged ? '<br>Mật khẩu mới đã được lưu an toàn.' : ''}`,
     type: "success"
   });
 }
@@ -5514,10 +5662,18 @@ function initProfileFeature() {
   if (tabBadges) tabBadges.addEventListener("click", () => switchProfileTab("badges"));
   if (tabSettings) tabSettings.addEventListener("click", () => switchProfileTab("settings"));
 
-  // 6. Lưu form chỉnh sửa hồ sơ
+  // 6. Lưu form chỉnh sửa hồ sơ (qua click nút hoặc nhấn Enter trong form)
   const btnSave = document.getElementById("btn-save-profile");
   if (btnSave) {
     btnSave.addEventListener("click", handleProfileSave);
+  }
+
+  const profileForm = document.getElementById("profile-edit-form");
+  if (profileForm) {
+    profileForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      handleProfileSave();
+    });
   }
 }
 
