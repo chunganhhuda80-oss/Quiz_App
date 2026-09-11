@@ -524,6 +524,48 @@ body.auth-mode .app-container {
   box-shadow: 0 6px 16px -2px rgba(2, 132, 199, 0.4);
 }
 
+.ranking-icon-mini {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 6px 16px -2px rgba(217, 119, 6, 0.4);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.ranking-icon-mini:hover {
+  transform: scale(1.06);
+  box-shadow: 0 8px 20px -2px rgba(217, 119, 6, 0.5);
+}
+
+.profile-icon-mini {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 6px 16px -2px rgba(37, 99, 235, 0.4);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.profile-icon-mini:hover {
+  transform: scale(1.06);
+  box-shadow: 0 8px 20px -2px rgba(37, 99, 235, 0.5);
+}
+
 .top-nav-bar .header-badge {
   margin-bottom: 0;
   display: inline-flex;
@@ -1822,6 +1864,112 @@ body.auth-mode .app-container {
   background: #fee2e2;
   color: #dc2626;
   transform: scale(1.1);
+}
+
+/* --------------------------------------------------------------------------
+   MÀN HÌNH BẢNG XẾP HẠNG & HỒ SƠ CÁ NHÂN TOÀN TRANG (#ranking-screen, #profile-screen)
+   -------------------------------------------------------------------------- */
+.top-nav-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.btn-screen-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  color: var(--text-main);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.btn-screen-action:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.btn-screen-action.btn-sync-ranking {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.btn-screen-action.btn-sync-ranking:hover {
+  background: #dcfce7;
+  border-color: #86efac;
+  color: #15803d;
+}
+
+.ranking-screen-body,
+.profile-screen-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: fadeIn 0.3s ease;
+}
+
+.screen-footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.btn-sub-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  color: var(--text-muted);
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-sub-action:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: var(--text-main);
+  transform: translateY(-1px);
+}
+
+.btn-sub-action.btn-danger-action {
+  border-color: #fecdd3;
+  color: #e11d48;
+  background: #fff1f2;
+}
+
+.btn-sub-action.btn-danger-action:hover {
+  background: #ffe4e6;
+  border-color: #fda4af;
+  color: #be123c;
 }
 
 /* Banner nhắc nhở đăng nhập */
@@ -4040,6 +4188,35 @@ body.auth-mode .app-container {
   .brand-icon-mini svg {
     width: 20px;
     height: 20px;
+  }
+
+  .ranking-icon-mini,
+  .profile-icon-mini {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 10px;
+    font-size: 1.25rem;
+  }
+
+  .top-nav-actions-group {
+    gap: 8px;
+  }
+
+  .btn-screen-action {
+    padding: 5px 10px;
+    font-size: 0.78rem;
+  }
+
+  .screen-footer-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .screen-footer-actions .btn-sub-action,
+  .screen-footer-actions .btn-primary {
+    width: 100%;
+    justify-content: center;
   }
 
   .brand-header h1 {

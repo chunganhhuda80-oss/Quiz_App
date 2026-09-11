@@ -1185,14 +1185,25 @@ function showScreen(screenId) {
   const target = document.getElementById(screenId);
   if (target) {
     target.classList.add("active");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (typeof window.scrollTo === "function") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   }
 
   // Khóa và cô lập giao diện khi đang trong chế độ làm bài thi (quiz-screen)
   const isExam = (screenId === "quiz-screen");
   const isAuth = (screenId === "auth-screen");
-  document.body.classList.toggle("exam-in-progress", isExam);
-  document.body.classList.toggle("auth-mode", isAuth);
+  if (document.body && document.body.classList) {
+    if (typeof document.body.classList.toggle === "function") {
+      document.body.classList.toggle("exam-in-progress", isExam);
+      document.body.classList.toggle("auth-mode", isAuth);
+    } else {
+      if (isExam) document.body.classList.add("exam-in-progress");
+      else document.body.classList.remove("exam-in-progress");
+      if (isAuth) document.body.classList.add("auth-mode");
+      else document.body.classList.remove("auth-mode");
+    }
+  }
 
   // Ẩn backdrop nếu đang mở
   const backdrop = document.getElementById("sidebar-backdrop");
@@ -1201,16 +1212,25 @@ function showScreen(screenId) {
     backdrop.style.display = "none";
   }
 
-  // Đồng bộ trạng thái tab trên thanh điều hướng dọc
-  const sidebarTabQuiz = document.getElementById("sidebar-tab-quiz");
-  const sidebarTabRoadmap = document.getElementById("sidebar-tab-roadmap");
-  if (screenId === "start-screen") {
-    if (sidebarTabQuiz) sidebarTabQuiz.classList.add("active");
-    if (sidebarTabRoadmap) sidebarTabRoadmap.classList.remove("active");
-  } else if (screenId === "roadmap-screen") {
-    if (sidebarTabRoadmap) sidebarTabRoadmap.classList.add("active");
-    if (sidebarTabQuiz) sidebarTabQuiz.classList.remove("active");
-  }
+  // Đồng bộ trạng thái 4 tab trên thanh điều hướng dọc (Sidebar)
+  const sidebarTabMap = {
+    "start-screen": "sidebar-tab-quiz",
+    "roadmap-screen": "sidebar-tab-roadmap",
+    "ranking-screen": "sidebar-tab-ranking",
+    "profile-screen": "sidebar-tab-profile"
+  };
+
+  const activeTabId = sidebarTabMap[screenId] || null;
+  Object.values(sidebarTabMap).forEach(tabId => {
+    const tabEl = document.getElementById(tabId);
+    if (tabEl) {
+      if (tabId === activeTabId) {
+        tabEl.classList.add("active");
+      } else {
+        tabEl.classList.remove("active");
+      }
+    }
+  });
 }
 
 // ==============================================================================
@@ -2245,6 +2265,18 @@ function updateAuthUI() {
   const roadmapNavName = document.getElementById("roadmap-nav-name");
   const roadmapNavClass = document.getElementById("roadmap-nav-class");
 
+  const rankingUserNavArea = document.getElementById("ranking-user-nav-area");
+  const rankingProfileChip = document.getElementById("ranking-user-profile-chip");
+  const rankingNavAvatar = document.getElementById("ranking-nav-avatar");
+  const rankingNavName = document.getElementById("ranking-nav-name");
+  const rankingNavClass = document.getElementById("ranking-nav-class");
+
+  const profileUserNavArea = document.getElementById("profile-user-nav-area");
+  const profileProfileChip = document.getElementById("profile-user-profile-chip");
+  const profileNavAvatar = document.getElementById("profile-nav-avatar");
+  const profileNavName = document.getElementById("profile-nav-name");
+  const profileNavClass = document.getElementById("profile-nav-class");
+
   const authHintBanner = document.getElementById("auth-hint-banner");
   const authHintText = document.getElementById("auth-hint-text");
   const nameInput = document.getElementById("student-name");
@@ -2255,59 +2287,51 @@ function updateAuthUI() {
   const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
 
   if (AuthState.currentUser) {
-    // Đã đăng nhập: Ẩn hoàn toàn nút "Đăng nhập / Đăng ký", chỉ hiện chip tên người dùng
-    if (userNavArea) {
-      userNavArea.classList.add("logged-in");
-    }
-    if (roadmapUserNavArea) {
-      roadmapUserNavArea.classList.add("logged-in");
-    }
+    // Đã đăng nhập: Ẩn nút đăng nhập, hiển thị chip tên người dùng trên cả 4 màn hình
+    [userNavArea, roadmapUserNavArea, rankingUserNavArea, profileUserNavArea].forEach(area => {
+      if (area) area.classList.add("logged-in");
+    });
     if (btnOpenAuth) {
       btnOpenAuth.style.display = "none";
     }
-    if (userProfileChip) {
-      userProfileChip.style.display = "inline-flex";
-      if (isAdmin) {
-        userProfileChip.classList.add("is-admin");
-      } else {
-        userProfileChip.classList.remove("is-admin");
+    [userProfileChip, roadmapProfileChip, rankingProfileChip, profileProfileChip].forEach(chip => {
+      if (chip) {
+        chip.style.display = "inline-flex";
+        if (isAdmin) {
+          chip.classList.add("is-admin");
+        } else {
+          chip.classList.remove("is-admin");
+        }
       }
-    }
-    if (roadmapProfileChip) {
-      roadmapProfileChip.style.display = "inline-flex";
-      if (isAdmin) {
-        roadmapProfileChip.classList.add("is-admin");
-      } else {
-        roadmapProfileChip.classList.remove("is-admin");
-      }
-    }
+    });
 
     if (isAdmin) {
-      if (navAvatar) navAvatar.textContent = "AD";
-      if (navName) navName.textContent = AuthState.currentUser.fullName || "Quản Trị Viên";
-      if (navClass) {
-        navClass.textContent = "QUẢN TRỊ VIÊN 🛡️";
-        navClass.style.color = "#e11d48";
-      }
-      if (roadmapNavAvatar) roadmapNavAvatar.textContent = "AD";
-      if (roadmapNavName) roadmapNavName.textContent = AuthState.currentUser.fullName || "Quản Trị Viên";
-      if (roadmapNavClass) {
-        roadmapNavClass.textContent = "QUẢN TRỊ VIÊN 🛡️";
-        roadmapNavClass.style.color = "#e11d48";
-      }
+      [navAvatar, roadmapNavAvatar, rankingNavAvatar, profileNavAvatar].forEach(av => {
+        if (av) av.textContent = "AD";
+      });
+      [navName, roadmapNavName, rankingNavName, profileNavName].forEach(nm => {
+        if (nm) nm.textContent = AuthState.currentUser.fullName || "Quản Trị Viên";
+      });
+      [navClass, roadmapNavClass, rankingNavClass, profileNavClass].forEach(cl => {
+        if (cl) {
+          cl.textContent = "QUẢN TRỊ VIÊN 🛡️";
+          cl.style.color = "#e11d48";
+          cl.style.display = "";
+        }
+      });
     } else {
       const initial = AuthState.currentUser.fullName ? AuthState.currentUser.fullName.trim().charAt(0).toUpperCase() : "H";
-      if (navAvatar) navAvatar.textContent = initial;
-      if (navName) navName.textContent = AuthState.currentUser.fullName;
-      // Đối với tài khoản bình thường: chỉ hiện tên user ở góc trên bên phải, ẩn huy hiệu phụ
-      if (navClass) {
-        navClass.style.display = "none";
-      }
-      if (roadmapNavAvatar) roadmapNavAvatar.textContent = initial;
-      if (roadmapNavName) roadmapNavName.textContent = AuthState.currentUser.fullName;
-      if (roadmapNavClass) {
-        roadmapNavClass.style.display = "none";
-      }
+      [navAvatar, roadmapNavAvatar, rankingNavAvatar, profileNavAvatar].forEach(av => {
+        if (av) av.textContent = initial;
+      });
+      [navName, roadmapNavName, rankingNavName, profileNavName].forEach(nm => {
+        if (nm) nm.textContent = AuthState.currentUser.fullName;
+      });
+      [navClass, roadmapNavClass, rankingNavClass, profileNavClass].forEach(cl => {
+        if (cl) {
+          cl.style.display = "none";
+        }
+      });
     }
 
     // Tự động điền thông tin và khoá form lại để đảm bảo tính minh bạch
@@ -2347,24 +2371,19 @@ function updateAuthUI() {
     initWeeksSelector();
     updateOfficialScoreDisplay(QuizState.selectedWeekId || 1);
   } else {
-    // Chưa đăng nhập: Hiện nút "Đăng nhập / Đăng ký", ẩn chip thông tin
-    if (userNavArea) {
-      userNavArea.classList.remove("logged-in");
-    }
-    if (roadmapUserNavArea) {
-      roadmapUserNavArea.classList.remove("logged-in");
-    }
+    // Chưa đăng nhập: Hiện nút "Đăng nhập / Đăng ký", ẩn chip thông tin trên cả 4 màn hình
+    [userNavArea, roadmapUserNavArea, rankingUserNavArea, profileUserNavArea].forEach(area => {
+      if (area) area.classList.remove("logged-in");
+    });
     if (btnOpenAuth) {
       btnOpenAuth.style.display = "inline-flex";
     }
-    if (userProfileChip) {
-      userProfileChip.style.display = "none";
-      userProfileChip.classList.remove("is-admin");
-    }
-    if (roadmapProfileChip) {
-      roadmapProfileChip.style.display = "none";
-      roadmapProfileChip.classList.remove("is-admin");
-    }
+    [userProfileChip, roadmapProfileChip, rankingProfileChip, profileProfileChip].forEach(chip => {
+      if (chip) {
+        chip.style.display = "none";
+        chip.classList.remove("is-admin");
+      }
+    });
     if (authHintBanner) {
       authHintBanner.className = "auth-hint-banner";
       authHintBanner.style.display = "";
@@ -2757,6 +2776,14 @@ function initAuth() {
   const btnRoadmapLogout = document.getElementById("roadmap-btn-logout");
   if (btnRoadmapLogout) {
     btnRoadmapLogout.addEventListener("click", handleLogout);
+  }
+  const btnRankingLogout = document.getElementById("ranking-btn-logout");
+  if (btnRankingLogout) {
+    btnRankingLogout.addEventListener("click", handleLogout);
+  }
+  const btnProfileLogoutNav = document.getElementById("profile-btn-logout-nav");
+  if (btnProfileLogoutNav) {
+    btnProfileLogoutNav.addEventListener("click", handleLogout);
   }
 
   // 5b. Nút mở màn hình đăng nhập từ thanh điều hướng (khi chưa đăng nhập)
@@ -3252,6 +3279,54 @@ async function switchToRoadmapTab(targetWeekId) {
   const weekToSelect = targetWeekId || RoadmapState.selectedWeekId || QuizState.selectedWeekId || 1;
   renderRoadmapWeeksList();
   selectRoadmapWeek(weekToSelect);
+}
+
+/**
+ * Chuyển sang Tab Bảng Xếp Hạng (Toàn Màn Hình Độc Lập)
+ */
+function switchToRankingTab() {
+  document.querySelectorAll("#sidebar-tab-quiz, #tab-btn-quiz, #roadmap-tab-btn-quiz").forEach(btn => {
+    btn.classList.remove("active");
+  });
+  document.querySelectorAll("#sidebar-tab-roadmap, #tab-btn-roadmap, #roadmap-tab-btn-roadmap").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  renderRankingModal();
+  showScreen("ranking-screen");
+  if (typeof updateSyncButtonsVisibility === "function") {
+    updateSyncButtonsVisibility();
+  }
+}
+
+/**
+ * Chuyển sang Tab Hồ Sơ Cá Nhân (Toàn Màn Hình Độc Lập)
+ */
+async function switchToProfileTab() {
+  if (!AuthState.currentUser) {
+    const wantAuth = await showAppConfirm({
+      title: "YÊU CẦU ĐĂNG NHẬP",
+      message: "Bạn cần đăng nhập để xem thông tin tài khoản và toàn bộ thành tích học tập từ lúc đăng ký.<br>Bạn có muốn đăng nhập ngay không?",
+      confirmText: "Đăng Nhập Ngay",
+      cancelText: "Để Sau",
+      type: "info"
+    });
+    if (wantAuth) {
+      showScreen("auth-screen");
+    }
+    return;
+  }
+
+  document.querySelectorAll("#sidebar-tab-quiz, #tab-btn-quiz, #roadmap-tab-btn-quiz").forEach(btn => {
+    btn.classList.remove("active");
+  });
+  document.querySelectorAll("#sidebar-tab-roadmap, #tab-btn-roadmap, #roadmap-tab-btn-roadmap").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  renderProfileModal();
+  switchProfileTab("history");
+  showScreen("profile-screen");
 }
 
 /**
@@ -4624,14 +4699,15 @@ function renderRankingModal() {
 }
 
 /**
- * Mở Modal Bảng Xếp Hạng & Bảng Thành Tích
+ * Mở Màn Hình Bảng Xếp Hạng & Bảng Thành Tích
  */
 function openRankingModal(isAutoAfterLogin = false) {
   const modal = document.getElementById("ranking-modal");
-  if (!modal) return;
+  if (modal) {
+    modal.style.display = "flex";
+  }
 
-  renderRankingModal();
-  modal.style.display = "flex";
+  switchToRankingTab();
 
   // Mặc định: nếu chưa có ai hoàn thành đủ số tuần thì tự động mở tab 'pending' để xem danh sách thi đua
   const btnRanked = document.getElementById("filter-btn-ranked");
@@ -4661,13 +4737,14 @@ function openRankingModal(isAutoAfterLogin = false) {
 }
 
 /**
- * Đóng Modal Bảng Xếp Hạng
+ * Đóng Màn Hình Bảng Xếp Hạng (Quay về màn hình Bài Thi)
  */
 function closeRankingModal() {
   const modal = document.getElementById("ranking-modal");
   if (modal) {
     modal.style.display = "none";
   }
+  showScreen("start-screen");
 }
 
 /**
@@ -4683,7 +4760,7 @@ function initRankingFeature() {
   // 3. Cập nhật quyền hiển thị nút Đồng bộ Sheet (Chỉ Admin)
   updateSyncButtonsVisibility();
 
-  // 3. Thiết lập nút đóng modal
+  // 3. Thiết lập nút đóng modal (tương thích ngược)
   const btnClose = document.getElementById("btn-close-ranking-modal");
   const backdrop = document.getElementById("ranking-modal-backdrop");
   const btnDismiss = document.getElementById("btn-ranking-dismiss");
@@ -4692,21 +4769,55 @@ function initRankingFeature() {
   if (backdrop) backdrop.addEventListener("click", closeRankingModal);
   if (btnDismiss) btnDismiss.addEventListener("click", closeRankingModal);
 
-  // 4. Thiết lập nút mở modal từ widget trang chủ
+  // 4. Thiết lập nút mở màn hình từ widget trang chủ
   const btnHomeOpen = document.getElementById("btn-home-open-ranking");
   if (btnHomeOpen) {
     btnHomeOpen.addEventListener("click", () => openRankingModal());
   }
 
-  // 5. Thiết lập nút "Vào Làm Bài Thi Ngay" trong modal
+  // 5. Thiết lập nút "Vào Làm Bài Thi Ngay" và các nút chuyển hướng trên màn hình Bảng Xếp Hạng
   const btnGoQuiz = document.getElementById("btn-ranking-go-quiz");
   if (btnGoQuiz) {
     btnGoQuiz.addEventListener("click", () => {
       closeRankingModal();
       switchToQuizTab();
-      const startCard = document.querySelector(".card");
-      if (startCard) {
-        startCard.scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
+  const btnGoQuizTop = document.getElementById("btn-ranking-go-quiz-top");
+  if (btnGoQuizTop) {
+    btnGoQuizTop.addEventListener("click", () => {
+      switchToQuizTab();
+    });
+  }
+
+  const btnGoRoadmapTop = document.getElementById("btn-ranking-go-roadmap-top");
+  if (btnGoRoadmapTop) {
+    btnGoRoadmapTop.addEventListener("click", () => {
+      switchToRoadmapTab();
+    });
+  }
+
+  const btnGoRoadmap = document.getElementById("btn-ranking-go-roadmap");
+  if (btnGoRoadmap) {
+    btnGoRoadmap.addEventListener("click", () => {
+      switchToRoadmapTab();
+    });
+  }
+
+  const rankingUserChip = document.getElementById("ranking-user-profile-chip");
+  if (rankingUserChip) {
+    rankingUserChip.addEventListener("click", (e) => {
+      if (e.target.closest(".btn-logout-small")) return;
+      switchToProfileTab();
+    });
+  }
+
+  const rankingBtnLogout = document.getElementById("ranking-btn-logout");
+  if (rankingBtnLogout) {
+    rankingBtnLogout.addEventListener("click", () => {
+      if (typeof handleLogout === "function") {
+        handleLogout();
       }
     });
   }
@@ -5012,41 +5123,25 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
 // ==============================================================================
 
 /**
- * Mở Modal Hồ Sơ Cá Nhân & Toàn Bộ Thành Tích
+ * Mở Màn Hình Hồ Sơ Cá Nhân & Toàn Bộ Thành Tích
  */
 async function openProfileModal() {
-  if (!AuthState.currentUser) {
-    const wantAuth = await showAppConfirm({
-      title: "YÊU CẦU ĐĂNG NHẬP",
-      message: "Bạn cần đăng nhập để xem thông tin tài khoản và toàn bộ thành tích học tập từ lúc đăng ký.<br>Bạn có muốn đăng nhập ngay không?",
-      confirmText: "Đăng Nhập Ngay",
-      cancelText: "Để Sau",
-      type: "info"
-    });
-    if (wantAuth) {
-      showScreen("auth-screen");
-    }
-    return;
-  }
-
   const modal = document.getElementById("profile-modal");
-  if (!modal) return;
-
-  renderProfileModal();
-  modal.style.display = "flex";
-
-  // Mặc định chọn tab lịch sử 15 tuần thi
-  switchProfileTab("history");
+  if (modal) {
+    modal.style.display = "flex";
+  }
+  await switchToProfileTab();
 }
 
 /**
- * Đóng Modal Hồ Sơ Cá Nhân
+ * Đóng Màn Hình Hồ Sơ Cá Nhân (Quay về màn hình Bài Thi)
  */
 function closeProfileModal() {
   const modal = document.getElementById("profile-modal");
   if (modal) {
     modal.style.display = "none";
   }
+  showScreen("start-screen");
 }
 
 /**
@@ -5698,7 +5793,7 @@ function initProfileFeature() {
     });
   }
 
-  // 2. Mở từ User Profile Chip trên Top Nav (trang trắc nghiệm & lộ trình)
+  // 2. Mở từ User Profile Chip trên Top Nav (trang trắc nghiệm, lộ trình, xếp hạng)
   const userChip = document.getElementById("user-profile-chip");
   if (userChip) {
     userChip.addEventListener("click", (e) => {
@@ -5715,7 +5810,37 @@ function initProfileFeature() {
     });
   }
 
-  // 3. Đóng Modal
+  const rankingUserChip = document.getElementById("ranking-user-profile-chip");
+  if (rankingUserChip) {
+    rankingUserChip.addEventListener("click", (e) => {
+      if (e.target.closest(".btn-logout-small")) return;
+      openProfileModal();
+    });
+  }
+
+  // 3. Các nút điều hướng nhanh trên màn hình Hồ Sơ
+  const btnProfileGoQuizTop = document.getElementById("btn-profile-go-quiz-top");
+  if (btnProfileGoQuizTop) {
+    btnProfileGoQuizTop.addEventListener("click", () => {
+      switchToQuizTab();
+    });
+  }
+
+  const btnProfileGoRankingTop = document.getElementById("btn-profile-go-ranking-top");
+  if (btnProfileGoRankingTop) {
+    btnProfileGoRankingTop.addEventListener("click", () => {
+      switchToRankingTab();
+    });
+  }
+
+  const btnProfileGoQuiz = document.getElementById("btn-profile-go-quiz");
+  if (btnProfileGoQuiz) {
+    btnProfileGoQuiz.addEventListener("click", () => {
+      switchToQuizTab();
+    });
+  }
+
+  // 4. Thiết lập nút đóng / quay lại (tương thích ngược)
   const btnClose = document.getElementById("btn-close-profile-modal");
   const btnCloseFooter = document.getElementById("btn-profile-close");
   const backdrop = document.getElementById("profile-modal-backdrop");
@@ -5724,18 +5849,26 @@ function initProfileFeature() {
   if (btnCloseFooter) btnCloseFooter.addEventListener("click", closeProfileModal);
   if (backdrop) backdrop.addEventListener("click", closeProfileModal);
 
-  // 4. Đăng xuất từ Modal Hồ Sơ
+  // 5. Đăng xuất từ màn hình Hồ Sơ
   const btnLogout = document.getElementById("btn-profile-logout");
   if (btnLogout) {
     btnLogout.addEventListener("click", () => {
-      closeProfileModal();
       if (typeof handleLogout === "function") {
         handleLogout();
       }
     });
   }
 
-  // 5. Chuyển đổi Tab trong Profile
+  const btnLogoutNav = document.getElementById("profile-btn-logout-nav");
+  if (btnLogoutNav) {
+    btnLogoutNav.addEventListener("click", () => {
+      if (typeof handleLogout === "function") {
+        handleLogout();
+      }
+    });
+  }
+
+  // 6. Chuyển đổi Tab trong Profile
   const tabHistory = document.getElementById("tab-profile-history");
   const tabBadges = document.getElementById("tab-profile-badges");
   const tabSettings = document.getElementById("tab-profile-settings");
@@ -5744,7 +5877,7 @@ function initProfileFeature() {
   if (tabBadges) tabBadges.addEventListener("click", () => switchProfileTab("badges"));
   if (tabSettings) tabSettings.addEventListener("click", () => switchProfileTab("settings"));
 
-  // 6. Lưu form chỉnh sửa hồ sơ (qua click nút hoặc nhấn Enter trong form)
+  // 7. Lưu form chỉnh sửa hồ sơ (qua click nút hoặc nhấn Enter trong form)
   const btnSave = document.getElementById("btn-save-profile");
   if (btnSave) {
     btnSave.addEventListener("click", handleProfileSave);
