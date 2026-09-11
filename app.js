@@ -4074,6 +4074,15 @@ function initRankingFeature() {
   setTimeout(() => {
     syncLeaderboardFromGoogleSheet(false);
   }, 1200);
+
+  // 9. Tự động hiển thị Modal Bảng Vinh Danh & Xếp Hạng khi vừa truy cập hoặc reset/tải lại trang (F5)
+  setTimeout(() => {
+    const quizScreen = document.getElementById("quiz-screen");
+    const isCurrentlyTesting = quizScreen && quizScreen.classList.contains("active");
+    if (!isCurrentlyTesting) {
+      openRankingModal();
+    }
+  }, 450);
 }
 
 /**
