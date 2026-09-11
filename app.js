@@ -2882,6 +2882,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 10. Khởi tạo Bảng Thành Tích & Xếp Hạng Top 5
   initRankingFeature();
+
+  // 11. Khởi tạo Phân Hệ Hồ Sơ Cá Nhân & Thành Tích Học Tập
+  initProfileFeature();
 });
 
 // ==============================================================================
@@ -3891,6 +3894,18 @@ function initSidebarNavigation() {
       }
     });
   }
+
+  const tabProfile = document.getElementById("sidebar-tab-profile");
+  if (tabProfile) {
+    tabProfile.addEventListener("click", () => {
+      openProfileModal();
+      sidebar.classList.remove("is-hovered");
+      if (backdrop) {
+        backdrop.classList.remove("active");
+        setTimeout(() => { backdrop.style.display = "none"; }, 200);
+      }
+    });
+  }
 }
 
 // ==============================================================================
@@ -4125,7 +4140,7 @@ function renderRankingModal() {
               </div>
             </div>
           </div>
-          <div class="achievement-rank-tag" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecdd3;">🛡️ Quản Trị Hệ Thống</div>
+          <div class="achievement-rank-tag" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecdd3; cursor: pointer;" onclick="closeRankingModal(); openProfileModal();" title="Nhấp để xem Hồ Sơ Cá Nhân">🛡️ Quản Trị Hệ Thống • Xem Hồ Sơ 👤</div>
         `;
       } else {
         const rankedIndex = rankedUsers.findIndex(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
@@ -4144,7 +4159,7 @@ function renderRankingModal() {
                 </div>
               </div>
             </div>
-            <div class="achievement-rank-tag">🏆 Hạng #${rankNum} Toàn Hệ Thống</div>
+            <div class="achievement-rank-tag" style="cursor: pointer;" onclick="closeRankingModal(); openProfileModal();" title="Nhấp để xem Hồ Sơ Cá Nhân & Thành Tích">🏆 Hạng #${rankNum} Toàn Hệ Thống • Xem Hồ Sơ 👤</div>
           `;
         } else {
           const pendingStat = pendingUsers.find(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
@@ -4163,7 +4178,7 @@ function renderRankingModal() {
                 </div>
               </div>
             </div>
-            <div class="achievement-rank-tag" style="color: #b45309; border-color: #fde68a;">⏳ Chờ (${doneCount}/${totalUnlocked} tuần)</div>
+            <div class="achievement-rank-tag" style="color: #b45309; border-color: #fde68a; cursor: pointer;" onclick="closeRankingModal(); openProfileModal();" title="Nhấp để xem Hồ Sơ Cá Nhân & Thành Tích">⏳ Chờ (${doneCount}/${totalUnlocked} tuần) • Xem Hồ Sơ 👤</div>
           `;
         }
       }
@@ -4268,7 +4283,7 @@ function renderRankingModal() {
         }).join("");
 
         return `
-          <div class="ranking-row-item ${isSelf ? 'is-current-user' : ''}">
+          <div class="ranking-row-item ${isSelf ? 'is-current-user' : ''}" ${isSelf ? 'style="cursor: pointer;" onclick="closeRankingModal(); openProfileModal();" title="Nhấn để xem chi tiết Hồ Sơ Cá Nhân & Thành Tích"' : ''}>
             <div class="ranking-row-left">
               <div class="rank-number-box">${rankIcon}</div>
               <div class="rank-avatar-small">${initial}</div>
@@ -4314,7 +4329,7 @@ function renderRankingModal() {
         }).join("");
 
         return `
-          <div class="ranking-row-item ${isSelf ? 'is-current-user' : ''}">
+          <div class="ranking-row-item ${isSelf ? 'is-current-user' : ''}" ${isSelf ? 'style="cursor: pointer;" onclick="closeRankingModal(); openProfileModal();" title="Nhấn để xem chi tiết Hồ Sơ Cá Nhân & Thành Tích"' : ''}>
             <div class="ranking-row-left">
               <div class="rank-number-box">⏳</div>
               <div class="rank-avatar-small" style="background: #94a3b8;">${initial}</div>
@@ -4700,5 +4715,590 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
     setSyncing(false);
   }
 }
+
+// ==============================================================================
+// PHÂN HỆ HỒ SƠ CÁ NHÂN & TIẾN ĐỘ HỌC TẬP TỪ LÚC ĐĂNG KÝ (PERSONAL PROFILE SUBSYSTEM)
+// ==============================================================================
+
+/**
+ * Mở Modal Hồ Sơ Cá Nhân & Toàn Bộ Thành Tích
+ */
+async function openProfileModal() {
+  if (!AuthState.currentUser) {
+    const wantAuth = await showAppConfirm({
+      title: "YÊU CẦU ĐĂNG NHẬP",
+      message: "Bạn cần đăng nhập để xem thông tin tài khoản và toàn bộ thành tích học tập từ lúc đăng ký.<br>Bạn có muốn đăng nhập ngay không?",
+      confirmText: "Đăng Nhập Ngay",
+      cancelText: "Để Sau",
+      type: "info"
+    });
+    if (wantAuth) {
+      showScreen("auth-screen");
+    }
+    return;
+  }
+
+  const modal = document.getElementById("profile-modal");
+  if (!modal) return;
+
+  renderProfileModal();
+  modal.style.display = "flex";
+
+  // Mặc định chọn tab lịch sử 15 tuần thi
+  switchProfileTab("history");
+}
+
+/**
+ * Đóng Modal Hồ Sơ Cá Nhân
+ */
+function closeProfileModal() {
+  const modal = document.getElementById("profile-modal");
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
+
+/**
+ * Chuyển đổi tab bên trong Modal Hồ Sơ Cá Nhân (history, badges, settings)
+ */
+function switchProfileTab(tabName) {
+  const tabHistory = document.getElementById("tab-profile-history");
+  const tabBadges = document.getElementById("tab-profile-badges");
+  const tabSettings = document.getElementById("tab-profile-settings");
+
+  const panelHistory = document.getElementById("panel-profile-history");
+  const panelBadges = document.getElementById("panel-profile-badges");
+  const panelSettings = document.getElementById("panel-profile-settings");
+
+  if (!panelHistory || !panelBadges || !panelSettings) return;
+
+  [tabHistory, tabBadges, tabSettings].forEach(t => t && t.classList.remove("active"));
+  panelHistory.style.display = "none";
+  panelBadges.style.display = "none";
+  panelSettings.style.display = "none";
+
+  if (tabName === "history") {
+    if (tabHistory) tabHistory.classList.add("active");
+    panelHistory.style.display = "block";
+  } else if (tabName === "badges") {
+    if (tabBadges) tabBadges.classList.add("active");
+    panelBadges.style.display = "block";
+  } else if (tabName === "settings") {
+    if (tabSettings) tabSettings.classList.add("active");
+    panelSettings.style.display = "block";
+  }
+}
+
+/**
+ * Render toàn bộ dữ liệu giao diện Modal Hồ Sơ Cá Nhân
+ */
+function renderProfileModal() {
+  const currentUser = AuthState.currentUser;
+  if (!currentUser) return;
+
+  const accounts = getLocalAccounts();
+  const account = accounts.find(a => a.username.toLowerCase() === (currentUser.username || "").toLowerCase()) || currentUser;
+  const adminUname = ((CONFIG.ADMIN && CONFIG.ADMIN.username) || "rappergaming").toLowerCase().trim();
+  const isAdmin = account.role === "admin" || (account.username && account.username.toLowerCase() === adminUname) || account.fullName === "Quản Trị Viên";
+
+  const attempts = getUserOfficialAttempts(account.username);
+
+  // 1. Xác định & Định dạng Thời gian đăng ký (createdAt)
+  let createdAt = account.createdAt;
+  if (!createdAt) {
+    const dates = Object.values(attempts)
+      .map(att => att.firstRecordedAt ? new Date(att.firstRecordedAt) : null)
+      .filter(d => d && !isNaN(d.getTime()));
+    if (dates.length > 0) {
+      dates.sort((a, b) => a.getTime() - b.getTime());
+      createdAt = dates[0].toISOString();
+    } else if (account.loggedAt) {
+      createdAt = account.loggedAt;
+    } else {
+      createdAt = new Date().toISOString();
+    }
+    account.createdAt = createdAt;
+    saveLocalAccounts(accounts);
+  }
+
+  const regDateObj = new Date(createdAt);
+  const isValidDate = !isNaN(regDateObj.getTime());
+  const regDateFormatted = isValidDate 
+    ? `${regDateObj.toLocaleDateString("vi-VN")} lúc ${regDateObj.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}` 
+    : "Từ ngày đầu tham gia";
+
+  const diffMs = isValidDate ? Math.max(0, Date.now() - regDateObj.getTime()) : 0;
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  let timeAgoStr = "Vừa mới đăng ký";
+  if (diffDays > 0) {
+    timeAgoStr = `${diffDays} ngày trước`;
+  } else if (diffHours > 0) {
+    timeAgoStr = `${diffHours} giờ trước`;
+  }
+
+  const lastLoginObj = account.loggedAt ? new Date(account.loggedAt) : new Date();
+  const lastLoginFormatted = !isNaN(lastLoginObj.getTime())
+    ? `${lastLoginObj.toLocaleDateString("vi-VN")} lúc ${lastLoginObj.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}`
+    : "Đang trực tuyến";
+
+  // 2. Render Hero Card Thông Tin Cá Nhân (#profile-hero-card)
+  const heroCard = document.getElementById("profile-hero-card");
+  if (heroCard) {
+    const initial = (account.fullName || account.username || "U").trim().charAt(0).toUpperCase();
+    const avatarContent = isAdmin ? "👑" : initial;
+
+    heroCard.innerHTML = `
+      <div class="profile-hero-main">
+        <div class="profile-avatar-large ${isAdmin ? 'admin-avatar' : ''}">
+          ${avatarContent}
+        </div>
+        <div class="profile-hero-info">
+          <div class="profile-name-row">
+            <h3 class="profile-hero-name">${escapeHtml(account.fullName || account.username)}</h3>
+            <span class="profile-role-badge ${isAdmin ? 'admin' : 'student'}">
+              ${isAdmin ? '🛡️ Quản Trị Viên' : '🎓 Học Viên'}
+            </span>
+          </div>
+          <div class="profile-sub-details">
+            <span class="profile-username-tag">@${escapeHtml(account.username)}</span>
+            <span class="profile-class-tag">${escapeHtml(account.className || 'Chưa phân lớp')}</span>
+            <span class="profile-status-online">● Đang hoạt động</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-timeline-box">
+        <div class="profile-timeline-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span><strong>Ngày đăng ký:</strong> ${regDateFormatted}</span>
+        </div>
+        <div class="profile-timeline-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span><strong>Thời gian tham gia:</strong> ${timeAgoStr}</span>
+        </div>
+        <div class="profile-timeline-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>
+          </svg>
+          <span><strong>Đăng nhập gần nhất:</strong> ${lastLoginFormatted}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // 3. Tính toán các chỉ số thống kê tổng quan (Overview 4-Grid)
+  const weeks = CONFIG.WEEKS || [];
+  const totalConfiguredWeeks = weeks.length;
+  const unlockedWeeks = weeks.filter(w => isWeekUnlocked(w));
+  const totalUnlocked = unlockedWeeks.length;
+
+  let completedWeeksCount = 0;
+  let totalScore = 0;
+  let totalCorrectQ = 0;
+  let totalAllQ = 0;
+
+  weeks.forEach(w => {
+    const att = attempts[w.id];
+    if (att && typeof att.score === "number") {
+      completedWeeksCount++;
+      totalScore += att.score;
+      if (att.correct !== undefined && att.total !== undefined) {
+        totalCorrectQ += Number(att.correct) || 0;
+        totalAllQ += Number(att.total) || 0;
+      }
+    }
+  });
+
+  const avgScore = completedWeeksCount > 0 ? (totalScore / completedWeeksCount).toFixed(1) : "0.0";
+  const accuracyPercent = totalAllQ > 0 ? Math.round((totalCorrectQ / totalAllQ) * 100) + "%" : "0%";
+  const completionRate = totalConfiguredWeeks > 0 ? Math.round((completedWeeksCount / totalConfiguredWeeks) * 100) : 0;
+
+  // Lấy thứ hạng hệ thống từ Leaderboard
+  const { rankedUsers, pendingUsers } = calculateLeaderboardData();
+  let rankDisplay = "--";
+  let rankSub = "Chưa tham gia thi";
+  let userRankNum = -1;
+
+  if (isAdmin) {
+    rankDisplay = "Quản Trị";
+    rankSub = "Hệ thống quản trị";
+  } else {
+    const rankedIdx = rankedUsers.findIndex(u => u.username.toLowerCase() === account.username.toLowerCase());
+    if (rankedIdx !== -1) {
+      userRankNum = rankedIdx + 1;
+      rankDisplay = `#${userRankNum} / ${rankedUsers.length}`;
+      rankSub = rankedIdx < 3 ? "🏆 Thuộc Top 3 vinh danh" : "Đã làm đủ tuần thi";
+    } else {
+      const pendingIdx = pendingUsers.findIndex(u => u.username.toLowerCase() === account.username.toLowerCase());
+      if (pendingIdx !== -1 && completedWeeksCount > 0) {
+        userRankNum = pendingIdx + 1;
+        rankDisplay = `Chờ (#${userRankNum})`;
+        rankSub = `Cần hoàn thành ${Math.max(0, totalUnlocked - completedWeeksCount)} tuần`;
+      }
+    }
+  }
+
+  // Render 4-Grid
+  const statsGrid = document.getElementById("profile-stats-grid");
+  if (statsGrid) {
+    statsGrid.innerHTML = `
+      <div class="profile-stat-box">
+        <div class="profile-stat-top">
+          <span class="profile-stat-label">Tiến Độ Tuần Thi</span>
+          <div class="profile-stat-icon blue">🎯</div>
+        </div>
+        <div class="profile-stat-val">${completedWeeksCount} / ${totalConfiguredWeeks}</div>
+        <div class="profile-stat-sub">${completionRate}% Lộ trình 15 tuần</div>
+      </div>
+
+      <div class="profile-stat-box">
+        <div class="profile-stat-top">
+          <span class="profile-stat-label">Điểm Trung Bình (GPA)</span>
+          <div class="profile-stat-icon emerald">⭐</div>
+        </div>
+        <div class="profile-stat-val">${avgScore} <small style="font-size:0.9rem;font-weight:600;color:#64748b;">đ</small></div>
+        <div class="profile-stat-sub">Tổng tích lũy: ${totalScore} điểm</div>
+      </div>
+
+      <div class="profile-stat-box">
+        <div class="profile-stat-top">
+          <span class="profile-stat-label">Tỷ Lệ Chính Xác</span>
+          <div class="profile-stat-icon amber">📊</div>
+        </div>
+        <div class="profile-stat-val">${accuracyPercent}</div>
+        <div class="profile-stat-sub">Đúng ${totalCorrectQ}/${totalAllQ} câu hỏi</div>
+      </div>
+
+      <div class="profile-stat-box">
+        <div class="profile-stat-top">
+          <span class="profile-stat-label">Thứ Hạng Hệ Thống</span>
+          <div class="profile-stat-icon purple">🏆</div>
+        </div>
+        <div class="profile-stat-val">${rankDisplay}</div>
+        <div class="profile-stat-sub">${rankSub}</div>
+      </div>
+    `;
+  }
+
+  // 4. Tab 1 Panel: Lịch sử làm bài 15 tuần (#profile-weeks-history-list)
+  const historyList = document.getElementById("profile-weeks-history-list");
+  if (historyList) {
+    historyList.innerHTML = weeks.map(w => {
+      const att = attempts[w.id];
+      const unlocked = isWeekUnlocked(w);
+
+      if (att && typeof att.score === "number") {
+        return `
+          <div class="profile-week-row completed">
+            <div class="profile-week-left">
+              <div class="profile-week-num-badge">✓</div>
+              <div>
+                <div class="profile-week-title">Tuần ${w.id}: ${escapeHtml(w.title || w.name)}</div>
+                <div class="profile-week-desc">
+                  Hoàn thành lúc: <strong>${att.firstRecordedAt || 'Đã ghi nhận'}</strong> | 
+                  Thời gian: <strong>${att.durationText || '15:00'}</strong> | 
+                  Đúng: <strong>${att.correct !== undefined ? `${att.correct}/${att.total || 0} câu (${att.percent || '100%'})` : `${att.score} điểm`}</strong>
+                </div>
+              </div>
+            </div>
+            <div class="profile-week-right">
+              <div class="profile-week-score-box">
+                <div class="profile-week-score-number">${att.score} đ</div>
+                <div class="profile-week-score-meta">Điểm chính thức</div>
+              </div>
+              <span class="profile-week-status-pill pass">Đã hoàn thành</span>
+            </div>
+          </div>
+        `;
+      } else if (unlocked) {
+        return `
+          <div class="profile-week-row pending-week">
+            <div class="profile-week-left">
+              <div class="profile-week-num-badge">${w.id}</div>
+              <div>
+                <div class="profile-week-title">Tuần ${w.id}: ${escapeHtml(w.title || w.name)}</div>
+                <div class="profile-week-desc">Tuần học đã mở | Bạn chưa làm bài kiểm tra chính thức</div>
+              </div>
+            </div>
+            <div class="profile-week-right">
+              <div class="profile-week-score-box">
+                <div class="profile-week-score-number" style="color: #94a3b8;">--</div>
+                <div class="profile-week-score-meta">Chưa có điểm</div>
+              </div>
+              <span class="profile-week-status-pill ready">Sẵn sàng thi</span>
+            </div>
+          </div>
+        `;
+      } else {
+        return `
+          <div class="profile-week-row locked-week">
+            <div class="profile-week-left">
+              <div class="profile-week-num-badge">🔒</div>
+              <div>
+                <div class="profile-week-title">Tuần ${w.id}: ${escapeHtml(w.title || w.name)}</div>
+                <div class="profile-week-desc">Chưa mở khoá theo lộ trình đào tạo</div>
+              </div>
+            </div>
+            <div class="profile-week-right">
+              <div class="profile-week-score-box">
+                <div class="profile-week-score-number" style="color: #cbd5e1;">--</div>
+                <div class="profile-week-score-meta">Chưa mở</div>
+              </div>
+              <span class="profile-week-status-pill lock">Đang khóa</span>
+            </div>
+          </div>
+        `;
+      }
+    }).join("");
+  }
+
+  // 5. Tab 2 Panel: Huy Hiệu & Danh Hiệu Thành Tích (#profile-badges-grid)
+  const badgesGrid = document.getElementById("profile-badges-grid");
+  if (badgesGrid) {
+    const hasPerfectScore = Object.values(attempts).some(a => a && a.score === 100);
+    const isTop3 = !isAdmin && userRankNum > 0 && userRankNum <= 3 && rankedUsers.some(u => u.username.toLowerCase() === account.username.toLowerCase());
+    const isAllUnlockedDone = totalUnlocked > 0 && completedWeeksCount === totalUnlocked;
+
+    const badges = [
+      {
+        icon: "🎖️",
+        name: "Tân Binh Gia Nhập",
+        desc: "Đăng ký tài khoản thành công và tham gia vào hệ thống đào tạo.",
+        unlocked: true
+      },
+      {
+        icon: "🚀",
+        name: "Khởi Động Xuất Sắc",
+        desc: "Hoàn thành bài kiểm tra chính thức Tuần 1 đầu tiên.",
+        unlocked: Boolean(attempts[1] && typeof attempts[1].score === "number")
+      },
+      {
+        icon: "📚",
+        name: "Kiên Trì Học Tập",
+        desc: "Hoàn thành bài kiểm tra chính thức từ 3 tuần thi trở lên.",
+        unlocked: completedWeeksCount >= 3
+      },
+      {
+        icon: "🎯",
+        name: "Bách Phát Bách Trúng",
+        desc: "Đạt điểm số tuyệt đối (100 điểm) ở một tuần thi bất kỳ.",
+        unlocked: hasPerfectScore
+      },
+      {
+        icon: "🏅",
+        name: "Cao Thủ Top 3",
+        desc: "Xuất sắc nằm trong Top 3 học viên dẫn đầu Bảng Vinh Danh.",
+        unlocked: isTop3
+      },
+      {
+        icon: "👑",
+        name: "Chiến Binh Toàn Năng",
+        desc: "Hoàn thành toàn bộ tất cả các tuần thi đã được mở khóa.",
+        unlocked: isAllUnlockedDone
+      }
+    ];
+
+    badgesGrid.innerHTML = badges.map(b => `
+      <div class="profile-badge-card ${b.unlocked ? 'unlocked' : 'locked'}">
+        <div class="profile-badge-icon">${b.icon}</div>
+        <div>
+          <div class="profile-badge-name">${b.name}</div>
+          <div class="profile-badge-desc">${b.desc}</div>
+          <div style="margin-top: 6px; font-size: 0.76rem; font-weight: 700; color: ${b.unlocked ? '#059669' : '#94a3b8'};">
+            ${b.unlocked ? '✓ ĐÃ ĐẠT ĐƯỢC' : '🔒 CHƯA MỞ KHÓA'}
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  // 6. Tab 3 Panel: Form Cài Đặt Hồ Sơ
+  const inputFullName = document.getElementById("profile-input-fullname");
+  const inputClass = document.getElementById("profile-input-class");
+  const inputOldPass = document.getElementById("profile-input-oldpass");
+  const inputNewPass = document.getElementById("profile-input-newpass");
+
+  if (inputFullName) inputFullName.value = account.fullName || "";
+  if (inputClass) inputClass.value = account.className || "";
+  if (inputOldPass) inputOldPass.value = "";
+  if (inputNewPass) inputNewPass.value = "";
+}
+
+/**
+ * Xử lý cập nhật thông tin cá nhân & đổi mật khẩu
+ */
+async function handleProfileSave() {
+  const currentUser = AuthState.currentUser;
+  if (!currentUser) return;
+
+  const inputFullName = document.getElementById("profile-input-fullname");
+  const inputClass = document.getElementById("profile-input-class");
+  const inputOldPass = document.getElementById("profile-input-oldpass");
+  const inputNewPass = document.getElementById("profile-input-newpass");
+
+  const newFullName = inputFullName ? inputFullName.value.trim() : "";
+  const newClassName = inputClass ? inputClass.value.trim() : "";
+  const oldPass = inputOldPass ? inputOldPass.value : "";
+  const newPass = inputNewPass ? inputNewPass.value : "";
+
+  if (!newFullName || newFullName.length < 2) {
+    await showAppAlert({
+      title: "LỖI NHẬP LIỆU",
+      message: "Họ và tên phải có tối thiểu 2 ký tự!",
+      type: "warning"
+    });
+    return;
+  }
+
+  if (!newClassName) {
+    await showAppAlert({
+      title: "LỖI NHẬP LIỆU",
+      message: "Vui lòng nhập thông tin Lớp hoặc Mã sinh viên!",
+      type: "warning"
+    });
+    return;
+  }
+
+  const accounts = getLocalAccounts();
+  const account = accounts.find(a => a.username.toLowerCase() === currentUser.username.toLowerCase());
+  if (!account) return;
+
+  let passwordChanged = false;
+  if (oldPass || newPass) {
+    if (account.password && account.password !== oldPass) {
+      await showAppAlert({
+        title: "SAI MẬT KHẨU",
+        message: "Mật khẩu hiện tại không chính xác! Vui lòng kiểm tra lại.",
+        type: "danger"
+      });
+      return;
+    }
+    if (!newPass || newPass.length < 4) {
+      await showAppAlert({
+        title: "MẬT KHẨU KHÔNG HỢP LỆ",
+        message: "Mật khẩu mới phải có tối thiểu 4 ký tự!",
+        type: "warning"
+      });
+      return;
+    }
+    passwordChanged = true;
+  }
+
+  const confirmed = await showAppConfirm({
+    title: "XÁC NHẬN CẬP NHẬT",
+    message: `Bạn có chắc chắn muốn lưu thông tin mới cho tài khoản <strong>@${account.username}</strong> không?`,
+    confirmText: "Lưu Cập Nhật",
+    cancelText: "Hủy Bỏ",
+    type: "info"
+  });
+
+  if (!confirmed) return;
+
+  // Cập nhật thông tin tài khoản
+  account.fullName = newFullName;
+  account.className = newClassName;
+  if (passwordChanged) {
+    account.password = newPass;
+  }
+  saveLocalAccounts(accounts);
+
+  // Cập nhật AuthState.currentUser
+  currentUser.fullName = newFullName;
+  currentUser.className = newClassName;
+  localStorage.setItem(AuthState.storageKeyUser, JSON.stringify(currentUser));
+
+  // Cập nhật giao diện toàn diện
+  updateAuthUI();
+  renderHomeRankingWidget();
+  renderRankingModal();
+  renderProfileModal();
+
+  await showAppAlert({
+    title: "CẬP NHẬT THÀNH CÔNG",
+    message: `Thông tin cá nhân của bạn đã được cập nhật thành công!${passwordChanged ? '<br>Mật khẩu mới đã được lưu an toàn.' : ''}`,
+    type: "success"
+  });
+}
+
+/**
+ * Khởi tạo toàn bộ sự kiện cho Phân Hệ Hồ Sơ Cá Nhân
+ */
+function initProfileFeature() {
+  // 1. Mở từ Sidebar
+  const tabProfile = document.getElementById("sidebar-tab-profile");
+  if (tabProfile) {
+    tabProfile.addEventListener("click", () => {
+      openProfileModal();
+      const sidebar = document.getElementById("app-sidebar");
+      const backdrop = document.getElementById("sidebar-backdrop");
+      if (sidebar) sidebar.classList.remove("is-hovered");
+      if (backdrop) {
+        backdrop.classList.remove("active");
+        setTimeout(() => { backdrop.style.display = "none"; }, 200);
+      }
+    });
+  }
+
+  // 2. Mở từ User Profile Chip trên Top Nav (trang trắc nghiệm & lộ trình)
+  const userChip = document.getElementById("user-profile-chip");
+  if (userChip) {
+    userChip.addEventListener("click", (e) => {
+      if (e.target.closest(".btn-logout-small")) return; // Bỏ qua nếu nhấn nút đăng xuất nhỏ
+      openProfileModal();
+    });
+  }
+
+  const roadmapUserChip = document.getElementById("roadmap-user-profile-chip");
+  if (roadmapUserChip) {
+    roadmapUserChip.addEventListener("click", (e) => {
+      if (e.target.closest(".btn-logout-small")) return;
+      openProfileModal();
+    });
+  }
+
+  // 3. Đóng Modal
+  const btnClose = document.getElementById("btn-close-profile-modal");
+  const btnCloseFooter = document.getElementById("btn-profile-close");
+  const backdrop = document.getElementById("profile-modal-backdrop");
+
+  if (btnClose) btnClose.addEventListener("click", closeProfileModal);
+  if (btnCloseFooter) btnCloseFooter.addEventListener("click", closeProfileModal);
+  if (backdrop) backdrop.addEventListener("click", closeProfileModal);
+
+  // 4. Đăng xuất từ Modal Hồ Sơ
+  const btnLogout = document.getElementById("btn-profile-logout");
+  if (btnLogout) {
+    btnLogout.addEventListener("click", () => {
+      closeProfileModal();
+      if (typeof handleLogout === "function") {
+        handleLogout();
+      }
+    });
+  }
+
+  // 5. Chuyển đổi Tab trong Profile
+  const tabHistory = document.getElementById("tab-profile-history");
+  const tabBadges = document.getElementById("tab-profile-badges");
+  const tabSettings = document.getElementById("tab-profile-settings");
+
+  if (tabHistory) tabHistory.addEventListener("click", () => switchProfileTab("history"));
+  if (tabBadges) tabBadges.addEventListener("click", () => switchProfileTab("badges"));
+  if (tabSettings) tabSettings.addEventListener("click", () => switchProfileTab("settings"));
+
+  // 6. Lưu form chỉnh sửa hồ sơ
+  const btnSave = document.getElementById("btn-save-profile");
+  if (btnSave) {
+    btnSave.addEventListener("click", handleProfileSave);
+  }
+}
+
 
 

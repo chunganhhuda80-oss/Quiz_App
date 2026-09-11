@@ -5118,6 +5118,628 @@ body.auth-mode .app-container {
   transform: scale(0.98) !important;
 }
 
+/* ==========================================================================
+   4. MODAL HỒ SƠ CÁ NHÂN & TIẾN ĐỘ HỌC TẬP (#profile-modal)
+   ========================================================================== */
+.profile-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.profile-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: fadeIn 0.25s ease;
+}
+
+.profile-modal-container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 880px;
+  max-height: calc(100vh - 32px);
+  height: min(90vh, 840px);
+  background: #ffffff;
+  border-radius: 26px;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.45);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUpModal 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.profile-modal-header {
+  flex-shrink: 0;
+  padding: 18px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+
+.profile-modal-title-group {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.profile-avatar-badge-top {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  border: 1px solid #bfdbfe;
+}
+
+.profile-modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.profile-modal-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 2px 0 0 0;
+  font-weight: 500;
+}
+
+.profile-close-btn {
+  background: #f1f5f9;
+  border: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.profile-close-btn:hover {
+  background: #e2e8f0;
+  color: var(--text-main);
+  transform: rotate(90deg);
+}
+
+.profile-modal-scrollable-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-modal-scrollable-body::-webkit-scrollbar {
+  width: 7px;
+}
+.profile-modal-scrollable-body::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+.profile-modal-scrollable-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+.profile-modal-scrollable-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* 1. Hero Card Cá Nhân */
+.profile-hero-card {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #3730a3 100%);
+  border-radius: 22px;
+  padding: 24px 28px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  box-shadow: 0 12px 30px rgba(49, 46, 129, 0.25);
+  flex-wrap: wrap;
+}
+
+.profile-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  min-width: 280px;
+}
+
+.profile-big-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  border: 3px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.profile-user-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.profile-fullname {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.profile-role-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #e0e7ff;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.profile-role-badge.admin-role {
+  background: #f43f5e;
+  border-color: #fda4af;
+  color: #ffffff;
+}
+
+.profile-sub-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.88rem;
+  color: #c7d2fe;
+  flex-wrap: wrap;
+}
+
+.profile-username-tag {
+  font-weight: 700;
+  color: #a5b4fc;
+}
+
+.profile-class-tag {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+}
+
+.profile-timeline-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.82rem;
+  min-width: 220px;
+}
+
+.profile-timeline-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e0e7ff;
+}
+
+.profile-timeline-item svg {
+  color: #93c5fd;
+  flex-shrink: 0;
+}
+
+/* 2. 4 Thẻ chỉ số tổng quan */
+.profile-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 768px) {
+  .profile-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.profile-stat-box {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.profile-stat-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.profile-stat-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profile-stat-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+}
+
+.profile-stat-icon.blue { background: #eff6ff; color: #2563eb; }
+.profile-stat-icon.emerald { background: #ecfdf5; color: #059669; }
+.profile-stat-icon.amber { background: #fffbeb; color: #d97706; }
+.profile-stat-icon.purple { background: #faf5ff; color: #7c3aed; }
+
+.profile-stat-val {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.1;
+}
+
+.profile-stat-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.profile-stat-sub {
+  font-size: 0.74rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* 3. Thanh điều hướng Tab bên trong Profile */
+.profile-tabs-nav {
+  display: flex;
+  gap: 8px;
+  background: #f1f5f9;
+  padding: 5px;
+  border-radius: 14px;
+}
+
+.profile-tab-btn {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all var(--transition-fast);
+}
+
+.profile-tab-btn.active {
+  background: #ffffff;
+  color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Tab 1: Danh sách lịch sử 15 tuần */
+.profile-weeks-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-week-row {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: all var(--transition-fast);
+}
+
+.profile-week-row:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.profile-week-row.completed {
+  border-left: 4px solid #10b981;
+}
+
+.profile-week-row.pending-week {
+  border-left: 4px solid #f59e0b;
+}
+
+.profile-week-row.locked-week {
+  border-left: 4px solid #cbd5e1;
+  opacity: 0.78;
+}
+
+.profile-week-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.profile-week-num-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  color: var(--text-main);
+  font-weight: 800;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-week-row.completed .profile-week-num-badge {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.profile-week-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.profile-week-desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.profile-week-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-shrink: 0;
+}
+
+.profile-week-score-box {
+  text-align: right;
+}
+
+.profile-week-score-number {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #059669;
+}
+
+.profile-week-score-meta {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.profile-week-status-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.profile-week-status-pill.pass {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.profile-week-status-pill.ready {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.profile-week-status-pill.lock {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+}
+
+/* Tab 2: Huy hiệu danh hiệu */
+.profile-badges-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 600px) {
+  .profile-badges-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.profile-badge-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all var(--transition-fast);
+}
+
+.profile-badge-card.unlocked {
+  border-color: #fde68a;
+  background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.08);
+}
+
+.profile-badge-card.locked {
+  opacity: 0.55;
+  filter: grayscale(1);
+}
+
+.profile-badge-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.profile-badge-card.unlocked .profile-badge-icon {
+  background: #fef3c7;
+}
+
+.profile-badge-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.profile-badge-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+/* Tab 3: Cài đặt & chỉnh sửa thông tin */
+.profile-edit-form {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.profile-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-form-title {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid #f1f5f9;
+}
+
+.profile-btn-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.profile-btn-save {
+  padding: 11px 24px;
+  font-size: 0.92rem;
+}
+
+/* Footer modal */
+.profile-modal-footer {
+  flex-shrink: 0;
+  padding: 14px 26px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #ffffff;
+}
+
+.btn-profile-logout {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #e11d48;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-fast);
+}
+
+.btn-profile-logout:hover {
+  background: #ffe4e6;
+  color: #be123c;
+}
+
+/* Make profile chip clickable */
+.user-profile-chip {
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.user-profile-chip:hover {
+  background: #f1f5f9;
+  transform: translateY(-1px);
+}
+
+
 
 
 
