@@ -4201,12 +4201,24 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
 
         // Lưu điểm vào lịch sử thi chính thức
         if (!history[weekId] || (typeof r.scaledScore === "number" && r.scaledScore > 0)) {
+          let durationFormatted = r.timeSpent || "15:00";
+          if (typeof durationFormatted === "string" && durationFormatted.includes("T") && durationFormatted.includes("Z")) {
+            try {
+              const d = new Date(durationFormatted);
+              if (!isNaN(d.getTime())) {
+                const m = String(d.getUTCMinutes()).padStart(2, "0");
+                const s = String(d.getUTCSeconds()).padStart(2, "0");
+                durationFormatted = `${m}:${s}`;
+              }
+            } catch (_) {}
+          }
+
           history[weekId] = {
             score: r.scaledScore,
             correct: r.correctCount,
             total: r.totalQuestions,
             percent: r.accuracy,
-            durationText: r.timeSpent,
+            durationText: durationFormatted,
             firstRecordedAt: r.timestamp
           };
           localStorage.setItem(historyKey, JSON.stringify(history));
