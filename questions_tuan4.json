@@ -1,0 +1,802 @@
+[
+  {
+    "id": 1,
+    "question": "Windowing trong TCP dùng để thực hiện chức năng nào?",
+    "optionA": "Mã hóa dữ liệu",
+    "optionB": "Kiểm soát luồng (Flow Control)",
+    "optionC": "Định tuyến gói tin",
+    "optionD": "Nén dữ liệu",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 2,
+    "question": "Trong Ethernet Frame, giá trị Type/Length = 0x0806 biểu thị giao thức nào?",
+    "optionA": "IPv4",
+    "optionB": "ARP",
+    "optionC": "IPv6",
+    "optionD": "ICMP",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 3,
+    "question": "Cho địa chỉ 192.168.9.40/28, Broadcast Address của subnet chứa địa chỉ này là gì?",
+    "optionA": "192.168.9.31",
+    "optionB": "192.168.9.47",
+    "optionC": "192.168.9.63",
+    "optionD": "192.168.9.55",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 4,
+    "question": "SLAAC dựa vào thông điệp nào từ router để thiết bị tự cấu hình địa chỉ IPv6?",
+    "optionA": "DHCP Discover",
+    "optionB": "Router Advertisement (RA)",
+    "optionC": "ARP Request",
+    "optionD": "DNS Query",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 5,
+    "question": "Access port thuộc bao nhiêu VLAN?",
+    "optionA": "Không thuộc VLAN nào",
+    "optionB": "1 VLAN duy nhất",
+    "optionC": "Tối đa 2 VLAN",
+    "optionD": "Tất cả VLAN",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 6,
+    "question": "STP được thiết kế để giải quyết vấn đề gì?",
+    "optionA": "Thiếu địa chỉ IP",
+    "optionB": "Switching Loop và Broadcast Storm khi có đường dự phòng (redundant link)",
+    "optionC": "Mã hóa dữ liệu",
+    "optionD": "Định tuyến giữa các mạng",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 7,
+    "question": "Cờ (flag) nào trong TCP dùng để khởi tạo kết nối?",
+    "optionA": "ACK",
+    "optionB": "SYN",
+    "optionC": "FIN",
+    "optionD": "RST",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 8,
+    "question": "Thứ tự chuyển đổi ĐÚNG của các trạng thái cổng trong STP là gì?",
+    "optionA": "Forwarding -> Learning -> Listening -> Blocking",
+    "optionB": "Blocking -> Listening -> Learning -> Forwarding",
+    "optionC": "Listening -> Blocking -> Forwarding -> Learning",
+    "optionD": "Learning -> Forwarding -> Blocking -> Listening",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 9,
+    "question": "STP là viết tắt của cụm từ nào?",
+    "optionA": "Switch Transfer Protocol",
+    "optionB": "Spanning Tree Protocol",
+    "optionC": "Static Topology Protocol",
+    "optionD": "Secure Transport Protocol",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 10,
+    "question": "Để cấu hình EtherChannel bằng LACP với cơ chế chủ động đàm phán ở cả 2 đầu, lệnh nào cần cấu hình trên cả 2 switch?",
+    "optionA": "channel-group X mode on (cả 2 đầu)",
+    "optionB": "channel-group X mode active (ít nhất 1 đầu active)",
+    "optionC": "channel-group X mode desirable (cả 2 đầu)",
+    "optionD": "channel-group X mode passive (cả 2 đầu)",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 11,
+    "question": "Đầu nối LC thường dùng cho loại cáp nào?",
+    "optionA": "Cáp đồng UTP",
+    "optionB": "Cáp quang",
+    "optionC": "Cáp đồng trục",
+    "optionD": "Cáp điện thoại",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 12,
+    "question": "Trong thiết kế mạng có EtherChannel Layer 2 giữa 2 switch Distribution, và mỗi switch Access nối redundant lên cả 2 switch Distribution, STP tương tác thế nào với thiết kế này để tối ưu băng thông và vẫn tránh loop?",
+    "optionA": "STP sẽ chặn toàn bộ EtherChannel vì phát hiện vòng lặp",
+    "optionB": "STP coi mỗi EtherChannel là 1 logical link duy nhất nên không chặn các link vật lý bên trong đó, đồng thời vẫn có thể cần chặn thêm 1 uplink dư thừa riêng biệt giữa Access và Distribution nếu có, giúp tối ưu băng thông hơn so với không dùng EtherChannel",
+    "optionC": "EtherChannel và STP không thể cùng hoạt động trên 1 thiết kế",
+    "optionD": "STP sẽ tự động vô hiệu hóa hoàn toàn khi có EtherChannel",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 13,
+    "question": "HTTP hoạt động ở tầng nào trong mô hình OSI?",
+    "optionA": "Transport (Layer 4)",
+    "optionB": "Network (Layer 3)",
+    "optionC": "Application (Layer 7)",
+    "optionD": "Data Link (Layer 2)",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 14,
+    "question": "Lệnh nào dùng để kiểm tra vai trò (Role) và trạng thái (State) hiện tại của từng cổng trong STP trên switch Cisco?",
+    "optionA": "show vlan brief",
+    "optionB": "show spanning-tree",
+    "optionC": "show interfaces trunk",
+    "optionD": "show mac address-table",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 15,
+    "question": "Trunk port có chức năng gì?",
+    "optionA": "Chỉ cho 1 VLAN duy nhất đi qua",
+    "optionB": "Cho phép nhiều VLAN đi qua cùng 1 link vật lý",
+    "optionC": "Chặn toàn bộ traffic",
+    "optionD": "Chỉ dùng cho kết nối PC",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 16,
+    "question": "Phân tích rủi ro bảo mật của VLAN Hopping Attack qua kỹ thuật Switch Spoofing, và cách phòng chống cơ bản?",
+    "optionA": "Không có rủi ro bảo mật nào đáng kể",
+    "optionB": "Kẻ tấn công giả làm switch để kích hoạt trunking tự động (DTP), từ đó truy cập được nhiều VLAN; phòng chống bằng cách tắt DTP và chỉ định rõ access/trunk thủ công trên từng cổng",
+    "optionC": "Chỉ xảy ra khi dùng VTP Server mode",
+    "optionD": "Chỉ ảnh hưởng tới Voice VLAN",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 17,
+    "question": "Full-duplex nghĩa là gì?",
+    "optionA": "Chỉ gửi hoặc nhận tại 1 thời điểm",
+    "optionB": "Gửi và nhận dữ liệu đồng thời trên cùng 1 kết nối",
+    "optionC": "Không thể truyền dữ liệu",
+    "optionD": "Chỉ dùng được với cáp quang",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 18,
+    "question": "Sự khác biệt cơ bản giữa PAgP và LACP là gì?",
+    "optionA": "Không có khác biệt gì",
+    "optionB": "PAgP là giao thức độc quyền của Cisco, LACP là chuẩn mở (802.3ad) tương thích đa hãng",
+    "optionC": "PAgP nhanh hơn LACP gấp đôi",
+    "optionD": "LACP chỉ dùng được với cáp quang",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 19,
+    "question": "Để gán 1 cổng switch vào VLAN 20 ở chế độ access, cần dùng đúng cặp lệnh nào?",
+    "optionA": "switchport mode trunk -> switchport trunk allowed vlan 20",
+    "optionB": "switchport mode access -> switchport access vlan 20",
+    "optionC": "vlan 20 -> switchport access vlan 20 (không cần mode access)",
+    "optionD": "interface vlan 20 -> no shutdown",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 20,
+    "question": "BPDU là viết tắt của cụm từ nào?",
+    "optionA": "Bridge Protocol Data Unit",
+    "optionB": "Basic Port Detection Utility",
+    "optionC": "Backup Port Data Uplink",
+    "optionD": "Broadcast Packet Data Unit",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 21,
+    "question": "Bridge ID trong STP được tạo thành từ những thành phần nào?",
+    "optionA": "Chỉ có địa chỉ IP",
+    "optionB": "Priority + địa chỉ MAC",
+    "optionC": "Chỉ có Hostname",
+    "optionD": "Số serial của switch",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 22,
+    "question": "Designated Port trên 1 segment mạng là cổng nào?",
+    "optionA": "Cổng có cost tới Root cao nhất trên segment đó",
+    "optionB": "Cổng có cost tới Root thấp nhất trên segment đó, đảm nhiệm forward traffic",
+    "optionC": "Cổng luôn bị vô hiệu hóa",
+    "optionD": "Cổng chỉ dùng cho Voice VLAN",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 23,
+    "question": "Phân tích vì sao STP truyền thống (802.1D) có thời gian hội tụ chậm (khoảng 30-50 giây), và điều này gây ảnh hưởng gì tới mạng doanh nghiệp cần độ sẵn sàng cao?",
+    "optionA": "Vì phần cứng switch cũ xử lý chậm",
+    "optionB": "Do các timer mặc định (Listening + Learning + Max Age) được thiết kế thận trọng để tránh loop tạm thời, nhưng gây gián đoạn traffic đáng kể mỗi khi topology thay đổi, ảnh hưởng lớn tới ứng dụng nhạy cảm thời gian thực",
+    "optionC": "Vì 802.1D không hỗ trợ nhiều VLAN",
+    "optionD": "Không có ảnh hưởng gì đáng kể trong thực tế",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 24,
+    "question": "Mô hình SOHO (Small Office/Home Office) có đặc trưng gì?",
+    "optionA": "Luôn có đủ 3 tầng Access-Distribution-Core",
+    "optionB": "Quy mô nhỏ, thường dùng 1 thiết bị tích hợp router+switch+AP+modem",
+    "optionC": "Bắt buộc có Core Layer riêng",
+    "optionD": "Không dùng địa chỉ Private IP",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 25,
+    "question": "Prefix length phổ biến nhất được khuyến nghị cho 1 mạng LAN IPv6 là gì?",
+    "optionA": "/48",
+    "optionB": "/64",
+    "optionC": "/96",
+    "optionD": "/128",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 26,
+    "question": "Core Layer trong mô hình 3-tier ưu tiên yếu tố nào nhất?",
+    "optionA": "Bảo mật chi tiết từng gói tin",
+    "optionB": "Tốc độ và độ ổn định khi chuyển tiếp traffic",
+    "optionC": "Cấp phát VLAN",
+    "optionD": "Lọc ACL phức tạp",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 27,
+    "question": "Cáp Cat6a hỗ trợ tốc độ 10Gbps đầy đủ ở khoảng cách tối đa bao nhiêu mét?",
+    "optionA": "55m",
+    "optionB": "100m",
+    "optionC": "500m",
+    "optionD": "1000m",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 28,
+    "question": "Sự khác biệt giữa VTP Server mode và VTP Client mode là gì?",
+    "optionA": "Không có khác biệt",
+    "optionB": "Server có thể tạo/sửa/xóa VLAN và gửi cho switch khác, Client chỉ nhận thông tin",
+    "optionC": "Client tạo VLAN còn Server chỉ nhận",
+    "optionD": "Server chỉ dùng được với 1 switch duy nhất",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 29,
+    "question": "Wildcard mask tương ứng với subnet mask /28 (255.255.255.240) là gì?",
+    "optionA": "0.0.0.15",
+    "optionB": "0.0.0.16",
+    "optionC": "0.0.0.31",
+    "optionD": "0.0.0.7",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 30,
+    "question": "Với subnet mask /25, số host khả dụng tối đa mỗi subnet là bao nhiêu?",
+    "optionA": "62",
+    "optionB": "126",
+    "optionC": "254",
+    "optionD": "30",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 31,
+    "question": "LACP là viết tắt của cụm từ nào?",
+    "optionA": "Local Area Control Protocol",
+    "optionB": "Link Aggregation Control Protocol",
+    "optionC": "Layer Access Control Point",
+    "optionD": "Logical Address Configuration Protocol",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 32,
+    "question": "Nếu admin đã chủ động đặt Bridge Priority thấp cho switch Core để nó luôn là Root Bridge, nhưng vô tình 1 switch mới cắm vào mạng lại có Bridge Priority thấp hơn nữa, hậu quả nào có thể xảy ra?",
+    "optionA": "Không có hậu quả gì vì Priority chỉ mang tính tham khảo",
+    "optionB": "Switch mới có thể 'cướp' vai trò Root Bridge ngoài ý muốn, làm thay đổi toàn bộ đường đi traffic tối ưu trong mạng, có thể gây nghẽn cổ chai hoặc gián đoạn tạm thời trong lúc STP hội tụ lại",
+    "optionC": "Switch Core sẽ tự động tăng Priority để giữ vai trò Root",
+    "optionD": "Mạng sẽ ngừng hoạt động hoàn toàn",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 33,
+    "question": "Lệnh nào dùng để vào chế độ Privileged EXEC trên Cisco IOS?",
+    "optionA": "configure terminal",
+    "optionB": "enable",
+    "optionC": "hostname",
+    "optionD": "interface",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 34,
+    "question": "PortFast là tính năng mở rộng của Cisco cho STP nhằm mục đích gì, và vì sao chỉ nên bật PortFast trên cổng nối trực tiếp với end-device chứ không phải cổng nối switch khác?",
+    "optionA": "PortFast tăng tốc độ truyền dữ liệu vật lý của cổng",
+    "optionB": "PortFast bỏ qua giai đoạn Listening/Learning để cổng chuyển ngay sang Forwarding (phù hợp end-device cần kết nối nhanh); nếu bật trên cổng nối switch khác có thể gây loop tạm thời nguy hiểm vì bỏ qua bước kiểm tra an toàn của STP",
+    "optionC": "PortFast chỉ dùng cho cổng Trunk",
+    "optionD": "PortFast là tính năng bắt buộc phải bật trên mọi cổng",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 35,
+    "question": "Nếu 1 đầu EtherChannel cấu hình chế độ 'on' (ép buộc, không đàm phán giao thức) còn đầu kia dùng LACP 'active', điều gì có khả năng xảy ra?",
+    "optionA": "EtherChannel hình thành bình thường không vấn đề gì",
+    "optionB": "EtherChannel không hình thành đúng do không tương thích cơ chế đàm phán, có thể gây ra sự cố loop nếu các cổng không được đồng bộ vào cùng 1 channel",
+    "optionC": "Switch tự động chuyển 'on' thành 'active'",
+    "optionD": "Không ảnh hưởng gì tới STP",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 36,
+    "question": "Cho địa chỉ 172.16.8.90/28, Network Address của subnet chứa địa chỉ này là gì?",
+    "optionA": "172.16.8.64",
+    "optionB": "172.16.8.80",
+    "optionC": "172.16.8.96",
+    "optionD": "172.16.8.48",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 37,
+    "question": "Vì sao UDP thường phù hợp cho streaming video/audio hơn TCP?",
+    "optionA": "UDP mã hóa tốt hơn",
+    "optionB": "UDP ưu tiên tốc độ, chấp nhận mất gói nhỏ thay vì làm chậm để đảm bảo tin cậy như TCP",
+    "optionC": "UDP có nhiều port hơn",
+    "optionD": "UDP không thể dùng cho ứng dụng thời gian thực",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 38,
+    "question": "Cho 2 switch có Bridge Priority bằng nhau, switch nào sẽ trở thành Root Bridge?",
+    "optionA": "Switch được bật nguồn trước",
+    "optionB": "Switch có địa chỉ MAC Address thấp hơn",
+    "optionC": "Switch có nhiều cổng hơn",
+    "optionD": "Không switch nào có thể trở thành Root",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 39,
+    "question": "UDP có đặc điểm 'connectionless' nghĩa là gì?",
+    "optionA": "Luôn cần bắt tay 3 bước trước khi gửi",
+    "optionB": "Không bắt tay trước khi gửi, không đảm bảo dữ liệu tới nơi hay đúng thứ tự",
+    "optionC": "Chỉ hoạt động trong mạng LAN",
+    "optionD": "Luôn mã hóa dữ liệu",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 40,
+    "question": "Nếu 1 cổng switch KHÔNG được cấu hình VLAN thủ công, cổng đó mặc định thuộc VLAN nào?",
+    "optionA": "Không thuộc VLAN nào",
+    "optionB": "VLAN 1",
+    "optionC": "VLAN 4094",
+    "optionD": "VLAN cuối cùng được tạo",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 41,
+    "question": "Root Port trên 1 switch (không phải Root Bridge) là cổng nào?",
+    "optionA": "Cổng có cost tới Root Bridge cao nhất",
+    "optionB": "Cổng có cost tới Root Bridge thấp nhất trên switch đó",
+    "optionC": "Cổng luôn ở trạng thái Blocking",
+    "optionD": "Cổng nối trực tiếp với PC",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 42,
+    "question": "Giải thích vì sao trên 1 cổng Trunk có thể tồn tại đồng thời nhiều VLAN, nhưng chỉ có thể có 1 Native VLAN duy nhất trên link đó?",
+    "optionA": "Vì giới hạn phần cứng của switch chỉ xử lý được 1 VLAN không tag",
+    "optionB": "Vì Native VLAN đại diện cho traffic KHÔNG gắn tag (để tương thích ngược với thiết bị cũ không hỗ trợ 802.1Q), mà trên 1 link chỉ có thể tồn tại 1 loại traffic 'không tag' duy nhất, các VLAN còn lại bắt buộc phải gắn tag riêng biệt",
+    "optionC": "Vì đây là giới hạn của giao thức TCP/IP",
+    "optionD": "Không có lý do kỹ thuật cụ thể, chỉ là quy ước",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 43,
+    "question": "Kỹ thuật Double Tagging VLAN Hopping lợi dụng điều gì trong cơ chế xử lý Native VLAN của switch?",
+    "optionA": "Lợi dụng việc switch mã hóa toàn bộ VLAN",
+    "optionB": "Gắn 2 lớp tag VLAN; switch đầu tiên bóc lớp tag Native (không tag) rồi chuyển tiếp frame, còn lớp tag VLAN thứ 2 vẫn ẩn bên trong để tới được switch kế tiếp thuộc VLAN khác",
+    "optionC": "Lợi dụng lỗi phần cứng của switch cũ",
+    "optionD": "Không liên quan gì tới Native VLAN",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 44,
+    "question": "Thứ tự ĐÚNG của TCP 3-way Handshake là gì?",
+    "optionA": "SYN -> ACK -> SYN-ACK",
+    "optionB": "SYN -> SYN-ACK -> ACK",
+    "optionC": "ACK -> SYN -> SYN-ACK",
+    "optionD": "SYN-ACK -> SYN -> ACK",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 45,
+    "question": "Chuẩn nào dùng để gắn thẻ (tag) VLAN trên đường Trunk?",
+    "optionA": "802.11",
+    "optionB": "802.1Q",
+    "optionC": "802.3",
+    "optionD": "802.1X",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 46,
+    "question": "Trong thiết kế mạng doanh nghiệp, vì sao khuyến nghị KHÔNG dùng VLAN 1 làm VLAN quản lý (Management VLAN)?",
+    "optionA": "Vì VLAN 1 không hỗ trợ định tuyến",
+    "optionB": "Vì VLAN 1 là VLAN mặc định, dễ bị nhắm tới khi tấn công nếu không được thay đổi, nên tách riêng VLAN quản lý giúp tăng bảo mật",
+    "optionC": "Vì VLAN 1 chỉ dùng được cho Voice VLAN",
+    "optionD": "Vì VLAN 1 không tồn tại trên switch Cisco",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 47,
+    "question": "Subnet /30 thường được dùng phổ biến nhất cho mục đích gì?",
+    "optionA": "Mạng LAN lớn",
+    "optionB": "Kết nối point-to-point giữa 2 router",
+    "optionC": "DHCP pool lớn",
+    "optionD": "Mạng Wifi công cộng",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 48,
+    "question": "Trong 1 topology có 3 switch nối thành hình tam giác (mỗi cặp switch có 1 link trực tiếp, tổng 3 link), STP cần chặn (block) tối thiểu bao nhiêu cổng để loại bỏ hoàn toàn vòng lặp?",
+    "optionA": "0 cổng",
+    "optionB": "1 cổng",
+    "optionC": "2 cổng",
+    "optionD": "3 cổng",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 49,
+    "question": "Một công ty muốn IP Phone và PC cùng cắm chung 1 cổng switch (PC cắm qua cổng phụ trên điện thoại) nhưng traffic thoại và dữ liệu phải tách biệt logic. Giải pháp phù hợp là gì?",
+    "optionA": "Dùng 2 cổng switch riêng cho điện thoại và PC",
+    "optionB": "Cấu hình Voice VLAN kết hợp với Access VLAN dữ liệu trên cùng 1 cổng switch",
+    "optionC": "Cấu hình cổng đó thành Trunk cho toàn bộ VLAN",
+    "optionD": "Không thể thực hiện được",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 50,
+    "question": "Cổng (port) nào sau đây dùng cho giao thức HTTPS?",
+    "optionA": "80",
+    "optionB": "443",
+    "optionC": "53",
+    "optionD": "22",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 51,
+    "question": "VTP Transparent mode hoạt động thế nào?",
+    "optionA": "Tạo VLAN và đồng bộ như Server",
+    "optionB": "Không tham gia đồng bộ VTP, chỉ chuyển tiếp thông tin VTP đi qua, tự quản lý VLAN riêng",
+    "optionC": "Không thể có VLAN nào",
+    "optionD": "Giống hệt Client mode",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 52,
+    "question": "Nếu Native VLAN không khớp giữa 2 đầu trunk, điều gì có thể xảy ra?",
+    "optionA": "Không có ảnh hưởng gì",
+    "optionB": "Gây lỗi VLAN mismatch, có thể khiến traffic rò rỉ nhầm giữa các VLAN",
+    "optionC": "Trunk tự động tắt vĩnh viễn",
+    "optionD": "Switch tự khởi động lại",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 53,
+    "question": "Lệnh nào dùng để kiểm tra danh sách VLAN hiện có trên switch cùng các cổng thuộc từng VLAN?",
+    "optionA": "show interfaces trunk",
+    "optionB": "show vlan brief",
+    "optionC": "show running-config vlan",
+    "optionD": "show mac address-table",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 54,
+    "question": "Star Topology có ưu điểm chính nào?",
+    "optionA": "Không cần thiết bị trung tâm",
+    "optionB": "Dễ quản lý, dễ cô lập lỗi khi 1 nhánh hỏng",
+    "optionC": "Chi phí luôn thấp nhất tuyệt đối",
+    "optionD": "Không có điểm lỗi trung tâm",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 55,
+    "question": "Bảng nơi Switch lưu địa chỉ MAC đã học được gọi là gì?",
+    "optionA": "Routing Table",
+    "optionB": "MAC Address Table (CAM Table)",
+    "optionC": "ARP Table",
+    "optionD": "NAT Table",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 56,
+    "question": "Dải địa chỉ nào sau đây là Link-Local Address trong IPv6?",
+    "optionA": "2000::/3",
+    "optionB": "fe80::/10",
+    "optionC": "ff00::/8",
+    "optionD": "fc00::/7",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 57,
+    "question": "Nếu 1 cổng switch đang ở trạng thái Listening trong STP, cổng đó đã bắt đầu học địa chỉ MAC vào bảng CAM chưa?",
+    "optionA": "Đã học bình thường",
+    "optionB": "Chưa, Listening chỉ tham gia bầu chọn Root Port/Designated Port, chưa học MAC",
+    "optionC": "Chỉ học MAC Broadcast",
+    "optionD": "Không xác định được",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 58,
+    "question": "De-encapsulation diễn ra ở đâu trong quá trình truyền dữ liệu?",
+    "optionA": "Ở thiết bị gửi",
+    "optionB": "Ở thiết bị nhận, bóc dần từng lớp header",
+    "optionC": "Ở thiết bị trung gian (switch)",
+    "optionD": "Không tồn tại thực tế",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 59,
+    "question": "Lệnh nào dùng để vào Global Configuration mode?",
+    "optionA": "enable",
+    "optionB": "configure terminal",
+    "optionC": "show running-config",
+    "optionD": "interface vlan 1",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 60,
+    "question": "Global Unicast Address (GUA) trong IPv6 tương đương khái niệm nào của IPv4?",
+    "optionA": "Private IP",
+    "optionB": "Public IP",
+    "optionC": "Loopback IP",
+    "optionD": "Multicast IP",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 61,
+    "question": "Switch A và Switch B nối qua trunk. Switch B chỉ cho phép VLAN 10,20 đi qua trunk (lệnh switchport trunk allowed vlan 10,20), nhưng Switch A gửi frame thuộc VLAN 30. Điều gì xảy ra?",
+    "optionA": "Frame VLAN 30 vẫn qua được bình thường",
+    "optionB": "Frame VLAN 30 bị chặn tại Switch B, giao tiếp VLAN 30 giữa 2 switch bị gián đoạn",
+    "optionC": "Switch B tự động thêm VLAN 30 vào danh sách cho phép",
+    "optionD": "Toàn bộ trunk bị tắt",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 62,
+    "question": "VLAN ID hợp lệ trong dải normal range nằm trong khoảng nào?",
+    "optionA": "1-1005",
+    "optionB": "1-100",
+    "optionC": "1-4094",
+    "optionD": "0-1000",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 63,
+    "question": "Tầng nào trong OSI chịu trách nhiệm truyền bit thô (0 và 1) qua cáp/sóng?",
+    "optionA": "Physical (Layer 1)",
+    "optionB": "Data Link (Layer 2)",
+    "optionC": "Network (Layer 3)",
+    "optionD": "Session (Layer 5)",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 64,
+    "question": "Một switch cũ từng là VTP Server với VLAN database lỗi thời (Revision Number rất cao) vô tình được cắm vào mạng doanh nghiệp đang hoạt động. Hậu quả nghiêm trọng nào có thể xảy ra?",
+    "optionA": "Không có hậu quả gì vì switch cũ sẽ tự động cập nhật theo mạng mới",
+    "optionB": "Switch cũ với Revision Number cao hơn sẽ ghi đè và XÓA toàn bộ VLAN hợp lệ hiện có trên toàn VTP domain",
+    "optionC": "Chỉ ảnh hưởng tới chính switch cũ đó",
+    "optionD": "Mạng sẽ tự chuyển sang Transparent mode để bảo vệ",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 65,
+    "question": "Rapid-PVST+ (802.1w) khác biệt với PVST+ (802.1D) truyền thống ở điểm nào?",
+    "optionA": "Rapid-PVST+ không hỗ trợ nhiều VLAN",
+    "optionB": "Rapid-PVST+ có thời gian hội tụ nhanh hơn đáng kể (vài giây) so với PVST+ (30-50 giây)",
+    "optionC": "Rapid-PVST+ chỉ dùng được trên switch Layer 3",
+    "optionD": "Không có khác biệt thực tế",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 66,
+    "question": "So sánh cơ chế phát hiện thay đổi topology giữa 802.1D (dựa vào Max Age timer hết hạn) và 802.1w/Rapid-PVST+ (dùng cơ chế Proposal/Agreement), vì sao 802.1w hội tụ nhanh hơn đáng kể?",
+    "optionA": "802.1w không cần phát hiện thay đổi topology",
+    "optionB": "802.1w chủ động trao đổi trạng thái trực tiếp (handshake) giữa các switch lân cận ngay khi có thay đổi, thay vì bị động chờ timer hết hạn như 802.1D",
+    "optionC": "802.1w chỉ hoạt động trên switch Layer 3 nên nhanh hơn",
+    "optionD": "Không có sự khác biệt thực chất",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 67,
+    "question": "Địa chỉ nào sau đây thuộc dải Private IP theo RFC 1918?",
+    "optionA": "172.32.5.1",
+    "optionB": "10.20.30.40",
+    "optionC": "224.0.0.1",
+    "optionD": "192.170.1.1",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 68,
+    "question": "Switch có Bridge ID thấp nhất trong STP sẽ trở thành vai trò gì?",
+    "optionA": "Backup Bridge",
+    "optionB": "Root Bridge",
+    "optionC": "Designated Bridge",
+    "optionD": "Standby Bridge",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 69,
+    "question": "Vì sao cần chia VLAN trong 1 switch vật lý?",
+    "optionA": "Chỉ để đặt tên đẹp cho mạng",
+    "optionB": "Giảm kích thước broadcast domain, tăng bảo mật, tổ chức mạng theo logic công việc",
+    "optionC": "Để switch chạy nhanh hơn về phần cứng",
+    "optionD": "Bắt buộc theo chuẩn IEEE mọi lúc",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 70,
+    "question": "Vì sao STP cần có Blocking Port thay vì để tất cả các cổng đều Forwarding?",
+    "optionA": "Để tiết kiệm điện năng cho switch",
+    "optionB": "Để tránh Switching Loop, cổng Blocking không forward traffic nhưng vẫn lắng nghe BPDU để phản ứng khi topology thay đổi",
+    "optionC": "Để tăng tốc độ truyền dữ liệu",
+    "optionD": "Blocking Port không có tác dụng thực tế",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 71,
+    "question": "Thiết bị nào hoạt động ở Layer 3, chịu trách nhiệm định tuyến giữa các mạng khác nhau?",
+    "optionA": "Switch Layer 2",
+    "optionB": "Router",
+    "optionC": "Hub",
+    "optionD": "Access Point",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 72,
+    "question": "VLAN mặc định trên switch Cisco (tất cả cổng mặc định thuộc VLAN nào)?",
+    "optionA": "VLAN 0",
+    "optionB": "VLAN 1",
+    "optionC": "VLAN 10",
+    "optionD": "VLAN 100",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 73,
+    "question": "Native VLAN trên trunk có đặc điểm gì?",
+    "optionA": "Là VLAN duy nhất bị gắn tag",
+    "optionB": "Là VLAN duy nhất KHÔNG bị gắn tag khi đi qua trunk",
+    "optionC": "Không tồn tại trên trunk",
+    "optionD": "Chỉ dùng cho Voice VLAN",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 74,
+    "question": "Voice VLAN dùng để làm gì?",
+    "optionA": "Tăng tốc độ mạng tổng thể",
+    "optionB": "Tách traffic thoại từ IP Phone khỏi traffic dữ liệu thông thường trên cùng 1 cổng switch",
+    "optionC": "Chặn toàn bộ cuộc gọi VoIP",
+    "optionD": "Chỉ dùng cho Wifi",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 75,
+    "question": "VTP Domain Name có vai trò gì trong việc đồng bộ VLAN giữa các switch?",
+    "optionA": "Không có vai trò gì",
+    "optionB": "Các switch phải cùng VTP Domain Name mới đồng bộ thông tin VLAN cho nhau",
+    "optionC": "Chỉ ảnh hưởng tới tốc độ mạng",
+    "optionD": "Chỉ cần thiết khi dùng IPv6",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 76,
+    "question": "Mỗi cổng switch hiện đại (full-duplex) tương ứng với bao nhiêu Collision Domain?",
+    "optionA": "0",
+    "optionB": "1 (riêng biệt cho mỗi cổng)",
+    "optionC": "Toàn switch chỉ có 1 collision domain chung",
+    "optionD": "Không xác định được",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 77,
+    "question": "PDU tại tầng Data Link (Layer 2) được gọi là gì?",
+    "optionA": "Packet",
+    "optionB": "Frame",
+    "optionC": "Segment",
+    "optionD": "Bits",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 78,
+    "question": "Lệnh 'show running-config' dùng để làm gì?",
+    "optionA": "Xem cấu hình đã lưu trong NVRAM",
+    "optionB": "Xem cấu hình hiện tại đang chạy trong RAM",
+    "optionC": "Xóa toàn bộ cấu hình",
+    "optionD": "Khởi động lại switch",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 79,
+    "question": "EtherChannel giúp ích gì cho hoạt động của STP trên các link được gộp?",
+    "optionA": "Không liên quan gì tới STP",
+    "optionB": "STP coi toàn bộ các link vật lý trong 1 EtherChannel là 1 link logic duy nhất, nên không chặn (block) các link riêng lẻ bên trong đó",
+    "optionC": "STP sẽ tự động chặn EtherChannel",
+    "optionD": "EtherChannel thay thế hoàn toàn chức năng của STP",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 80,
+    "question": "EtherChannel được dùng để làm gì?",
+    "optionA": "Mã hóa dữ liệu giữa 2 switch",
+    "optionB": "Gộp nhiều link vật lý riêng biệt thành 1 logical link duy nhất",
+    "optionC": "Chia 1 link vật lý thành nhiều link ảo",
+    "optionD": "Tăng số lượng VLAN tối đa",
+    "correctAnswer": "B",
+    "points": 1
+  }
+]

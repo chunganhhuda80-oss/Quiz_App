@@ -1,0 +1,702 @@
+[
+  {
+    "id": 1,
+    "question": "Vì sao FTP dùng tới 2 port riêng biệt (20 và 21)?",
+    "optionA": "Port 21 dùng cho kênh điều khiển (control), Port 20 dùng cho kênh truyền dữ liệu (data)",
+    "optionB": "Cả 2 port đều dùng cho cùng 1 mục đích để tăng tốc độ",
+    "optionC": "Đây là lỗi thiết kế không có lý do",
+    "optionD": "Chỉ để tương thích ngược",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 2,
+    "question": "Vì sao việc chặn ICMP (thường dùng để test bằng ping) không đồng nghĩa với việc chặn được toàn bộ khả năng do thám (reconnaissance) mạng của kẻ tấn công, khi các cổng TCP/UDP vẫn có thể được quét (port scan)?",
+    "optionA": "Vì kẻ tấn công vẫn có thể gửi trực tiếp gói TCP SYN hoặc UDP tới từng port để xác định port nào đang mở/đóng, mà không cần dựa vào ICMP",
+    "optionB": "Vì ICMP không liên quan gì tới bảo mật mạng",
+    "optionC": "Vì việc chặn ICMP tự động chặn luôn TCP/UDP",
+    "optionD": "Vì port scan chỉ hoạt động khi ICMP được bật",
+    "correctAnswer": "A",
+    "points": 4
+  },
+  {
+    "id": 3,
+    "question": "Wireshark bắt được 1 gói tin với cờ SYN=1 và ACK=0. Đây là gói tin nào trong quá trình 3-way handshake?",
+    "optionA": "Gói đầu tiên (SYN) từ Client",
+    "optionB": "Gói thứ 2 (SYN-ACK) từ Server",
+    "optionC": "Gói thứ 3 (ACK) từ Client",
+    "optionD": "Không thuộc quá trình handshake",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 4,
+    "question": "Một ứng dụng cần truyền dữ liệu cực kỳ nhạy cảm về mặt thời gian thực (game bắn súng online) nhưng có thể chấp nhận mất vài gói tin nhỏ. Giao thức tầng Transport nào PHÙ HỢP hơn?",
+    "optionA": "TCP, vì luôn đảm bảo tin cậy",
+    "optionB": "UDP, vì độ trễ thấp hơn quan trọng hơn việc đảm bảo mọi gói đều tới nơi",
+    "optionC": "Cả 2 đều không phù hợp",
+    "optionD": "ICMP",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 5,
+    "question": "Windowing trong TCP có chức năng gì?",
+    "optionA": "Mã hóa dữ liệu",
+    "optionB": "Kiểm soát luồng (Flow Control), giới hạn số byte gửi trước khi cần ACK để tránh làm ngập bên nhận",
+    "optionC": "Định tuyến gói tin",
+    "optionD": "Nén dữ liệu",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 6,
+    "question": "Trong quá trình chuyển đổi dần từ IPv4 sang IPv6, kỹ thuật nào cho phép đóng gói (encapsulate) gói tin IPv6 bên trong gói tin IPv4 để truyền qua hạ tầng mạng chỉ hỗ trợ IPv4?",
+    "optionA": "Dual-stack",
+    "optionB": "NAT64",
+    "optionC": "Tunneling (VD 6to4, ISATAP)",
+    "optionD": "SLAAC",
+    "correctAnswer": "C",
+    "points": 4
+  },
+  {
+    "id": 7,
+    "question": "Sự khác biệt cơ bản giữa SLAAC và DHCPv6 là gì?",
+    "optionA": "SLAAC dùng cho IPv4, DHCPv6 dùng cho IPv6",
+    "optionB": "SLAAC thiết bị tự cấu hình dựa trên Router Advertisement, DHCPv6 cấp phát tập trung qua server (Stateful)",
+    "optionC": "Không có khác biệt",
+    "optionD": "DHCPv6 chỉ hoạt động khi không có router",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 8,
+    "question": "FCS trong Ethernet Frame nằm ở phần nào?",
+    "optionA": "Header",
+    "optionB": "Giữa frame",
+    "optionC": "Trailer",
+    "optionD": "Không tồn tại",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 9,
+    "question": "Vì sao TCP cần cơ chế 3-way handshake thay vì chỉ cần 2-way (gửi SYN rồi nhận ACK) để thiết lập kết nối?",
+    "optionA": "Vì 2-way không thể xác nhận CẢ 2 chiều truyền tin đều sẵn sàng - client cần biết server đã nhận đúng SYN, và server cần client xác nhận đã nhận SYN-ACK của mình",
+    "optionB": "Vì quy định kỹ thuật yêu cầu đúng 3 bước, không có lý do logic cụ thể",
+    "optionC": "Để tăng độ trễ nhằm bảo mật hơn",
+    "optionD": "Để tránh việc phải dùng Sequence Number",
+    "correctAnswer": "A",
+    "points": 4
+  },
+  {
+    "id": 10,
+    "question": "IPv6 có khái niệm địa chỉ Broadcast giống IPv4 không?",
+    "optionA": "Có, giống hệt IPv4",
+    "optionB": "Không, IPv6 dùng Multicast thay cho Broadcast",
+    "optionC": "Có nhưng chỉ dùng nội bộ",
+    "optionD": "Chỉ có trên thiết bị Cisco",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 11,
+    "question": "Cờ (flag) nào trong TCP dùng để khởi tạo kết nối?",
+    "optionA": "ACK",
+    "optionB": "FIN",
+    "optionC": "SYN",
+    "optionD": "RST",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 12,
+    "question": "Địa chỉ IPv6 nào sau đây thuộc dải Unique Local Address (ULA)?",
+    "optionA": "2001:db8::1",
+    "optionB": "fc00::1",
+    "optionC": "fe80::1",
+    "optionD": "ff00::1",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 13,
+    "question": "So sánh Anycast trong IPv6 với Load Balancing truyền thống, điểm khác biệt cốt lõi là gì?",
+    "optionA": "Anycast định tuyến gói tin tới điểm gần nhất về mặt topology dựa trên routing table, trong khi Load Balancer thường phân phối traffic dựa trên thuật toán ở tầng ứng dụng",
+    "optionB": "Anycast chỉ hoạt động trong IPv4",
+    "optionC": "Không có khác biệt",
+    "optionD": "Anycast luôn chậm hơn Load Balancing",
+    "correctAnswer": "A",
+    "points": 4
+  },
+  {
+    "id": 14,
+    "question": "Trong 1 phiên TCP, Client gửi SYN với Sequence Number = 1000. Server phản hồi SYN-ACK với Acknowledgment Number là bao nhiêu?",
+    "optionA": "1000",
+    "optionB": "1001",
+    "optionC": "999",
+    "optionD": "2000",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 15,
+    "question": "Một thiết bị trong mạng Dual-stack ping IPv4 thành công nhưng ping6 IPv6 thất bại dù đã cấu hình địa chỉ Global Unicast đúng. Nguyên nhân ÍT khả năng nhất trong các lựa chọn sau là gì?",
+    "optionA": "Router chưa gửi Router Advertisement đúng cách",
+    "optionB": "Firewall chặn traffic ICMPv6",
+    "optionC": "Subnet mask IPv4 bị cấu hình sai",
+    "optionD": "Địa chỉ IPv6 Link-Local bị conflict hoặc chưa hình thành đúng",
+    "correctAnswer": "C",
+    "points": 4
+  },
+  {
+    "id": 16,
+    "question": "So sánh hệ quả khi Congestion Control của TCP hoạt động (tự giảm tốc độ gửi khi nghẽn) với việc UDP hoàn toàn không có Congestion Control. Điều gì có thể xảy ra nếu 1 ứng dụng UDP truyền dữ liệu lớn trong mạng đang nghẽn, cùng lúc với các phiên TCP khác?",
+    "optionA": "UDP sẽ tự động nhường băng thông cho TCP",
+    "optionB": "UDP không giảm tốc độ gửi dù mạng nghẽn, có thể chiếm phần lớn băng thông và làm các phiên TCP (vốn tự giảm tốc độ) bị thiệt thòi",
+    "optionC": "Không có ảnh hưởng gì giữa 2 loại traffic",
+    "optionD": "UDP sẽ tự chuyển sang dùng TCP khi phát hiện nghẽn",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 17,
+    "question": "Vì sao mô hình mạng cần chia thành nhiều tầng (như OSI) thay vì gộp chung?",
+    "optionA": "Để mỗi tầng đảm nhiệm chức năng riêng, dễ thiết kế/gỡ lỗi/thay thế độc lập",
+    "optionB": "Không có lý do kỹ thuật cụ thể",
+    "optionC": "Để tăng số lượng thiết bị cần mua",
+    "optionD": "Để giảm tốc độ truyền dữ liệu",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 18,
+    "question": "Cho địa chỉ 192.168.5.70/26, Network Address của subnet chứa địa chỉ này là gì?",
+    "optionA": "192.168.5.0",
+    "optionB": "192.168.5.64",
+    "optionC": "192.168.5.128",
+    "optionD": "192.168.5.32",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 19,
+    "question": "Giải thích cơ chế EUI-64 dùng để tự động tạo Interface ID (64-bit sau) từ địa chỉ MAC 48-bit trong quá trình SLAAC. Bước nào sau đây mô tả ĐÚNG quy trình này?",
+    "optionA": "Chèn giá trị FFFE vào giữa 24-bit đầu và 24-bit sau của MAC, rồi đảo bit thứ 7 (U/L bit) của byte đầu tiên",
+    "optionB": "Nhân đôi giá trị MAC address",
+    "optionC": "Đảo ngược toàn bộ thứ tự byte của MAC",
+    "optionD": "Thêm số 0 vào cuối MAC address cho đủ 64-bit",
+    "correctAnswer": "A",
+    "points": 4
+  },
+  {
+    "id": 20,
+    "question": "Địa chỉ nào sau đây thuộc dải Private IP theo RFC 1918?",
+    "optionA": "172.32.0.1",
+    "optionB": "172.16.0.1",
+    "optionC": "11.0.0.1",
+    "optionD": "192.169.0.1",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 21,
+    "question": "Prefix length phổ biến nhất được khuyến nghị cho 1 mạng LAN IPv6 là gì?",
+    "optionA": "/48",
+    "optionB": "/56",
+    "optionC": "/64",
+    "optionD": "/128",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 22,
+    "question": "Với subnet mask /29, số host khả dụng tối đa mỗi subnet là bao nhiêu?",
+    "optionA": "2",
+    "optionB": "6",
+    "optionC": "14",
+    "optionD": "30",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 23,
+    "question": "Dual-stack nghĩa là gì?",
+    "optionA": "Thiết bị chỉ chạy IPv6",
+    "optionB": "Thiết bị chạy đồng thời cả IPv4 và IPv6",
+    "optionC": "Thiết bị chuyển đổi IPv4 sang IPv6 hoàn toàn",
+    "optionD": "Thiết bị không hỗ trợ định tuyến",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 24,
+    "question": "Địa chỉ nào sau đây là 1 địa chỉ IPv6 Link-Local hợp lệ?",
+    "optionA": "2001:db8::1",
+    "optionB": "fe80::a1b2:c3d4",
+    "optionC": "192.168.1.1",
+    "optionD": "fe80:1234:5678",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 25,
+    "question": "Vì sao UDP thường được chọn cho các ứng dụng như streaming video/audio, VoIP thay vì TCP?",
+    "optionA": "UDP mã hóa dữ liệu tốt hơn",
+    "optionB": "UDP ưu tiên tốc độ, chấp nhận mất gói nhỏ thay vì làm chậm để đảm bảo tin cậy như TCP",
+    "optionC": "UDP có nhiều port hơn TCP",
+    "optionD": "UDP không thể dùng cho các ứng dụng thời gian thực",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 26,
+    "question": "Một ứng dụng VoIP dùng UDP nhưng vẫn cần đảm bảo chất lượng thoại chấp nhận được dù mạng có tỷ lệ mất gói nhất định. Kỹ thuật nào KHÔNG thuộc về tầng Transport mà ứng dụng phải tự triển khai ở tầng cao hơn để bù đắp cho việc UDP không đảm bảo tin cậy?",
+    "optionA": "TCP Retransmission",
+    "optionB": "TCP Windowing",
+    "optionC": "Forward Error Correction (FEC) hoặc buffer/jitter tại tầng ứng dụng",
+    "optionD": "TCP 3-way handshake",
+    "correctAnswer": "C",
+    "points": 4
+  },
+  {
+    "id": 27,
+    "question": "Dải địa chỉ nào sau đây dùng cho Multicast trong IPv6?",
+    "optionA": "fe80::/10",
+    "optionB": "fc00::/7",
+    "optionC": "ff00::/8",
+    "optionD": "2000::/3",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 28,
+    "question": "Lý do chính khiến IPv6 ra đời là gì?",
+    "optionA": "IPv6 nhanh hơn IPv4",
+    "optionB": "Địa chỉ IPv4 (khoảng 4.3 tỷ) không đủ đáp ứng số lượng thiết bị kết nối Internet ngày càng tăng",
+    "optionC": "IPv4 không hỗ trợ mã hóa",
+    "optionD": "IPv4 không tương thích với cáp quang",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 29,
+    "question": "Nếu bên gửi TCP có Window Size = 4000 byte và đã gửi 3000 byte chưa nhận ACK, bên gửi còn có thể gửi tối đa bao nhiêu byte nữa trước khi phải dừng chờ ACK?",
+    "optionA": "1000 byte",
+    "optionB": "3000 byte",
+    "optionC": "4000 byte",
+    "optionD": "7000 byte",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 30,
+    "question": "Cổng (port) nào sau đây dùng cho giao thức DNS?",
+    "optionA": "53",
+    "optionB": "80",
+    "optionC": "443",
+    "optionD": "25",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 31,
+    "question": "Tầng nào trong OSI chịu trách nhiệm mã hóa dữ liệu (VD SSL/TLS)?",
+    "optionA": "Application (Layer 7)",
+    "optionB": "Presentation (Layer 6)",
+    "optionC": "Session (Layer 5)",
+    "optionD": "Transport (Layer 4)",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 32,
+    "question": "UDP có đặc điểm cơ bản nào sau đây?",
+    "optionA": "Connection-oriented, đảm bảo tin cậy",
+    "optionB": "Connectionless, không đảm bảo tin cậy",
+    "optionC": "Chỉ dùng cho FTP",
+    "optionD": "Luôn có handshake như TCP",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 33,
+    "question": "Trong mô hình 3-tier, tầng nào đóng vai trò trung gian, thực hiện routing giữa các VLAN?",
+    "optionA": "Access",
+    "optionB": "Distribution",
+    "optionC": "Core",
+    "optionD": "Edge",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 34,
+    "question": "Cờ nào trong TCP dùng để kết thúc kết nối bình thường?",
+    "optionA": "SYN",
+    "optionB": "FIN",
+    "optionC": "RST",
+    "optionD": "URG",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 35,
+    "question": "Access Layer trong mô hình 3-tier chịu trách nhiệm chính nào?",
+    "optionA": "Định tuyến liên mạng lớn",
+    "optionB": "Nơi end device kết nối vào, thực hiện VLAN/Port Security",
+    "optionC": "Chuyển tiếp traffic tốc độ cao xuyên toàn mạng",
+    "optionD": "Kết nối ra Internet",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 36,
+    "question": "Full Mesh Topology có nhược điểm chính là gì?",
+    "optionA": "Không có dự phòng",
+    "optionB": "Tốn chi phí do số lượng kết nối lớn",
+    "optionC": "Không hỗ trợ cáp quang",
+    "optionD": "Dễ bị lỗi khi 1 nhánh hỏng",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 37,
+    "question": "Trong 1 mạng Dual-stack, nếu DNS trả về cả bản ghi A (IPv4) và AAAA (IPv6) cho cùng 1 tên miền, thiết bị hỗ trợ đầy đủ IPv6 mặc định thường có xu hướng ưu tiên dùng loại địa chỉ nào để kết nối?",
+    "optionA": "Luôn ưu tiên IPv4",
+    "optionB": "Luôn ưu tiên IPv6 theo cơ chế ưu tiên IPv6 mặc định của hệ điều hành hiện đại",
+    "optionC": "Ngẫu nhiên không theo quy tắc",
+    "optionD": "Bắt buộc phải cấu hình tay",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 38,
+    "question": "Broadcast Domain thường bị giới hạn bởi thiết bị nào (nếu không chia VLAN)?",
+    "optionA": "Switch",
+    "optionB": "Hub",
+    "optionC": "Router",
+    "optionD": "Access Point",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 39,
+    "question": "Nếu 1 tổ chức được cấp prefix IPv6 /48 và muốn chia thành các subnet /64 cho từng phòng ban, họ có thể tạo ra tối đa bao nhiêu subnet /64?",
+    "optionA": "256",
+    "optionB": "4096",
+    "optionC": "65536",
+    "optionD": "16",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 40,
+    "question": "Dải địa chỉ nào sau đây là Link-Local Address trong IPv6?",
+    "optionA": "2000::/3",
+    "optionB": "fe80::/10",
+    "optionC": "ff00::/8",
+    "optionD": "fc00::/7",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 41,
+    "question": "Header của UDP đơn giản hơn TCP rất nhiều vì lý do gì?",
+    "optionA": "UDP không cần trường Source Port và Dest Port",
+    "optionB": "UDP không có các trường Sequence Number, ACK Number, Flags như TCP vì không cần cơ chế đảm bảo tin cậy/thứ tự",
+    "optionC": "UDP không hỗ trợ Checksum",
+    "optionD": "UDP chỉ hoạt động ở Layer 2",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 42,
+    "question": "Unique Local Address (ULA) trong IPv6 tương đương khái niệm nào của IPv4?",
+    "optionA": "Public IP",
+    "optionB": "Private IP",
+    "optionC": "Broadcast IP",
+    "optionD": "Multicast IP",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 43,
+    "question": "SLAAC là viết tắt của cụm từ nào?",
+    "optionA": "Static Local Address Auto Configuration",
+    "optionB": "Stateless Address Autoconfiguration",
+    "optionC": "Secure Link Address Auto Check",
+    "optionD": "System Layer Address Auto Config",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 44,
+    "question": "Một Firewall chặn toàn bộ traffic UDP nhưng cho phép TCP. Dịch vụ nào sau đây có khả năng KHÔNG hoạt động được bình thường?",
+    "optionA": "HTTP (port 80)",
+    "optionB": "HTTPS (port 443)",
+    "optionC": "DNS Query (thường dùng UDP port 53)",
+    "optionD": "SSH (port 22)",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 45,
+    "question": "IPv6 có kích thước bao nhiêu bit?",
+    "optionA": "32-bit",
+    "optionB": "64-bit",
+    "optionC": "128-bit",
+    "optionD": "256-bit",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 46,
+    "question": "Vì sao thiết kế IPv6 quyết định loại bỏ hoàn toàn khái niệm Broadcast (vốn tồn tại trong IPv4) và thay bằng Multicast?",
+    "optionA": "Vì Multicast dễ cấu hình hơn Broadcast",
+    "optionB": "Vì Broadcast gây lãng phí băng thông khi gửi tới toàn bộ thiết bị dù không phải tất cả đều cần nhận, Multicast cho phép chỉ gửi tới nhóm thiết bị thực sự quan tâm",
+    "optionC": "Vì phần cứng hiện đại không hỗ trợ Broadcast",
+    "optionD": "Không có lý do kỹ thuật cụ thể",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 47,
+    "question": "Sự khác biệt giữa Well-known Port và Dynamic Port là gì?",
+    "optionA": "Well-known Port (0-1023) dành cho dịch vụ chuẩn, Dynamic Port (49152-65535) thường dùng tạm thời cho client",
+    "optionB": "Không có khác biệt",
+    "optionC": "Dynamic Port chỉ dùng cho UDP",
+    "optionD": "Well-known Port chỉ dùng cho IPv6",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 48,
+    "question": "PDU tại tầng Network (Layer 3) được gọi là gì?",
+    "optionA": "Frame",
+    "optionB": "Packet",
+    "optionC": "Segment",
+    "optionD": "Bits",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 49,
+    "question": "Thiết bị nào hoạt động chủ yếu ở Layer 2, dùng MAC Address Table để chuyển mạch?",
+    "optionA": "Router",
+    "optionB": "Switch Layer 2",
+    "optionC": "Firewall",
+    "optionD": "Access Point",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 50,
+    "question": "Increment (block size) của subnet mask 255.255.255.240 là bao nhiêu?",
+    "optionA": "8",
+    "optionB": "16",
+    "optionC": "32",
+    "optionD": "4",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 51,
+    "question": "Global Unicast Address (GUA) trong IPv6 tương đương khái niệm nào của IPv4?",
+    "optionA": "Private IP",
+    "optionB": "Public IP",
+    "optionC": "Loopback IP",
+    "optionD": "APIPA",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 52,
+    "question": "Thứ tự ĐÚNG của quá trình TCP 4-way Termination khi bên A muốn đóng kết nối trước là gì?",
+    "optionA": "A gửi FIN -> B gửi ACK -> B gửi FIN -> A gửi ACK",
+    "optionB": "A gửi ACK -> B gửi FIN -> A gửi FIN -> B gửi ACK",
+    "optionC": "A gửi SYN -> B gửi SYN-ACK -> A gửi ACK -> Kết thúc",
+    "optionD": "A gửi RST ngay lập tức",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 53,
+    "question": "TCP là giao thức hoạt động ở tầng nào?",
+    "optionA": "Network",
+    "optionB": "Transport",
+    "optionC": "Data Link",
+    "optionD": "Application",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 54,
+    "question": "Nguyên tắc Peer-to-peer Communication trong OSI nghĩa là gì?",
+    "optionA": "Mỗi tầng trên máy gửi chỉ giao tiếp logic với đúng tầng tương ứng ở máy nhận",
+    "optionB": "Chỉ tầng Application giao tiếp được",
+    "optionC": "Các tầng độc lập hoàn toàn",
+    "optionD": "Dữ liệu đi thẳng từ L7 sang L1 của máy nhận",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 55,
+    "question": "Switching method nào kiểm tra toàn bộ FCS trước khi quyết định forward frame?",
+    "optionA": "Cut-through",
+    "optionB": "Store-and-forward",
+    "optionC": "Fragment-free",
+    "optionD": "Flood-forward",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 56,
+    "question": "Encapsulation diễn ra theo đúng thứ tự nào?",
+    "optionA": "Data -> Frame -> Segment -> Packet -> Bits",
+    "optionB": "Data -> Segment -> Packet -> Frame -> Bits",
+    "optionC": "Data -> Packet -> Segment -> Frame -> Bits",
+    "optionD": "Bits -> Frame -> Packet -> Segment -> Data",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 57,
+    "question": "Congestion Control trong TCP hoạt động dựa trên nguyên tắc nào?",
+    "optionA": "Luôn gửi với tốc độ tối đa",
+    "optionB": "Tự động điều chỉnh tốc độ gửi, giảm khi phát hiện dấu hiệu nghẽn mạng (mất gói) rồi tăng dần trở lại",
+    "optionC": "Ngắt kết nối ngay khi có 1 gói bị mất",
+    "optionD": "Không có cơ chế Congestion Control trong TCP",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 58,
+    "question": "Cho địa chỉ 10.1.1.200/27, Broadcast Address của subnet chứa địa chỉ này là gì?",
+    "optionA": "10.1.1.191",
+    "optionB": "10.1.1.223",
+    "optionC": "10.1.1.255",
+    "optionD": "10.1.1.207",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 59,
+    "question": "Một cuộc tấn công gửi hàng loạt gói SYN mà không hoàn thành handshake (không gửi ACK cuối), khiến server giữ nhiều kết nối ở trạng thái 'half-open' tới khi hết tài nguyên. Đây là dạng tấn công gì và tận dụng đặc điểm nào của TCP?",
+    "optionA": "SYN Flood, tận dụng việc server phải cấp phát tài nguyên ngay khi nhận SYN dù chưa hoàn tất handshake",
+    "optionB": "UDP Flood, tận dụng việc UDP không cần handshake",
+    "optionC": "ARP Spoofing, tận dụng bảng ARP Cache",
+    "optionD": "DNS Amplification, tận dụng UDP port 53",
+    "correctAnswer": "A",
+    "points": 4
+  },
+  {
+    "id": 60,
+    "question": "Anycast Address trong IPv6 có đặc điểm gì khác biệt so với Unicast?",
+    "optionA": "Gửi tới tất cả thiết bị trong mạng",
+    "optionB": "1 địa chỉ được gán cho nhiều thiết bị, gói tin đi tới thiết bị gần nhất",
+    "optionC": "Chỉ dùng cho router",
+    "optionD": "Không tồn tại trong IPv6",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 61,
+    "question": "Rút gọn địa chỉ IPv6 sau theo đúng quy tắc: 2001:0db8:0000:0000:0000:ff00:0042:8329",
+    "optionA": "2001:db8::ff00:42:8329",
+    "optionB": "2001:0db8::ff00:0042:8329",
+    "optionC": "2001:db8:0:0:0:ff00:42:8329::",
+    "optionD": "2001:db8:ff00:42:8329::",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 62,
+    "question": "Retransmission trong TCP xảy ra khi nào?",
+    "optionA": "Khi bên gửi không nhận được ACK trong thời gian timeout cho phép",
+    "optionB": "Khi bên nhận yêu cầu gửi lại toàn bộ dữ liệu ngẫu nhiên",
+    "optionC": "Định kỳ mỗi 1 giây bất kể có lỗi hay không",
+    "optionD": "Chỉ xảy ra khi dùng UDP",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 63,
+    "question": "Wildcard mask tương ứng với subnet mask 255.255.255.128 là gì?",
+    "optionA": "0.0.0.128",
+    "optionB": "0.0.0.127",
+    "optionC": "0.0.0.255",
+    "optionD": "0.0.0.0",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 64,
+    "question": "Duplex mismatch (1 đầu half-duplex, đầu kia full-duplex) gây ra hậu quả gì?",
+    "optionA": "Không có hậu quả gì",
+    "optionB": "Collision và giảm hiệu năng nghiêm trọng dù cáp vẫn tốt",
+    "optionC": "Mất kết nối vật lý hoàn toàn",
+    "optionD": "Đổi VLAN tự động",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 65,
+    "question": "Địa chỉ IPv6 được viết dưới dạng nào?",
+    "optionA": "4 nhóm thập phân cách nhau bởi dấu chấm",
+    "optionB": "8 nhóm hexa cách nhau bởi dấu hai chấm",
+    "optionC": "16 nhóm nhị phân",
+    "optionD": "Chuỗi ký tự bất kỳ",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 66,
+    "question": "Ký hiệu '::' trong địa chỉ IPv6 dùng để làm gì và có giới hạn sử dụng ra sao?",
+    "optionA": "Thay thế 1 dãy nhóm toàn số 0 liên tiếp, chỉ được dùng 1 lần trong 1 địa chỉ",
+    "optionB": "Thay thế bất kỳ số nào, dùng nhiều lần tùy ý",
+    "optionC": "Chỉ dùng ở đầu địa chỉ",
+    "optionD": "Không có giới hạn sử dụng",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 67,
+    "question": "Địa chỉ MAC có kích thước bao nhiêu bit?",
+    "optionA": "24-bit",
+    "optionB": "32-bit",
+    "optionC": "48-bit",
+    "optionD": "64-bit",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 68,
+    "question": "Server nhận được các segment TCP với Sequence Number bị đảo thứ tự (segment 3 tới trước segment 2). TCP tại Server xử lý tình huống này như thế nào?",
+    "optionA": "TCP loại bỏ toàn bộ và yêu cầu gửi lại từ đầu",
+    "optionB": "TCP tại tầng Transport sẽ đệm (buffer) các segment đến sau, sắp xếp lại đúng thứ tự dựa trên Sequence Number trước khi chuyển lên tầng Application",
+    "optionC": "TCP chuyển thẳng dữ liệu sai thứ tự lên ứng dụng để ứng dụng tự xử lý",
+    "optionD": "TCP ngắt kết nối ngay lập tức khi phát hiện sai thứ tự",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 69,
+    "question": "Một laptop nhận được Router Advertisement (RA) từ router nhưng trong mạng không có DHCPv6 server. Laptop sẽ tự cấu hình địa chỉ bằng cơ chế nào?",
+    "optionA": "DHCPv6 Stateful",
+    "optionB": "SLAAC",
+    "optionC": "NAT66",
+    "optionD": "Không thể tự cấu hình, phải nhập tay",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 70,
+    "question": "Cổng nào sau đây dùng cho giao thức SSH?",
+    "optionA": "21",
+    "optionB": "22",
+    "optionC": "23",
+    "optionD": "25",
+    "correctAnswer": "B",
+    "points": 1
+  }
+]

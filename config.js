@@ -40,22 +40,22 @@ const CONFIG = {
     {
       id: 3,
       name: "Tuần 3",
-      title: "Tầng Ứng Dụng (HTTP, DNS, DHCP, FTP)",
-      file: "",
+      title: "Tầng Ứng Dụng (HTTP, DNS, DHCP, FTP, ICMP)",
+      file: "questions_tuan3.json",
       durationMinutes: 30,
-      totalQuestions: 0,
-      isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      totalQuestions: 70,
+      isUnlocked: true,
+      description: "70 câu trắc nghiệm (FTP, ICMP, TCP 3-Way Handshake, Tầng Ứng dụng & Transport)"
     },
     {
       id: 4,
       name: "Tuần 4",
-      title: "Tầng Giao Vận (TCP Handshake & UDP)",
-      file: "",
-      durationMinutes: 30,
-      totalQuestions: 0,
-      isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung"
+      title: "Tầng Giao Vận & Mạng (Flow Control, Subnetting, IPv6)",
+      file: "questions_tuan4.json",
+      durationMinutes: 35,
+      totalQuestions: 80,
+      isUnlocked: true,
+      description: "80 câu trắc nghiệm (TCP Flow Control, Ethernet Frame, Chia mạng con Subnetting, IPv6 SLAAC)"
     },
     {
       id: 5,
@@ -176,8 +176,11 @@ const CONFIG = {
     title: "HỆ THỐNG KIỂM TRA TRẮC NGHIỆM THEO TUẦN",
     subject: "Mạng Máy Tính (Networking Fundamentals)",
 
-    // Tự động xáo trộn thứ tự câu hỏi mỗi lần học sinh mở bài (true / false)
+    // Tự động xáo trộn thứ tự câu hỏi mỗi lần học sinh mở bài hoặc làm lại bài (true / false)
     shuffleQuestions: true,
+
+    // Tự động đảo ngẫu nhiên các phương án A, B, C, D trong từng câu hỏi (true / false)
+    shuffleOptions: true,
 
     // Thời gian dừng lại (mili-giây) sau khi bấm chọn đáp án để xem đúng/sai
     autoAdvanceDelayMs: 1100,

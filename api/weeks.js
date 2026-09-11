@@ -46,7 +46,7 @@ module.exports = async (req, res) => {
       console.warn("Lỗi đọc extendsclass:", e);
     }
 
-    return res.status(200).json({ timestamp: 0, weeks: { "1": true, "2": true } });
+    return res.status(200).json({ timestamp: 0, weeks: { "1": true, "2": true, "3": true, "4": true } });
   }
 
   // POST hoặc PUT: Lưu trạng thái mới từ Admin

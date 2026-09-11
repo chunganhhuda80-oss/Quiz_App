@@ -740,15 +740,66 @@ async function loadWeekQuestions(week) {
 }
 
 // ==============================================================================
-// THUẬT TOÁN XÁO TRỘN CÂU HỎI (FISHER-YATES SHUFFLE)
+// THUẬT TOÁN XÁO TRỘN CÂU HỎI & ĐÁP ÁN (FISHER-YATES SHUFFLE)
 // ==============================================================================
-function shuffleQuestions(arr) {
+function shuffleArray(arr) {
   const cloned = [...arr];
   for (let i = cloned.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [cloned[i], cloned[j]] = [cloned[j], cloned[i]];
   }
   return cloned;
+}
+
+function shuffleQuestions(arr) {
+  return prepareQuestionsForQuiz(arr);
+}
+
+/**
+ * Chuẩn bị và xáo trộn ngẫu nhiên bộ câu hỏi thi cũng như vị trí các đáp án A, B, C, D
+ * Đảm bảo mỗi học sinh vào thi và mỗi lần bấm "Làm lại bài thi" (Retry) đều có:
+ * 1. Thứ tự câu hỏi ngẫu nhiên mới hoàn toàn.
+ * 2. Vị trí các đáp án A, B, C, D được tráo đổi ngẫu nhiên, phân phối đều đáp án đúng.
+ */
+function prepareQuestionsForQuiz(rawQuestions) {
+  if (!Array.isArray(rawQuestions) || rawQuestions.length === 0) return [];
+
+  const shouldShuffleOptions = (CONFIG.QUIZ && CONFIG.QUIZ.shuffleOptions !== false);
+  const shouldShuffleQuestions = (CONFIG.QUIZ && CONFIG.QUIZ.shuffleQuestions !== false);
+
+  // 1. Tạo bản sao sâu và đảo ngẫu nhiên các phương án A, B, C, D trong từng câu
+  const processed = rawQuestions.map((q, qIndex) => {
+    const originalCorrect = String(q.correctAnswer || "A").trim().toUpperCase();
+    const options = [
+      { key: "A", text: q.optionA, isCorrect: originalCorrect === "A" },
+      { key: "B", text: q.optionB, isCorrect: originalCorrect === "B" },
+      { key: "C", text: q.optionC, isCorrect: originalCorrect === "C" },
+      { key: "D", text: q.optionD, isCorrect: originalCorrect === "D" }
+    ];
+
+    const shuffledOpts = shouldShuffleOptions ? shuffleArray(options) : [...options];
+    const letters = ["A", "B", "C", "D"];
+    let newCorrect = "A";
+
+    const newQ = {
+      ...q,
+      originalId: q.id !== undefined ? q.id : (qIndex + 1)
+    };
+
+    shuffledOpts.forEach((opt, idx) => {
+      const letter = letters[idx];
+      newQ[`option${letter}`] = opt.text;
+      if (opt.isCorrect) {
+        newCorrect = letter;
+      }
+    });
+
+    newQ.correctAnswer = newCorrect;
+    return newQ;
+  });
+
+  // 2. Đảo ngẫu nhiên thứ tự các câu hỏi trong đề thi
+  return shouldShuffleQuestions ? shuffleArray(processed) : processed;
 }
 
 // ==============================================================================
@@ -806,12 +857,8 @@ function startQuiz() {
   QuizState.username = AuthState.currentUser.username;
   QuizState.startTime = new Date();
 
-  // Xáo trộn thứ tự câu hỏi nếu cấu hình bật
-  if (CONFIG.QUIZ.shuffleQuestions) {
-    QuizState.activeQuestions = shuffleQuestions(QuizState.rawQuestions);
-  } else {
-    QuizState.activeQuestions = [...QuizState.rawQuestions];
-  }
+  // Xáo trộn ngẫu nhiên thứ tự câu hỏi & vị trí các đáp án A/B/C/D mỗi lượt thi hoặc làm lại
+  QuizState.activeQuestions = prepareQuestionsForQuiz(QuizState.rawQuestions);
 
   // Tính tổng điểm tối đa của đề thi
   QuizState.totalPossiblePoints = QuizState.activeQuestions.reduce((sum, q) => sum + (Number(q.points) || 2), 0);
