@@ -3487,9 +3487,20 @@ function initSidebarNavigation() {
 // ==============================================================================
 
 /**
- * Danh sách 6 tài khoản mẫu phục vụ kiểm thử (Mật khẩu: 123456 hoặc 123)
- * - 5 tài khoản hoàn thành đủ 4/4 tuần đã mở để xếp Top 1 -> Top 5
- * - 1 tài khoản mới hoàn thành 2/4 tuần để hiển thị trạng thái "Pending"
+/**
+ * Danh sách các tài khoản kiểm thử mẫu cũ cần dọn dẹp triệt để khi người dùng xóa trên Google Sheet
+ */
+const OBSOLETE_MOCK_USERNAMES = [
+  "tran_thi_mai",
+  "le_hoang_nam",
+  "pham_minh_duc",
+  "vu_hai_yen",
+  "hoang_thu_trang",
+  "nguyen_van_an"
+];
+
+/**
+ * Tài khoản mẫu Quán Quân (admin1) - Mật khẩu: 123 hoặc 123456
  */
 const MOCK_TEST_ACCOUNTS = [
   {
@@ -3503,153 +3514,69 @@ const MOCK_TEST_ACCOUNTS = [
       3: { score: 96, correct: 67, total: 70, percent: 96, durationText: "21:10" },
       4: { score: 98, correct: 69, total: 70, percent: 98, durationText: "20:05" }
     }
-  },
-  {
-    username: "tran_thi_mai",
-    password: "123",
-    fullName: "Trần Thị Mai",
-    className: "ATTT-K18B",
-    attempts: {
-      1: { score: 94, correct: 47, total: 50, percent: 94, durationText: "15:20" },
-      2: { score: 96, correct: 67, total: 70, percent: 96, durationText: "18:50" },
-      3: { score: 92, correct: 64, total: 70, percent: 92, durationText: "22:30" },
-      4: { score: 94, correct: 66, total: 70, percent: 94, durationText: "21:15" }
-    }
-  },
-  {
-    username: "le_hoang_nam",
-    password: "123",
-    fullName: "Lê Hoàng Nam",
-    className: "KTPM-K18",
-    attempts: {
-      1: { score: 92, correct: 46, total: 50, percent: 92, durationText: "16:05" },
-      2: { score: 90, correct: 63, total: 70, percent: 90, durationText: "23:10" },
-      3: { score: 94, correct: 66, total: 70, percent: 94, durationText: "19:45" },
-      4: { score: 88, correct: 62, total: 70, percent: 88, durationText: "24:00" }
-    }
-  },
-  {
-    username: "pham_minh_duc",
-    password: "123",
-    fullName: "Phạm Minh Đức",
-    className: "DTVT-K18",
-    attempts: {
-      1: { score: 88, correct: 44, total: 50, percent: 88, durationText: "17:10" },
-      2: { score: 90, correct: 63, total: 70, percent: 90, durationText: "22:15" },
-      3: { score: 86, correct: 60, total: 70, percent: 86, durationText: "25:30" },
-      4: { score: 88, correct: 62, total: 70, percent: 88, durationText: "23:45" }
-    }
-  },
-  {
-    username: "vu_hai_yen",
-    password: "123",
-    fullName: "Vũ Hải Yến",
-    className: "CNTT-K18B",
-    attempts: {
-      1: { score: 86, correct: 43, total: 50, percent: 86, durationText: "18:20" },
-      2: { score: 84, correct: 59, total: 70, percent: 84, durationText: "24:50" },
-      3: { score: 88, correct: 62, total: 70, percent: 88, durationText: "22:10" },
-      4: { score: 84, correct: 59, total: 70, percent: 84, durationText: "25:10" }
-    }
-  },
-  {
-    username: "hoang_thu_trang",
-    password: "123",
-    fullName: "Hoàng Thu Trang",
-    className: "CNTT-K18A",
-    attempts: {
-      1: { score: 96, correct: 48, total: 50, percent: 96, durationText: "14:50" },
-      2: { score: 94, correct: 66, total: 70, percent: 94, durationText: "19:10" }
-      // Tuần 3 và 4 chưa làm -> Rơi vào Pending!
-    }
   }
 ];
 
 /**
- * Tự động chèn 6 tài khoản mẫu vào LocalStorage nếu chưa tồn tại
+ * Tự động dọn dẹp các tài khoản kiểm thử cũ đã bị xóa trên Google Sheet
+ * và đảm bảo tài khoản Quán Quân (admin1) sẵn sàng trong LocalStorage
  */
 function seedMockTestUsersIfEmpty() {
   try {
-    const existingAccounts = getLocalAccounts();
+    // 1. Dọn dẹp sạch sẽ toàn bộ điểm số và lịch sử của các tài khoản mẫu cũ khỏi LocalStorage
+    OBSOLETE_MOCK_USERNAMES.forEach(oldUname => {
+      localStorage.removeItem(getUserHistoryKey(oldUname));
+    });
+
+    let existingAccounts = getLocalAccounts();
     let hasAccountChanges = false;
 
-    // Tự động chuyển đổi tài khoản nguyen_van_an / aaaaaa sang admin1
+    // 2. Lọc bỏ các tài khoản mẫu cũ khỏi danh sách accounts
+    const initialCount = existingAccounts.length;
+    existingAccounts = existingAccounts.filter(a => !OBSOLETE_MOCK_USERNAMES.includes(a.username.toLowerCase()));
+    if (existingAccounts.length !== initialCount) {
+      hasAccountChanges = true;
+    }
+
+    // 3. Đảm bảo tài khoản admin1 tồn tại
     let admin1Account = existingAccounts.find(a => a.username.toLowerCase() === "admin1");
     if (!admin1Account) {
-      const anIndex = existingAccounts.findIndex(a => a.username.toLowerCase() === "nguyen_van_an" || a.username.toLowerCase() === "aaaaaa");
-      if (anIndex !== -1) {
-        existingAccounts[anIndex].username = "admin1";
-        existingAccounts[anIndex].fullName = "admin1";
-        admin1Account = existingAccounts[anIndex];
-        hasAccountChanges = true;
-      }
-    } else {
-      if (admin1Account.fullName !== "admin1") {
-        admin1Account.fullName = "admin1";
-        hasAccountChanges = true;
-      }
-    }
-
-    // Chuyển lịch sử cũ từ nguyen_van_an hoặc aaaaaa sang admin1 nếu cần
-    ["nguyen_van_an", "aaaaaa"].forEach(oldUname => {
-      const oldHistory = getUserOfficialAttempts(oldUname);
-      if (oldHistory && Object.keys(oldHistory).length > 0) {
-        const curAdminHistory = getUserOfficialAttempts("admin1");
-        if (!curAdminHistory || Object.keys(curAdminHistory).length === 0) {
-          localStorage.setItem(getUserHistoryKey("admin1"), JSON.stringify(oldHistory));
-        }
-      }
-    });
-
-    // Dọn dẹp tài khoản thừa (nguyen_van_an, aaaaaa) khỏi danh sách để tránh trùng lặp
-    for (let i = existingAccounts.length - 1; i >= 0; i--) {
-      const uname = existingAccounts[i].username.toLowerCase();
-      if ((uname === "nguyen_van_an" || uname === "aaaaaa") && existingAccounts.some(a => a.username.toLowerCase() === "admin1")) {
-        existingAccounts.splice(i, 1);
-        hasAccountChanges = true;
-      }
-    }
-
-    const existingUsernames = new Set(existingAccounts.map(a => a.username.toLowerCase()));
-
-    MOCK_TEST_ACCOUNTS.forEach(mock => {
-      // 1. Thêm tài khoản nếu chưa có
-      if (!existingUsernames.has(mock.username.toLowerCase())) {
-        existingAccounts.push({
-          username: mock.username,
-          password: mock.password,
-          fullName: mock.fullName,
-          className: mock.className,
-          createdAt: new Date().toISOString()
-        });
-        hasAccountChanges = true;
-      }
-
-      // 2. Thêm lịch sử điểm thi lần 1 chính thức cho tài khoản
-      const historyKey = getUserHistoryKey(mock.username);
-      const existingHistory = getUserOfficialAttempts(mock.username);
-      let historyChanged = false;
-
-      Object.keys(mock.attempts).forEach(weekId => {
-        if (!existingHistory[weekId]) {
-          existingHistory[weekId] = {
-            ...mock.attempts[weekId],
-            firstRecordedAt: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })
-          };
-          historyChanged = true;
-        }
+      existingAccounts.push({
+        username: "admin1",
+        password: "123",
+        fullName: "admin1",
+        className: "CNTT-K18A",
+        createdAt: new Date().toISOString()
       });
+      hasAccountChanges = true;
+    } else if (admin1Account.fullName !== "admin1") {
+      admin1Account.fullName = "admin1";
+      hasAccountChanges = true;
+    }
 
-      if (historyChanged) {
-        localStorage.setItem(historyKey, JSON.stringify(existingHistory));
+    // 4. Đảm bảo điểm số 4 tuần cho admin1 nếu chưa có
+    const admin1History = getUserOfficialAttempts("admin1");
+    let historyChanged = false;
+    const adminMock = MOCK_TEST_ACCOUNTS[0];
+    Object.keys(adminMock.attempts).forEach(weekId => {
+      if (!admin1History[weekId]) {
+        admin1History[weekId] = {
+          ...adminMock.attempts[weekId],
+          firstRecordedAt: new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" })
+        };
+        historyChanged = true;
       }
     });
+
+    if (historyChanged) {
+      localStorage.setItem(getUserHistoryKey("admin1"), JSON.stringify(admin1History));
+    }
 
     if (hasAccountChanges) {
       saveLocalAccounts(existingAccounts);
     }
   } catch (e) {
-    console.warn("Lỗi khi tạo dữ liệu kiểm thử Mock Users:", e);
+    console.warn("Lỗi khi dọn dẹp và khởi tạo tài khoản:", e);
   }
 }
 
@@ -4156,10 +4083,15 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
     }
 
     if (json && json.status === "success" && Array.isArray(json.results)) {
-      const existingAccounts = getLocalAccounts();
+      // 1. Dọn dẹp sạch sẽ toàn bộ điểm số và lịch sử của các tài khoản mẫu cũ khỏi LocalStorage
+      OBSOLETE_MOCK_USERNAMES.forEach(oldUname => {
+        localStorage.removeItem(getUserHistoryKey(oldUname));
+      });
+
+      let existingAccounts = getLocalAccounts().filter(a => !OBSOLETE_MOCK_USERNAMES.includes(a.username.toLowerCase()));
       const accountMap = new Map();
       existingAccounts.forEach(a => accountMap.set(a.username.toLowerCase(), a));
-      let hasChanges = false;
+      let hasChanges = true;
 
       // Tập hợp danh sách các lần thi ĐẦU TIÊN duy nhất từ Google Sheet (Bỏ qua các lần thi lại/nộp đè)
       const sheetFirstAttemptsByUser = new Map(); // username -> Map(weekId -> attemptData)
@@ -4237,8 +4169,8 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
         let userHistoryChanged = false;
 
         weekMap.forEach((attemptData, weekId) => {
-          // Chỉ lưu nếu trong bộ nhớ máy chưa có điểm của tuần này
-          if (!history[weekId]) {
+          // Lưu hoặc cập nhật điểm theo Google Sheet nếu có thay đổi
+          if (!history[weekId] || history[weekId].score !== attemptData.score) {
             history[weekId] = attemptData;
             userHistoryChanged = true;
             hasChanges = true;
