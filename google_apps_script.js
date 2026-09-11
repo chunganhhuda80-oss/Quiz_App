@@ -243,6 +243,38 @@ function doPost(e) {
       resultSheet.getRange(lastRow, 5).setFontColor("#dc2626"); // Đỏ (Chưa đạt)
     }
 
+    // ==========================================================================
+    // 4. XỬ LÝ LẤY BẢNG XẾP HẠNG TỪ GOOGLE SHEET (action === "get_leaderboard")
+    // ==========================================================================
+    if (data.action === "get_leaderboard" || data.action === "get_results") {
+      const resultSheet = ss.getSheetByName(SHEET_NAME_RESULTS);
+      if (!resultSheet || resultSheet.getLastRow() <= 1) {
+        return ContentService.createTextOutput(
+          JSON.stringify({ status: "success", count: 0, results: [] })
+        ).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const rows = resultSheet.getDataRange().getValues();
+      const dataRows = rows.slice(1);
+
+      const results = dataRows.map(r => ({
+        timestamp: r[0],
+        studentName: r[1],
+        username: (r[2] || "").toString().toLowerCase().trim(),
+        studentClass: r[3],
+        scaledScore: Number(r[4]) || 0,
+        rawScore: r[5],
+        correctCount: Number(r[6]) || 0,
+        totalQuestions: Number(r[7]) || 0,
+        accuracy: r[8],
+        timeSpent: r[9]
+      }));
+
+      return ContentService.createTextOutput(
+        JSON.stringify({ status: "success", count: results.length, results: results })
+      ).setMimeType(ContentService.MimeType.JSON);
+    }
+
     return ContentService.createTextOutput(
       JSON.stringify({
         status: "success",
@@ -263,10 +295,54 @@ function doPost(e) {
 }
 
 /**
- * Kiểm tra trạng thái hoạt động của Webhook
+ * Xử lý GET request: Trả về Bảng Xếp Hạng & Danh sách điểm thi dạng JSON
  */
 function doGet(e) {
-  return ContentService.createTextOutput(
-    "Quiz Webhook & Quản Lý Tài Khoản đang hoạt động tốt! Hệ thống đã sẵn sàng nhận kết quả trắc nghiệm và thông tin đăng nhập/đăng ký."
-  ).setMimeType(ContentService.MimeType.TEXT);
+  try {
+    const action = e && e.parameter ? e.parameter.action : "";
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+    // 1. API Lấy toàn bộ kết quả bài thi từ sheet KetQuaThi
+    if (action === "get_leaderboard" || action === "get_results") {
+      const resultSheet = ss.getSheetByName(SHEET_NAME_RESULTS);
+      if (!resultSheet || resultSheet.getLastRow() <= 1) {
+        return ContentService.createTextOutput(
+          JSON.stringify({ status: "success", count: 0, results: [] })
+        ).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const rows = resultSheet.getDataRange().getValues();
+      const dataRows = rows.slice(1);
+
+      const results = dataRows.map(r => ({
+        timestamp: r[0],
+        studentName: r[1],
+        username: (r[2] || "").toString().toLowerCase().trim(),
+        studentClass: r[3],
+        scaledScore: Number(r[4]) || 0,
+        rawScore: r[5],
+        correctCount: Number(r[6]) || 0,
+        totalQuestions: Number(r[7]) || 0,
+        accuracy: r[8],
+        timeSpent: r[9]
+      }));
+
+      return ContentService.createTextOutput(
+        JSON.stringify({ status: "success", count: results.length, results: results })
+      ).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // 2. Mặc định: Phản hồi trạng thái Webhook sẵn sàng
+    return ContentService.createTextOutput(
+      JSON.stringify({
+        status: "ready",
+        message: "Quiz Webhook & Quản Lý Bảng Xếp Hạng Google Sheet đang hoạt động tốt!"
+      })
+    ).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService.createTextOutput(
+      JSON.stringify({ status: "error", message: err.toString() })
+    ).setMimeType(ContentService.MimeType.JSON);
+  }
 }

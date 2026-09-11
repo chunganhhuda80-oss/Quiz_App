@@ -4367,6 +4367,29 @@ body.auth-mode .app-container {
   color: #dc2626;
 }
 
+.btn-ranking-sync {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 13px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-ranking-sync:hover {
+  background: #d1fae5;
+  border-color: #6ee7b7;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
 /* Thân cuộn toàn diện của Modal - Cho phép cuộn mượt mà từ đầu đến cuối */
 .ranking-modal-scrollable-body {
   flex: 1 1 auto;

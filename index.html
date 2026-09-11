@@ -309,12 +309,20 @@
               <p class="ranking-widget-sub" id="ranking-widget-condition-text">Đang tải xếp hạng...</p>
             </div>
           </div>
-          <button type="button" class="btn-open-ranking-modal" id="btn-home-open-ranking">
-            <span>Xem Bảng Xếp Hạng Đầy Đủ</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </button>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn-open-ranking-modal" id="btn-home-sync-sheet" style="background: #ecfdf5; border-color: #a7f3d0; color: #065f46;" title="Đồng bộ điểm số từ Google Sheet">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+              </svg>
+              <span>Đồng Bộ Sheet</span>
+            </button>
+            <button type="button" class="btn-open-ranking-modal" id="btn-home-open-ranking">
+              <span>Xem Bảng Xếp Hạng Đầy Đủ</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="ranking-top5-container" id="ranking-top5-home-list">
           <!-- Render danh sách 5 thẻ Top học sinh -->
@@ -925,11 +933,19 @@
             <p class="ranking-modal-subtitle">Thành tích xuất sắc các tuần kiểm tra trắc nghiệm</p>
           </div>
         </div>
-        <button type="button" class="ranking-close-btn" id="btn-close-ranking-modal" title="Đóng bảng xếp hạng">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <path d="M18 6L6 18M6 6l12 12"/>
-          </svg>
-        </button>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button type="button" class="btn-ranking-sync" id="btn-sync-ranking-sheet" title="Đồng bộ điểm số từ Google Sheet">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+            <span>Đồng Bộ Google Sheet</span>
+          </button>
+          <button type="button" class="ranking-close-btn" id="btn-close-ranking-modal" title="Đóng bảng xếp hạng">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <!-- Vùng nội dung có thanh cuộn mượt mà toàn diện -->

@@ -4061,6 +4061,134 @@ function initRankingFeature() {
       listRanked.style.display = "none";
     });
   }
+
+  // 7. Thiết lập các nút Đồng bộ Google Sheet trực tiếp
+  const btnHomeSync = document.getElementById("btn-home-sync-sheet");
+  const btnModalSync = document.getElementById("btn-sync-ranking-sheet");
+
+  if (btnHomeSync) {
+    btnHomeSync.addEventListener("click", () => syncLeaderboardFromGoogleSheet(true));
+  }
+  if (btnModalSync) {
+    btnModalSync.addEventListener("click", () => syncLeaderboardFromGoogleSheet(true));
+  }
+
+  // 8. Tự động kiểm tra và đồng bộ ngầm khi mở ứng dụng
+  setTimeout(() => {
+    syncLeaderboardFromGoogleSheet(false);
+  }, 1200);
+}
+
+/**
+ * Đồng bộ toàn bộ dữ liệu kết quả thi từ Google Sheet về hệ thống Local
+ */
+async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
+  if (!CONFIG.GOOGLE_APPS_SCRIPT_URL || !CONFIG.GOOGLE_APPS_SCRIPT_URL.startsWith("http")) return;
+
+  const btnSyncHome = document.getElementById("btn-home-sync-sheet");
+  const btnSyncModal = document.getElementById("btn-sync-ranking-sheet");
+
+  const setSyncing = (isSyncing) => {
+    [btnSyncHome, btnSyncModal].forEach(btn => {
+      if (btn) {
+        btn.disabled = isSyncing;
+        btn.style.opacity = isSyncing ? "0.65" : "1";
+        const span = btn.querySelector("span");
+        if (span) span.textContent = isSyncing ? "Đang đồng bộ..." : (btn.id === "btn-home-sync-sheet" ? "Đồng Bộ Sheet" : "Đồng Bộ Google Sheet");
+      }
+    });
+  };
+
+  try {
+    setSyncing(true);
+    const res = await fetch(`${CONFIG.GOOGLE_APPS_SCRIPT_URL}?action=get_leaderboard`);
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+    const text = await res.text();
+    let json = null;
+    try {
+      json = JSON.parse(text);
+    } catch (parseErr) {
+      console.log("[Google Sheet Sync] Webhook đang ở phiên bản ghi nhận (chưa cập nhật doGet get_leaderboard):", text.slice(0, 60));
+      return;
+    }
+
+    if (json && json.status === "success" && Array.isArray(json.results)) {
+      const existingAccounts = getLocalAccounts();
+      const accountMap = new Map();
+      existingAccounts.forEach(a => accountMap.set(a.username.toLowerCase(), a));
+      let hasChanges = false;
+
+      json.results.forEach(r => {
+        const uname = (r.username || "").toLowerCase().trim();
+        if (!uname || uname.includes("khách")) return;
+
+        // Thêm tài khoản nếu chưa có trong LocalStorage
+        if (!accountMap.has(uname)) {
+          const newAcc = {
+            username: uname,
+            fullName: r.studentName || uname,
+            className: (r.studentClass || "").split("[")[0].trim() || "Chưa phân lớp",
+            createdAt: r.timestamp || new Date().toISOString()
+          };
+          existingAccounts.push(newAcc);
+          accountMap.set(uname, newAcc);
+          hasChanges = true;
+        }
+
+        // Xác định ID tuần từ thông tin lớp (VD: "CNTT-K18A [Tuần 1]")
+        let weekId = 1;
+        const match = (r.studentClass || "").match(/Tuần\s*(\d+)/i);
+        if (match && match[1]) {
+          weekId = parseInt(match[1], 10);
+        }
+
+        const historyKey = getUserHistoryKey(uname);
+        const history = getUserOfficialAttempts(uname);
+
+        // Lưu điểm vào lịch sử thi chính thức
+        if (!history[weekId] || (typeof r.scaledScore === "number" && r.scaledScore > 0)) {
+          history[weekId] = {
+            score: r.scaledScore,
+            correct: r.correctCount,
+            total: r.totalQuestions,
+            percent: r.accuracy,
+            durationText: r.timeSpent,
+            firstRecordedAt: r.timestamp
+          };
+          localStorage.setItem(historyKey, JSON.stringify(history));
+          hasChanges = true;
+        }
+      });
+
+      if (hasChanges) {
+        saveLocalAccounts(existingAccounts);
+      }
+
+      renderHomeRankingWidget();
+      renderRankingModal();
+
+      if (notifyUser) {
+        if (typeof showAdminToast === "function") {
+          showAdminToast(`✓ Đã đồng bộ thành công ${json.results.length} bài thi từ Google Sheet!`, "success");
+        } else {
+          alert(`✓ Đã đồng bộ thành công ${json.results.length} bài thi từ Google Sheet!`);
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("Lỗi đồng bộ từ Google Sheet:", err);
+    if (notifyUser) {
+      if (typeof showAdminToast === "function") {
+        showAdminToast("⚠️ Không thể kết nối với Google Sheet lúc này. Vui lòng thử lại!", "error");
+      } else {
+        alert("⚠️ Không thể kết nối với Google Sheet lúc này. Vui lòng thử lại!");
+      }
+    }
+  } finally {
+    setSyncing(false);
+  }
 }
 
 
