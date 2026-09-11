@@ -1,0 +1,1102 @@
+[
+  {
+    "id": 1,
+    "question": "Network Address và Broadcast Address trong một subnet có đặc điểm gì khác biệt so với các địa chỉ host khả dụng?",
+    "optionA": "Cả hai địa chỉ này chỉ tồn tại về mặt lý thuyết, không có ý nghĩa thực tế khi cấu hình mạng",
+    "optionB": "Chỉ có Broadcast Address là không dùng được, còn Network Address vẫn có thể gán cho thiết bị",
+    "optionC": "Network Address và Broadcast Address đều có thể dùng làm địa chỉ host bình thường cho thiết bị",
+    "optionD": "Network Address có toàn bộ bit host bằng 0, Broadcast Address có toàn bộ bit host bằng 1, cả hai đều không dùng làm địa chỉ host được",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 2,
+    "question": "Chế độ vi phạm Shutdown (mặc định) trong Port Security xử lý cổng như thế nào khi phát hiện vi phạm?",
+    "optionA": "Drop traffic vi phạm và ghi log lại nhưng vẫn giữ cổng ở trạng thái hoạt động bình thường",
+    "optionB": "Chỉ âm thầm drop traffic vi phạm mà không có bất kỳ hành động nào khác với cổng",
+    "optionC": "Tắt hẳn cổng đó (err-disable), cần quản trị viên can thiệp thủ công để bật lại cổng",
+    "optionD": "Tự động tăng giới hạn số lượng MAC được học thêm trên cổng đó để tránh vi phạm tiếp",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 3,
+    "question": "PDU tại tầng Transport (Layer 4) khi dùng giao thức TCP được gọi là gì?",
+    "optionA": "Datagram, đơn vị dữ liệu chỉ dùng riêng cho giao thức UDP ở tầng Transport",
+    "optionB": "Packet, đơn vị dữ liệu được tầng Network thêm địa chỉ IP nguồn và đích",
+    "optionC": "Frame, đơn vị dữ liệu được tầng Data Link thêm địa chỉ MAC nguồn và đích",
+    "optionD": "Segment, đơn vị dữ liệu do tầng Transport tạo ra khi phân đoạn dữ liệu ứng dụng",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 4,
+    "question": "Cổng 443 theo mặc định được dùng cho giao thức nào và có đặc điểm gì?",
+    "optionA": "HTTP, giao thức truyền tải nội dung web nhưng không có mã hóa bảo mật",
+    "optionB": "HTTPS, phiên bản mã hóa an toàn hơn của HTTP dùng để truyền tải nội dung web",
+    "optionC": "RDP, giao thức dùng để điều khiển máy tính từ xa qua giao diện đồ họa",
+    "optionD": "SSH, giao thức dùng để truy cập từ xa và quản lý thiết bị an toàn qua mạng",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 5,
+    "question": "Chế độ vi phạm Restrict trong Port Security khác Protect ở điểm nào?",
+    "optionA": "Restrict drop traffic vi phạm kèm theo ghi log và tăng biến đếm vi phạm, còn Protect chỉ âm thầm drop mà không ghi log",
+    "optionB": "Restrict chỉ áp dụng cho switch Layer 3 còn Protect chỉ áp dụng cho switch Layer 2",
+    "optionC": "Restrict tắt hẳn cổng vi phạm còn Protect chỉ ghi log mà không drop bất kỳ traffic nào",
+    "optionD": "Cả hai chế độ hoàn toàn giống nhau về cách xử lý traffic vi phạm trên cổng switch",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 6,
+    "question": "DR và BDR trong OSPF được bầu chọn trên loại mạng nào và nhằm mục đích gì?",
+    "optionA": "Trên mạng multi-access như Ethernet, nhằm giảm số lượng adjacency cần thiết lập giữa các router",
+    "optionB": "Trên liên kết point-to-point, nhằm tăng số lượng adjacency để tăng độ dự phòng",
+    "optionC": "Trên mọi loại mạng không phân biệt, nhằm tăng tốc độ hội tụ của toàn hệ thống OSPF",
+    "optionD": "Chỉ trên mạng WAN tốc độ thấp, nhằm giảm tải xử lý cho router có cấu hình yếu",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 7,
+    "question": "Trong AAA Framework, thành phần Authentication đảm nhiệm vai trò gì?",
+    "optionA": "Ghi log lại toàn bộ hành động người dùng đã thực hiện để phục vụ kiểm tra sau này",
+    "optionB": "Xác thực danh tính người dùng, ví dụ thông qua việc nhập username và password khi đăng nhập",
+    "optionC": "Mã hóa toàn bộ dữ liệu truyền giữa client và server trong suốt phiên làm việc",
+    "optionD": "Phân quyền cho người dùng biết họ được phép thực hiện những hành động gì trên hệ thống",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 8,
+    "question": "Trong các mức độ nghiêm trọng (Severity Level) của Syslog, mức nào là nghiêm trọng nhất?",
+    "optionA": "3 Error, mức cao nhất trong các sự kiện thường gặp trên thiết bị mạng",
+    "optionB": "4 Warning, mức trung bình nhưng thường được xem là nghiêm trọng nhất thực tế",
+    "optionC": "7 Debug, mức nghiêm trọng nhất vì chứa nhiều thông tin chi tiết nhất",
+    "optionD": "0 Emergency, mức nghiêm trọng nhất trong thang đo từ 0 đến 7 của Syslog",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 9,
+    "question": "Default route (0.0.0.0/0) thường được dùng trong tình huống nào của thiết kế mạng?",
+    "optionA": "Khi cần định tuyến chính xác tới từng subnet cụ thể mà không bỏ sót bất kỳ đích nào",
+    "optionB": "Khi cần một route bắt tất cả traffic không khớp với route cụ thể nào khác, thường trỏ ra hướng Internet",
+    "optionC": "Khi cần chặn hoàn toàn mọi traffic đi ra khỏi router trong mọi tình huống",
+    "optionD": "Khi mạng không có bất kỳ kết nối nào ra bên ngoài Internet cần xử lý",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 10,
+    "question": "Bit thấp nhất của byte đầu tiên trong địa chỉ MAC dùng để phân biệt điều gì?",
+    "optionA": "Phân biệt Unicast (bit bằng 0) với Multicast (bit bằng 1) của địa chỉ MAC đó",
+    "optionB": "Phân biệt thiết bị đó là switch hay router dựa trên giá trị của bit này",
+    "optionC": "Phân biệt địa chỉ MAC đó thuộc mạng có dây hay mạng không dây đang sử dụng",
+    "optionD": "Phân biệt tốc độ tối đa mà cổng mạng của thiết bị đó có thể hỗ trợ",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 11,
+    "question": "Trong nhóm VRRP, thiết bị đóng vai trò xử lý traffic thực tế được gọi là gì?",
+    "optionA": "Active, chịu trách nhiệm forward traffic trong khi các router còn lại đóng vai Standby chờ sẵn",
+    "optionB": "Master, chịu trách nhiệm forward traffic trong khi các router còn lại đóng vai Backup chờ sẵn",
+    "optionC": "Leader, chịu trách nhiệm forward traffic trong khi các router còn lại đóng vai Follower",
+    "optionD": "Primary, chịu trách nhiệm forward traffic trong khi các router còn lại đóng vai Secondary",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 12,
+    "question": "OID (Object Identifier) trong SNMP có vai trò gì?",
+    "optionA": "Là địa chỉ IP dùng để phân biệt các thiết bị SNMP khác nhau trong cùng một mạng",
+    "optionB": "Là giao thức truyền tải dữ liệu thay thế cho UDP trong các phiên bản SNMP mới",
+    "optionC": "Là mật khẩu dùng để xác thực khi kết nối vào SNMP server từ xa",
+    "optionD": "Là địa chỉ định danh duy nhất cho từng thông số cụ thể trong MIB, ví dụ OID cho CPU load của thiết bị",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 13,
+    "question": "Một switch cấu hình Port Security với maximum 2 địa chỉ MAC trên một cổng, khi có thiết bị thứ ba cắm vào cùng cổng đó, điều gì sẽ xảy ra tùy theo violation mode đang cấu hình?",
+    "optionA": "Thiết bị thứ ba luôn được phép kết nối bình thường bất kể violation mode đang cấu hình là gì",
+    "optionB": "Switch sẽ tự động tăng giới hạn maximum lên 3 để cho phép thiết bị mới kết nối",
+    "optionC": "Toàn bộ ba thiết bị trên cổng đó sẽ bị mất kết nối ngay khi phát hiện vi phạm xảy ra",
+    "optionD": "Tùy vào chế độ Protect, Restrict hay Shutdown mà traffic của thiết bị thứ ba có thể bị drop âm thầm, bị drop kèm log, hoặc cổng bị tắt hẳn",
+    "correctAnswer": "D",
+    "points": 4
+  },
+  {
+    "id": 14,
+    "question": "Tầng Session (Layer 5) trong mô hình OSI có chức năng chính là gì?",
+    "optionA": "Định dạng, mã hóa và nén dữ liệu trước khi chuyển xuống các tầng thấp hơn để truyền đi",
+    "optionB": "Truyền bit thô qua môi trường vật lý bằng tín hiệu điện áp, ánh sáng hoặc sóng vô tuyến",
+    "optionC": "Phân đoạn dữ liệu và đảm bảo truyền tin cậy bằng cách quản lý số hiệu cổng nguồn đích",
+    "optionD": "Thiết lập, duy trì và kết thúc phiên làm việc giữa hai ứng dụng, quản lý session ID tương ứng",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 15,
+    "question": "Administrative Distance của Static route so với route Directly Connected khác nhau như thế nào?",
+    "optionA": "Static route có AD bằng 1, cao hơn Directly Connected có AD bằng 0 nên ít được ưu tiên hơn",
+    "optionB": "Static route có AD bằng 0, thấp hơn Directly Connected có AD bằng 1 nên được ưu tiên hơn",
+    "optionC": "Static route không có khái niệm Administrative Distance nên không thể so sánh được",
+    "optionD": "Cả hai loại route đều có AD bằng nhau nên được ưu tiên như nhau khi có xung đột",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 16,
+    "question": "Global Unicast Address (GUA) trong IPv6 tương đương với khái niệm nào trong IPv4?",
+    "optionA": "Link-Local IP, chỉ có hiệu lực trong phạm vi một segment mạng duy nhất",
+    "optionB": "Loopback IP, chỉ dùng để kiểm tra chính thiết bị đang cấu hình mà thôi",
+    "optionC": "Public IP, định tuyến được trên Internet, thường bắt đầu bằng dải 2000::/3",
+    "optionD": "Private IP, chỉ dùng nội bộ và không định tuyến được trên Internet công cộng",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 17,
+    "question": "Một công ty có 4 phòng ban cần 50, 20, 10 và 2 host, khi thiết kế VLSM nên bắt đầu chia subnet cho phòng ban nào trước tiên?",
+    "optionA": "Phòng ban cần 20 host, vì đây là con số trung bình nên phù hợp để bắt đầu tính toán",
+    "optionB": "Phòng ban cần 2 host, vì nên xử lý các subnet nhỏ nhất trước để dễ tính toán hơn",
+    "optionC": "Có thể chia theo thứ tự bất kỳ vì VLSM không yêu cầu tuân theo trình tự cụ thể nào",
+    "optionD": "Phòng ban cần 50 host, vì nguyên tắc VLSM là chia từ subnet cần nhiều host nhất trước rồi giảm dần",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 18,
+    "question": "Một hệ thống cần backup nhanh file cấu hình của hàng chục router nội bộ mà không cần cơ chế xác thực phức tạp, giao thức nào phù hợp hơn để thực hiện việc này?",
+    "optionA": "FTP, vì luôn yêu cầu xác thực đầy đủ nên phù hợp hơn cho môi trường nội bộ tin cậy",
+    "optionB": "Syslog, vì đây là giao thức chuyên dùng để lưu trữ file cấu hình tập trung",
+    "optionC": "TFTP, vì đơn giản, không xác thực, phù hợp cho việc backup nhanh trong môi trường nội bộ tin cậy",
+    "optionD": "SNMP, vì đây là giao thức chuyên dùng để truyền tải file cấu hình giữa các thiết bị",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 19,
+    "question": "Một ACL có nhiều dòng permit và deny xen kẽ nhau, gói tin khớp với dòng deny ở vị trí thứ 3 nhưng cũng khớp với dòng permit ở vị trí thứ 5, kết quả xử lý sẽ ra sao?",
+    "optionA": "Router sẽ xét cả hai dòng rồi chọn kết quả nào xuất hiện nhiều hơn trong toàn bộ ACL",
+    "optionB": "Router sẽ báo lỗi xung đột cấu hình và từ chối xử lý gói tin đó hoàn toàn",
+    "optionC": "Gói tin sẽ được permit vì dòng permit luôn được ưu tiên hơn dòng deny bất kể vị trí trong ACL",
+    "optionD": "Gói tin sẽ bị deny vì router dừng xử lý ngay khi gặp dòng đầu tiên khớp điều kiện, không xét tiếp các dòng phía sau",
+    "correctAnswer": "D",
+    "points": 4
+  },
+  {
+    "id": 20,
+    "question": "Cơ chế Reliable Delivery của TCP đảm bảo độ tin cậy như thế nào khi một segment bị mất trên đường truyền?",
+    "optionA": "Bên nhận sẽ tự động tạo ra dữ liệu thay thế cho segment bị mất mà không cần gửi lại",
+    "optionB": "TCP sẽ bỏ qua hoàn toàn segment bị mất và tiếp tục gửi các segment tiếp theo bình thường",
+    "optionC": "Nếu không nhận được ACK trong thời gian timeout, bên gửi sẽ tự động gửi lại (retransmission) segment đó",
+    "optionD": "Kết nối sẽ tự động bị hủy bỏ hoàn toàn ngay khi phát hiện có một segment bị mất",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 21,
+    "question": "Với subnet mask 255.255.255.248 (/29), địa chỉ host đầu tiên khả dụng trong subnet 192.168.1.8 là gì?",
+    "optionA": "192.168.1.16, thuộc về subnet kế tiếp nên không phải là host của subnet 192.168.1.8",
+    "optionB": "192.168.1.8, chính là địa chỉ Network nên có thể dùng trực tiếp làm địa chỉ host",
+    "optionC": "192.168.1.15, đây là địa chỉ Broadcast nên không thể dùng làm host đầu tiên được",
+    "optionD": "192.168.1.9, vì địa chỉ Network là 192.168.1.8 nên host đầu tiên là Network cộng thêm 1",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 22,
+    "question": "Named ACL có ưu điểm gì so với Numbered ACL khi cần sửa đổi cấu hình?",
+    "optionA": "Named ACL chỉ hoạt động được trên switch Layer 3, không dùng được trên router thông thường",
+    "optionB": "Có thể sửa hoặc xóa từng dòng riêng lẻ, trong khi Numbered ACL cũ phải xóa hết rồi cấu hình lại từ đầu",
+    "optionC": "Numbered ACL có thể sửa từng dòng riêng lẻ còn Named ACL thì không có khả năng này",
+    "optionD": "Named ACL luôn xử lý nhanh hơn Numbered ACL vì tên gợi nhớ giúp router xử lý hiệu quả hơn",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 23,
+    "question": "Vì sao Named ACL thường được ưu tiên hơn Numbered ACL trong các hệ thống mạng doanh nghiệp hiện đại?",
+    "optionA": "Vì tên gợi nhớ giúp dễ quản lý, dễ nhận biết mục đích ACL, và có thể sửa từng dòng riêng lẻ mà không cần xóa toàn bộ",
+    "optionB": "Vì Named ACL có tốc độ xử lý traffic nhanh hơn hẳn so với Numbered ACL trong mọi tình huống",
+    "optionC": "Vì Named ACL chỉ tồn tại trên các dòng switch Layer 3 cao cấp, thể hiện đẳng cấp công nghệ",
+    "optionD": "Vì Numbered ACL đã bị Cisco ngừng hỗ trợ hoàn toàn trên các phiên bản IOS hiện đại",
+    "correctAnswer": "A",
+    "points": 4
+  },
+  {
+    "id": 24,
+    "question": "Inside Local và Inside Global trong thuật ngữ NAT khác nhau như thế nào?",
+    "optionA": "Cả hai khái niệm đều chỉ cùng một địa chỉ Private duy nhất của thiết bị nội bộ",
+    "optionB": "Inside Local là địa chỉ Private nội bộ của thiết bị, Inside Global là địa chỉ Public đại diện cho thiết bị đó khi ra ngoài",
+    "optionC": "Inside Local chỉ áp dụng cho IPv6 còn Inside Global chỉ áp dụng cho IPv4 truyền thống",
+    "optionD": "Inside Local là địa chỉ Public đại diện khi ra ngoài, Inside Global là địa chỉ Private nội bộ của thiết bị",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 25,
+    "question": "Ba khái niệm cơ bản của QoS gồm Classification, Marking và Queuing có ý nghĩa lần lượt là gì?",
+    "optionA": "Cấp phát IP, gia hạn IP, và thu hồi IP khi thiết bị ngừng sử dụng địa chỉ đó",
+    "optionB": "Mã hóa traffic, giải mã traffic, và kiểm tra tính toàn vẹn của traffic đã xử lý",
+    "optionC": "Xác thực người dùng, phân quyền truy cập, và ghi log hành động đã thực hiện",
+    "optionD": "Phân loại traffic, đánh dấu mức ưu tiên, và xếp hàng xử lý theo độ ưu tiên đã đánh dấu",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 26,
+    "question": "TFTP thường được dùng trong tình huống nào khi quản trị thiết bị mạng?",
+    "optionA": "Truyền tải các file có dung lượng cực lớn qua Internet với độ tin cậy tuyệt đối",
+    "optionB": "Mã hóa toàn bộ traffic giữa router và switch trong hệ thống mạng doanh nghiệp",
+    "optionC": "Xác thực người dùng khi đăng nhập vào hệ thống quản lý tập trung của doanh nghiệp",
+    "optionD": "Backup hoặc restore nhanh file cấu hình router hoặc IOS image trong mạng nội bộ mà không cần xác thực phức tạp",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 27,
+    "question": "Đầu nối RJ45 được dùng phổ biến cho loại cáp mạng nào?",
+    "optionA": "Cáp đồng UTP, chuẩn đầu nối 8 pin dùng cho kết nối Ethernet thông thường",
+    "optionB": "Cáp quang Multi-mode, chuẩn đầu nối nhỏ gọn phổ biến trong datacenter",
+    "optionC": "Cáp quang Single-mode, chuẩn đầu nối chuyên dùng cho khoảng cách truyền xa",
+    "optionD": "Cáp đồng đồng trục (Coaxial), chuẩn đầu nối cũ ít còn sử dụng hiện nay",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 28,
+    "question": "Dải địa chỉ Class A truyền thống nằm trong khoảng nào và dành cho loại mạng nào?",
+    "optionA": "192.0.0.0 đến 223.255.255.255, dành cho các mạng LAN nhỏ với subnet mask mặc định /24",
+    "optionB": "1.0.0.0 đến 126.255.255.255, dành cho các mạng cực lớn với subnet mask mặc định /8",
+    "optionC": "224.0.0.0 đến 239.255.255.255, dành riêng cho lưu lượng Multicast trong hệ thống",
+    "optionD": "128.0.0.0 đến 191.255.255.255, dành cho các mạng tầm trung với subnet mask mặc định /16",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 29,
+    "question": "Registered ports (1024-49151) khác Dynamic/Private ports (49152-65535) như thế nào về mục đích sử dụng?",
+    "optionA": "Cả hai loại port đều dùng cho cùng mục đích duy nhất là phục vụ giao thức Well-known",
+    "optionB": "Registered ports chỉ dùng tạm thời cho client còn Dynamic ports dùng cố định cho ứng dụng đã đăng ký",
+    "optionC": "Registered ports chỉ áp dụng cho giao thức UDP còn Dynamic ports chỉ áp dụng cho TCP",
+    "optionD": "Registered ports do ứng dụng đăng ký với IANA để dùng cố định, còn Dynamic ports dùng tạm thời cho client khi kết nối ra ngoài",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 30,
+    "question": "Implicit deny ở cuối mỗi ACL có ý nghĩa gì và tại sao cần lưu ý khi cấu hình?",
+    "optionA": "Chỉ xuất hiện trên Extended ACL, không xuất hiện trên Standard ACL trong mọi trường hợp",
+    "optionB": "Là dòng deny ẩn chặn toàn bộ traffic còn lại chưa được permit, nên ACL cần ít nhất một dòng permit nếu không sẽ chặn hết traffic",
+    "optionC": "Có thể xóa bỏ hoàn toàn dòng implicit deny này bằng lệnh cấu hình thủ công trên router",
+    "optionD": "Là dòng permit ẩn cho phép toàn bộ traffic còn lại đi qua nếu không có dòng deny nào khớp",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 31,
+    "question": "BPDU (Bridge Protocol Data Unit) trong STP chứa thông tin gì để phục vụ việc bầu chọn Root Bridge?",
+    "optionA": "Chỉ chứa danh sách VLAN hiện có trên switch đó để đồng bộ với các switch khác",
+    "optionB": "Chỉ chứa địa chỉ IP của switch đó để các switch khác biết đường định tuyến tới nó",
+    "optionC": "Chỉ chứa thông tin về số lượng cổng đang hoạt động trên switch tại thời điểm gửi",
+    "optionD": "Bridge ID, gồm Priority và địa chỉ MAC, dùng để so sánh và xác định switch nào có Bridge ID nhỏ nhất",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 32,
+    "question": "Địa chỉ MAC Multicast dùng cho IPv4 thường bắt đầu bằng dãy byte nào?",
+    "optionA": "AA:BB:CC, dãy byte thường dùng làm ví dụ minh họa chứ không mang ý nghĩa chuẩn",
+    "optionB": "FF:FF:FF, dãy byte đặc trưng dùng riêng cho địa chỉ Broadcast trong Ethernet",
+    "optionC": "00:00:00, dãy byte mặc định khi thiết bị chưa được cấu hình địa chỉ MAC",
+    "optionD": "01:00:5E, dãy byte đầu tiên đặc trưng cho địa chỉ Multicast của IPv4 theo chuẩn IEEE",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 33,
+    "question": "Lệnh switchport mode trunk kết hợp với lệnh nào để giới hạn danh sách VLAN được phép đi qua đường trunk đó?",
+    "optionA": "channel-group [số] mode active, dùng để gộp cổng đó vào một EtherChannel",
+    "optionB": "switchport port-security maximum [số], dùng để giới hạn số MAC học được trên cổng",
+    "optionC": "switchport access vlan [id], dùng để gán cổng vào đúng một VLAN access cụ thể",
+    "optionD": "switchport trunk allowed vlan [danh sách], chỉ định rõ những VLAN nào được phép truyền qua trunk",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 34,
+    "question": "Accounting trong AAA Framework có chức năng gì đối với hệ thống bảo mật?",
+    "optionA": "Phân quyền chi tiết cho từng người dùng biết họ được làm gì trên hệ thống đang dùng",
+    "optionB": "Ghi log lại hành động đã thực hiện, ai làm gì và lúc nào, để phục vụ kiểm tra hoặc điều tra sự cố sau này",
+    "optionC": "Xác thực danh tính người dùng ngay khi họ cố gắng truy cập vào hệ thống lần đầu tiên",
+    "optionD": "Mã hóa toàn bộ dữ liệu nhạy cảm trước khi lưu trữ vào cơ sở dữ liệu hệ thống",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 35,
+    "question": "WPA2 sử dụng thuật toán mã hóa nào để bảo vệ dữ liệu truyền qua mạng không dây?",
+    "optionA": "DES, thuật toán mã hóa cũ hơn với độ an toàn thấp hơn nhiều so với các chuẩn hiện đại",
+    "optionB": "AES, thuật toán mã hóa được xem là chuẩn phổ biến và an toàn hơn các thuật toán cũ trước đó",
+    "optionC": "RSA, thuật toán mã hóa bất đối xứng thường dùng cho việc trao đổi khóa qua Internet",
+    "optionD": "MD5, thuật toán băm thường dùng để kiểm tra tính toàn vẹn chứ không phải mã hóa dữ liệu",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 36,
+    "question": "Mesh Topology có đặc điểm nổi bật nào so với Star Topology?",
+    "optionA": "Tất cả thiết bị chỉ nối về đúng một điểm trung tâm duy nhất, dễ quản lý hơn Mesh",
+    "optionB": "Mỗi thiết bị nối trực tiếp với nhiều thiết bị khác, độ dự phòng cao hơn nhưng tốn chi phí hơn",
+    "optionC": "Chỉ áp dụng được cho mạng không dây, hoàn toàn không dùng được cho mạng có dây",
+    "optionD": "Không có bất kỳ hình thức dự phòng nào giữa các thiết bị trong toàn bộ hệ thống",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 37,
+    "question": "ACL (Access Control List) trên router hoặc switch dùng để làm gì?",
+    "optionA": "Tăng tốc độ xử lý gói tin bằng cách bỏ qua hoàn toàn việc kiểm tra địa chỉ IP",
+    "optionB": "Tự động sửa lỗi cấu hình sai trên các interface của router hoặc switch",
+    "optionC": "Mã hóa toàn bộ traffic đi qua router trước khi chuyển tiếp ra ngoài mạng",
+    "optionD": "Quyết định cho phép (permit) hay chặn (deny) traffic dựa trên các điều kiện như IP nguồn, IP đích, protocol, port",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 38,
+    "question": "Trạng thái Disabled trong STP xảy ra khi nào?",
+    "optionA": "Khi switch đó vừa được bầu làm Root Bridge và đang chờ các switch khác đồng bộ theo",
+    "optionB": "Khi cổng đó vừa được bầu làm Root Port nhưng chưa hoàn tất quá trình đồng bộ",
+    "optionC": "Khi cổng đó đang trong quá trình học địa chỉ MAC nhưng chưa được phép forward dữ liệu",
+    "optionD": "Khi cổng đó bị quản trị viên tắt thủ công, không tham gia vào bất kỳ hoạt động STP nào nữa",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 39,
+    "question": "Một ACL chỉ có đúng một dòng deny mà không có dòng permit nào, điều gì sẽ xảy ra với toàn bộ traffic đi qua interface áp dụng ACL đó?",
+    "optionA": "Router sẽ báo lỗi cấu hình và từ chối áp dụng ACL đó lên bất kỳ interface nào",
+    "optionB": "Toàn bộ traffic sẽ bị chặn hết vì dòng deny cộng với implicit deny ở cuối khiến không có traffic nào được permit",
+    "optionC": "Toàn bộ traffic vẫn được phép đi qua bình thường vì thiếu dòng permit sẽ mặc định cho phép hết",
+    "optionD": "Chỉ traffic khớp đúng điều kiện dòng deny mới bị chặn, các traffic khác vẫn đi qua bình thường",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 40,
+    "question": "Recursive query trong DNS hoạt động như thế nào khi client gửi yêu cầu phân giải tên miền?",
+    "optionA": "Server chỉ trả lời rằng nó không biết và không cung cấp bất kỳ thông tin gợi ý nào cho client",
+    "optionB": "DNS server sẽ từ chối xử lý yêu cầu nếu không có sẵn kết quả trong bộ nhớ cache",
+    "optionC": "DNS server nhận yêu cầu có trách nhiệm tự đi hỏi tiếp các server khác cho tới khi có kết quả rồi trả về cho client",
+    "optionD": "Client tự đi hỏi tiếp từng bước tới các server khác nhau cho tới khi tìm ra kết quả cuối cùng",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 41,
+    "question": "SNMPv3 khác SNMPv2c như thế nào về mặt bảo mật?",
+    "optionA": "Cả hai phiên bản đều có mức độ bảo mật hoàn toàn giống nhau khi triển khai thực tế",
+    "optionB": "SNMPv3 chỉ dùng được cho thiết bị Cisco còn SNMPv2c dùng được cho mọi hãng khác",
+    "optionC": "SNMPv3 có mã hóa và xác thực đầy đủ, an toàn hơn nhiều so với SNMPv2c chỉ dùng community string dạng clear-text",
+    "optionD": "SNMPv2c có mã hóa và xác thực đầy đủ hơn hẳn so với SNMPv3 phiên bản mới hơn",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 42,
+    "question": "Thuật toán SPF (Dijkstra) trong OSPF được mỗi router sử dụng để làm gì?",
+    "optionA": "Bầu chọn Router ID tự động dựa trên địa chỉ MAC nhỏ nhất trên các interface",
+    "optionB": "Tự tính toán cây đường đi ngắn nhất tới mọi đích dựa trên dữ liệu có sẵn trong LSDB",
+    "optionC": "Mã hóa toàn bộ nội dung LSA trước khi gửi cho các router khác trong cùng Area",
+    "optionD": "Xác định thời gian gửi Hello packet định kỳ phù hợp với từng loại interface",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 43,
+    "question": "Trong VTP, chế độ Client khác chế độ Server ở điểm nào?",
+    "optionA": "Client chỉ hoạt động khi không có bất kỳ switch nào khác trong cùng VTP domain",
+    "optionB": "Client không tham gia đồng bộ VTP mà chỉ chuyển tiếp thông tin qua các switch khác",
+    "optionC": "Client có toàn quyền tạo, sửa, xóa VLAN giống hệt như chế độ Server trong cùng domain",
+    "optionD": "Client chỉ nhận thông tin VLAN từ Server chứ không thể tự tạo, sửa hay xóa VLAN được",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 44,
+    "question": "PAT (Port Address Translation) cho phép điều gì mà Static NAT và Dynamic NAT thông thường không làm được?",
+    "optionA": "Loại bỏ hoàn toàn nhu cầu sử dụng địa chỉ Public khi kết nối ra Internet",
+    "optionB": "Ánh xạ cố định 1-1 giữa một Private IP và một Public IP cụ thể không đổi",
+    "optionC": "Nhiều Private IP cùng chia sẻ chung một Public IP duy nhất nhờ phân biệt bằng số port khác nhau",
+    "optionD": "Cho phép thiết bị bên ngoài Internet chủ động khởi tạo kết nối vào thiết bị nội bộ",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 45,
+    "question": "Chuẩn 802.11b và 802.11g có điểm chung nào về băng tần hoạt động?",
+    "optionA": "802.11b chỉ hoạt động 2.4GHz còn 802.11g chỉ hoạt động 5GHz hoàn toàn khác biệt",
+    "optionB": "Cả hai đều hoạt động trên băng tần 5GHz với tốc độ tối đa gần như tương đương nhau",
+    "optionC": "Cả hai chuẩn đều đã ngừng hoạt động và không còn thiết bị nào hỗ trợ hiện nay",
+    "optionD": "Cả hai đều hoạt động trên băng tần 2.4GHz, dù tốc độ tối đa khác nhau giữa hai chuẩn",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 46,
+    "question": "Tunneling (ví dụ 6to4, ISATAP) trong quá trình chuyển đổi IPv4 sang IPv6 hoạt động như thế nào?",
+    "optionA": "Chuyển đổi trực tiếp toàn bộ địa chỉ IPv4 hiện có thành địa chỉ IPv6 tương ứng",
+    "optionB": "Đóng gói gói tin IPv6 bên trong gói tin IPv4 để truyền qua hạ tầng mạng chỉ hỗ trợ IPv4",
+    "optionC": "Chạy đồng thời cả hai giao thức IPv4 và IPv6 song song trên cùng một thiết bị",
+    "optionD": "Loại bỏ hoàn toàn khả năng giao tiếp giữa thiết bị IPv4 và thiết bị IPv6",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 47,
+    "question": "Cổng UDP nào được TFTP sử dụng theo mặc định?",
+    "optionA": "69, cổng UDP mặc định dành riêng cho giao thức TFTP đơn giản không xác thực",
+    "optionB": "20/21, cặp cổng TCP mặc định dành cho giao thức FTP truyền thống",
+    "optionC": "161/162, cặp cổng UDP mặc định dành cho giao thức SNMP giám sát thiết bị",
+    "optionD": "80, cổng TCP mặc định dành cho giao thức HTTP truyền tải nội dung web",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 48,
+    "question": "Autonomous AP hoạt động độc lập có nghĩa là gì trong thực tế triển khai?",
+    "optionA": "AP tự động đồng bộ cấu hình với tất cả AP khác mà không cần quản trị viên can thiệp",
+    "optionB": "AP chỉ hoạt động được khi không có bất kỳ thiết bị nào khác trong cùng mạng",
+    "optionC": "Mỗi AP tự cấu hình và quản lý riêng biệt mà không cần một bộ điều khiển trung tâm như WLC",
+    "optionD": "Mỗi AP cần kết nối bắt buộc với WLC để có thể hoạt động và phát sóng wifi",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 49,
+    "question": "Mô hình 2-tier (Collapsed Core) khác mô hình 3-tier truyền thống ở điểm nào?",
+    "optionA": "Gộp Access và Distribution Layer làm một, chỉ giữ lại Core Layer riêng biệt duy nhất",
+    "optionB": "Hoàn toàn loại bỏ lớp Access, chỉ còn Distribution và Core xử lý toàn bộ traffic",
+    "optionC": "Có thêm một lớp thứ tư ngoài ba lớp truyền thống nhằm tăng cường khả năng mở rộng",
+    "optionD": "Gộp Distribution và Core Layer làm một, thường dùng cho mạng quy mô vừa hoặc nhỏ",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 50,
+    "question": "Ký hiệu CIDR /20 trong địa chỉ IP có ý nghĩa gì?",
+    "optionA": "Toàn bộ 20 bit đều thuộc phần host, không có bit nào dành cho phần network",
+    "optionB": "Ký hiệu này chỉ áp dụng cho địa chỉ IPv6, không áp dụng được cho IPv4 truyền thống",
+    "optionC": "20 bit đầu tiên thuộc phần network, phần còn lại 12 bit dùng cho phần host của địa chỉ",
+    "optionD": "20 bit cuối cùng thuộc phần network, phần đầu 12 bit dùng cho phần host của địa chỉ",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 51,
+    "question": "Một quản trị viên muốn giám sát từ xa tình trạng CPU và RAM của hàng loạt router trong hệ thống, giao thức nào phù hợp nhất để thực hiện việc này?",
+    "optionA": "NTP, giao thức chuyên dùng để đồng bộ thời gian giữa các thiết bị trong hệ thống",
+    "optionB": "TFTP, giao thức chuyên dùng để backup và restore file cấu hình của thiết bị",
+    "optionC": "SNMP, giao thức chuyên dùng để giám sát và quản lý thiết bị mạng từ xa qua MIB và OID",
+    "optionD": "DNS, giao thức chuyên dùng để phân giải tên miền thành địa chỉ IP tương ứng",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 52,
+    "question": "Một switch có hai cổng cùng dẫn tới Root Bridge với cost bằng nhau, switch sẽ dùng tiêu chí phụ nào để chọn Root Port?",
+    "optionA": "Không có tiêu chí phụ nào, STP sẽ ngẫu nhiên chọn một trong hai cổng bất kỳ",
+    "optionB": "Switch sẽ để cả hai cổng cùng đóng vai trò Root Port đồng thời để dự phòng lẫn nhau",
+    "optionC": "Cổng nào kết nối muộn hơn sẽ được ưu tiên chọn làm Root Port thay vì cổng kết nối trước",
+    "optionD": "Cổng có Port ID thấp hơn thường được ưu tiên chọn khi cost tới Root Bridge bằng nhau giữa các cổng",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 53,
+    "question": "Syslog được dùng để làm gì trong hệ thống quản lý mạng?",
+    "optionA": "Cấp phát địa chỉ IP tự động cho các thiết bị mới kết nối vào mạng nội bộ",
+    "optionB": "Đồng bộ thời gian chính xác giữa các thiết bị trong toàn bộ hệ thống mạng",
+    "optionC": "Gửi log sự kiện từ thiết bị mạng về một server tập trung để lưu trữ và phân tích sau này",
+    "optionD": "Mã hóa toàn bộ traffic truyền giữa router và switch trong mạng doanh nghiệp",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 54,
+    "question": "Vì sao Inter-VLAN Routing là bắt buộc khi hai PC thuộc hai VLAN khác nhau muốn giao tiếp với nhau?",
+    "optionA": "Vì VLAN chỉ ảnh hưởng tới tốc độ truyền chứ không ảnh hưởng tới khả năng giao tiếp giữa các PC",
+    "optionB": "Vì các PC trong VLAN khác nhau luôn dùng chung một địa chỉ MAC nên cần phân biệt bằng routing",
+    "optionC": "Vì VLAN là các broadcast domain riêng biệt, cần một thiết bị Layer 3 để định tuyến traffic giữa chúng",
+    "optionD": "Vì Inter-VLAN Routing chỉ cần thiết khi số lượng VLAN vượt quá mười trong toàn bộ hệ thống",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 55,
+    "question": "MIB (Management Information Base) trong SNMP là gì?",
+    "optionA": "Giao thức riêng biệt dùng để mã hóa dữ liệu trước khi gửi qua SNMP server",
+    "optionB": "Một loại địa chỉ IP đặc biệt chỉ dùng riêng cho các thiết bị chạy SNMP",
+    "optionC": "Tên gọi khác của community string dùng để xác thực trong SNMPv2c",
+    "optionD": "Cấu trúc dữ liệu chứa các thông tin thiết bị có thể giám sát được thông qua giao thức SNMP",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 56,
+    "question": "Khi áp ACL vào một interface, việc chọn đúng chiều in hoặc out có ý nghĩa gì?",
+    "optionA": "Chỉ mang tính hình thức, không ảnh hưởng gì tới kết quả lọc traffic thực tế của ACL",
+    "optionB": "Chỉ áp dụng cho Standard ACL, không cần quan tâm chiều khi áp dụng Extended ACL",
+    "optionC": "Xác định ACL sẽ lọc traffic đi vào interface đó hay traffic đi ra khỏi interface đó, ảnh hưởng trực tiếp tới traffic nào bị kiểm tra",
+    "optionD": "Luôn phải chọn cả hai chiều in và out cùng lúc để ACL hoạt động đúng cách",
+    "correctAnswer": "C",
+    "points": 4
+  },
+  {
+    "id": 57,
+    "question": "Quy tắc chung của thang đo Severity Level trong Syslog là gì?",
+    "optionA": "Số càng nhỏ thì mức độ nghiêm trọng của sự kiện càng cao",
+    "optionB": "Chỉ có hai mức độ nghiêm trọng duy nhất là cao và thấp trong toàn bộ thang đo",
+    "optionC": "Số càng lớn thì mức độ nghiêm trọng của sự kiện càng cao",
+    "optionD": "Mức độ nghiêm trọng không liên quan gì tới giá trị số trong thang đo",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 58,
+    "question": "Cờ PSH trong TCP Segment có ý nghĩa gì khi được thiết lập?",
+    "optionA": "Yêu cầu khẩn cấp xử lý ưu tiên dữ liệu đó trước mọi segment khác đang chờ",
+    "optionB": "Yêu cầu đẩy dữ liệu ngay cho ứng dụng nhận thay vì giữ trong buffer chờ thêm dữ liệu",
+    "optionC": "Yêu cầu kết thúc kết nối ngay lập tức mà không cần qua bốn bước termination",
+    "optionD": "Yêu cầu khởi tạo lại toàn bộ kết nối TCP từ đầu do phát hiện lỗi nghiêm trọng",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 59,
+    "question": "Trong CIA Triad, thành phần Confidentiality đảm bảo điều gì cho hệ thống thông tin?",
+    "optionA": "Dữ liệu không bị thay đổi trái phép trong quá trình truyền tải hoặc lưu trữ trên hệ thống",
+    "optionB": "Thông tin chỉ người có quyền mới xem được, thường thực hiện bằng mã hóa và phân quyền truy cập",
+    "optionC": "Ghi lại toàn bộ hành động của người dùng để phục vụ kiểm tra và điều tra sau này",
+    "optionD": "Hệ thống và dữ liệu luôn sẵn sàng phục vụ khi người dùng hợp lệ cần truy cập",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 60,
+    "question": "Trạng thái Blocking trong STP có đặc điểm hoạt động như thế nào?",
+    "optionA": "Chỉ học địa chỉ MAC mà không thực hiện bất kỳ hoạt động nào khác liên quan STP",
+    "optionB": "Không forward traffic dữ liệu nhưng vẫn lắng nghe BPDU để duy trì tính toán topology",
+    "optionC": "Forward traffic dữ liệu bình thường nhưng không lắng nghe bất kỳ BPDU nào gửi tới",
+    "optionD": "Hoàn toàn bị tắt về mặt vật lý, không nhận cũng không gửi bất kỳ tín hiệu nào",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 61,
+    "question": "Extended ACL nên được đặt gần nguồn (source) nhất có thể vì lý do gì?",
+    "optionA": "Vì Extended ACL chỉ hoạt động được khi đặt gần nguồn, không hoạt động khi đặt gần đích",
+    "optionB": "Vì Extended ACL không thể lọc theo IP đích nên cần đặt gần nguồn để bù đắp",
+    "optionC": "Vì Extended ACL lọc được chi tiết cả đích và protocol nên chặn sớm giúp tiết kiệm băng thông toàn mạng",
+    "optionD": "Vì đặt gần nguồn giúp giảm số dòng cấu hình cần thiết trong toàn bộ Extended ACL",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 62,
+    "question": "Integrity trong CIA Triad được đảm bảo thông qua cơ chế nào là phổ biến nhất?",
+    "optionA": "Ghi log chi tiết mọi hành động của người dùng trên hệ thống mạng nội bộ",
+    "optionB": "Triển khai hệ thống dự phòng chống DDoS để đảm bảo dịch vụ luôn hoạt động",
+    "optionC": "Mã hóa dữ liệu bằng các thuật toán như AES nhằm giữ bí mật nội dung thông tin",
+    "optionD": "Hash và checksum, giúp phát hiện nếu dữ liệu bị thay đổi trái phép trong quá trình truyền hoặc lưu trữ",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 63,
+    "question": "Chế độ vi phạm (violation mode) Protect trong Port Security xử lý traffic vi phạm như thế nào?",
+    "optionA": "Tắt hẳn cổng đó (err-disable), cần can thiệp thủ công để bật lại sau đó",
+    "optionB": "Cho phép toàn bộ traffic đi qua bình thường mà không có bất kỳ hành động nào",
+    "optionC": "Drop traffic vi phạm đồng thời ghi log và tăng biến đếm vi phạm tương ứng",
+    "optionD": "Âm thầm drop traffic vi phạm mà không ghi log lại sự kiện đó",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 64,
+    "question": "Standard ACL chỉ có thể lọc traffic dựa trên tiêu chí nào?",
+    "optionA": "Chỉ dựa trên loại protocol đang sử dụng mà không quan tâm địa chỉ IP",
+    "optionB": "Dựa trên cả IP nguồn, IP đích, protocol và port giống như Extended ACL",
+    "optionC": "Chỉ dựa trên địa chỉ MAC nguồn của thiết bị đang gửi traffic đi",
+    "optionD": "Chỉ dựa trên địa chỉ IP nguồn, không lọc được theo IP đích, protocol hay port",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 65,
+    "question": "Preamble và SFD trong khung Ethernet II có chức năng gì trước khi frame thực sự bắt đầu?",
+    "optionA": "Đồng bộ tín hiệu giữa hai thiết bị và báo hiệu điểm bắt đầu chính thức của frame",
+    "optionB": "Xác định loại giao thức lớp trên đang được đóng gói bên trong frame đó",
+    "optionC": "Kiểm tra lỗi CRC cho toàn bộ nội dung frame trước khi chuyển tiếp đi tiếp",
+    "optionD": "Chứa địa chỉ MAC nguồn và đích của frame đang được truyền đi trong mạng",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 66,
+    "question": "NTP (Network Time Protocol) đóng vai trò quan trọng như thế nào trong hệ thống mạng doanh nghiệp?",
+    "optionA": "Đồng bộ thời gian chính xác giữa các thiết bị, giúp việc đối chiếu log và điều tra sự cố bảo mật trở nên khả thi",
+    "optionB": "Mã hóa toàn bộ traffic truyền qua mạng nhằm tăng cường bảo mật cho hệ thống",
+    "optionC": "Giám sát tình trạng CPU và RAM của các thiết bị mạng theo thời gian thực",
+    "optionD": "Cấp phát địa chỉ IP tự động cho các thiết bị mới kết nối vào mạng nội bộ",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 67,
+    "question": "Trong GLBP, AVF (Active Virtual Forwarder) đảm nhiệm vai trò gì so với AVG?",
+    "optionA": "AVF là router thực sự forward traffic cho một phần client được AVG phân công Virtual MAC tương ứng",
+    "optionB": "AVF là router duy nhất chịu trách nhiệm phân phối Virtual MAC cho các router khác trong nhóm",
+    "optionC": "AVF thay thế hoàn toàn vai trò của Virtual IP trong toàn bộ nhóm GLBP đang hoạt động",
+    "optionD": "AVF chỉ đóng vai trò dự phòng thụ động, không tham gia forward bất kỳ traffic nào",
+    "correctAnswer": "A",
+    "points": 4
+  },
+  {
+    "id": 68,
+    "question": "Một Extended ACL cần chặn traffic HTTP (port 80) từ một subnet cụ thể tới một server, nhưng vẫn cho phép các traffic khác đi qua bình thường, cấu hình cần lưu ý điều gì?",
+    "optionA": "Phải cấu hình Standard ACL thay vì Extended ACL vì Standard ACL lọc theo port tốt hơn",
+    "optionB": "Phải có dòng deny cho port 80 tới đúng IP server đó, kèm theo dòng permit any any ở cuối để không chặn nhầm traffic khác",
+    "optionC": "Chỉ cần một dòng deny duy nhất cho port 80 là đủ, không cần thêm bất kỳ dòng permit nào khác",
+    "optionD": "Không thể thực hiện được yêu cầu này bằng ACL vì ACL chỉ lọc được theo IP chứ không lọc theo port",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 69,
+    "question": "PAgP (Port Aggregation Protocol) là giao thức như thế nào và thuộc về hãng nào?",
+    "optionA": "Giao thức độc quyền của Cisco dùng để đàm phán EtherChannel tự động giữa các switch",
+    "optionB": "Giao thức dùng để bầu chọn Root Bridge tự động khi có nhiều switch tham gia STP",
+    "optionC": "Giao thức dùng để đồng bộ VLAN tự động giữa nhiều switch trong cùng một domain",
+    "optionD": "Chuẩn mở 802.3ad tương thích đa hãng, phổ biến hơn LACP trong thực tế triển khai",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 70,
+    "question": "Vì sao AAA Framework thường được triển khai đầy đủ cả ba thành phần thay vì chỉ dùng riêng Authentication?",
+    "optionA": "Vì AAA Framework chỉ có ý nghĩa khi triển khai đủ ba thành phần cùng lúc, thiếu một thành phần sẽ khiến hai thành phần còn lại ngừng hoạt động",
+    "optionB": "Vì chỉ xác thực danh tính (Authentication) chưa đủ để kiểm soát quyền hạn (Authorization) và truy vết hành vi (Accounting) của người dùng sau khi đã đăng nhập",
+    "optionC": "Vì Accounting bắt buộc phải chạy trước Authentication để ghi lại quá trình xác thực",
+    "optionD": "Vì Authorization và Accounting là hai tên gọi khác nhau của cùng một chức năng xác thực",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 71,
+    "question": "Vì sao doanh nghiệp nên ưu tiên dùng SNMPv3 thay vì SNMPv2c khi triển khai giám sát hệ thống mạng?",
+    "optionA": "Vì SNMPv3 có tốc độ truyền dữ liệu nhanh hơn đáng kể so với SNMPv2c trong mọi trường hợp",
+    "optionB": "Vì SNMPv2c đã bị Cisco ngừng hỗ trợ hoàn toàn trên các thiết bị hiện đại ngày nay",
+    "optionC": "Vì SNMPv3 có mã hóa và xác thực đầy đủ, tránh rủi ro lộ community string dạng clear-text như SNMPv2c",
+    "optionD": "Vì SNMPv3 không cần cấu hình MIB hay OID như SNMPv2c yêu cầu trước đó",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 72,
+    "question": "Static NAT phù hợp nhất khi nào trong thiết kế mạng doanh nghiệp?",
+    "optionA": "Khi cần tiết kiệm tối đa số lượng địa chỉ Public đang sở hữu của doanh nghiệp",
+    "optionB": "Khi cần một server nội bộ luôn có địa chỉ Public cố định để người dùng ngoài truy cập ổn định",
+    "optionC": "Khi có hàng trăm PC nội bộ cần chia sẻ chung một địa chỉ Public duy nhất khi ra Internet",
+    "optionD": "Khi không có nhu cầu kết nối bất kỳ thiết bị nội bộ nào ra Internet",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 73,
+    "question": "Cáp UTP Cat5e hỗ trợ tốc độ và khoảng cách truyền tối đa như thế nào?",
+    "optionA": "Không có giới hạn khoảng cách vì đây là loại cáp quang chuyên dùng cho khoảng cách xa",
+    "optionB": "Hỗ trợ tới 10Gbps với khoảng cách tối đa khoảng 100m giống hệt như chuẩn Cat6a",
+    "optionC": "Hỗ trợ tới 1Gbps với khoảng cách tối đa khoảng 100m trong điều kiện lắp đặt tiêu chuẩn",
+    "optionD": "Chỉ hỗ trợ tối đa 100Mbps và khoảng cách giới hạn trong phạm vi rất ngắn dưới 10m",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 74,
+    "question": "Trong một hệ thống có nhiều loại traffic cùng đi qua một liên kết WAN băng thông hạn chế, việc áp dụng QoS giúp ích gì cho traffic VoIP?",
+    "optionA": "Chặn hoàn toàn các loại traffic khác để chỉ còn traffic VoIP được phép đi qua liên kết",
+    "optionB": "Đảm bảo traffic VoIP được ưu tiên xử lý với độ trễ thấp hơn, tránh bị nghẽn bởi các traffic ít quan trọng hơn như tải file",
+    "optionC": "Mã hóa toàn bộ traffic VoIP để tránh bị nghe lén trong quá trình truyền qua liên kết WAN",
+    "optionD": "Tăng tổng băng thông khả dụng của toàn bộ liên kết WAN lên gấp đôi so với bình thường",
+    "correctAnswer": "B",
+    "points": 4
+  },
+  {
+    "id": 75,
+    "question": "LSDB (Link-State Database) trong OSPF chứa thông tin gì và có đặc điểm ra sao giữa các router cùng Area?",
+    "optionA": "Thay đổi liên tục không đồng bộ giữa các router dù cùng thuộc một Area duy nhất",
+    "optionB": "Chứa toàn bộ thông tin LSA nhận được, các router cùng Area sẽ có LSDB giống hệt nhau",
+    "optionC": "Chỉ chứa thông tin về chính router đó, không chứa dữ liệu từ các router khác trong Area",
+    "optionD": "Chỉ được lưu trữ duy nhất tại DR, các router khác không cần lưu trữ riêng LSDB",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 76,
+    "question": "Trailer FCS được thêm vào ở bước nào trong quy trình đóng gói (Encapsulation) năm bước?",
+    "optionA": "Bước 3, khi tầng Network thêm IP header chứa địa chỉ IP nguồn và đích",
+    "optionB": "Bước 4, khi tầng Data Link đóng gói dữ liệu thành Frame kèm theo header và trailer",
+    "optionC": "Bước 2, khi tầng Transport thêm TCP/UDP header chứa source và dest port",
+    "optionD": "Bước 5, khi dữ liệu được chuyển thành tín hiệu điện hoặc quang để truyền đi",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 77,
+    "question": "QoS (Quality of Service) trong mạng nhằm mục đích gì đối với các loại traffic khác nhau?",
+    "optionA": "Mã hóa toàn bộ traffic đi qua router nhằm tăng cường bảo mật cho hệ thống mạng",
+    "optionB": "Chặn hoàn toàn các loại traffic không quan trọng để tiết kiệm băng thông tối đa",
+    "optionC": "Ưu tiên xử lý một số loại traffic quan trọng hơn, ví dụ traffic thoại VoIP cần độ trễ thấp hơn traffic tải file",
+    "optionD": "Cấp phát địa chỉ IP tự động cho các thiết bị theo mức độ ưu tiên đã định trước",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 78,
+    "question": "NAT64 được dùng trong tình huống nào của quá trình chuyển đổi mạng?",
+    "optionA": "Thay thế hoàn toàn vai trò của DHCPv6 trong việc cấp phát địa chỉ cho thiết bị",
+    "optionB": "Cho phép hai thiết bị cùng chạy IPv6 giao tiếp trực tiếp với nhau mà không cần dịch địa chỉ",
+    "optionC": "Cho phép thiết bị chỉ chạy IPv6 giao tiếp được với thiết bị chỉ chạy IPv4 thông qua việc dịch địa chỉ",
+    "optionD": "Chỉ dùng để dịch địa chỉ Private IPv4 sang Public IPv4 giống như NAT truyền thống",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 79,
+    "question": "Hai router OSPF chỉ hình thành neighbor adjacency thành công khi các thông số nào khớp nhau giữa chúng?",
+    "optionA": "Chỉ cần cùng thuộc chung một VLAN là đủ điều kiện để hình thành neighbor",
+    "optionB": "Không cần bất kỳ thông số nào khớp nhau, OSPF luôn tự động chấp nhận mọi neighbor",
+    "optionC": "Area ID, giá trị Hello/Dead timer, subnet, và thông tin authentication nếu có cấu hình",
+    "optionD": "Chỉ cần cùng chạy chung một phiên bản hệ điều hành router là đủ điều kiện",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 80,
+    "question": "Trong quy trình DORA của DHCP, bước nào diễn ra ngay sau khi client gửi Discover?",
+    "optionA": "Release, khi client chủ động từ chối địa chỉ IP mà server đã đề xuất trước đó",
+    "optionB": "Request, khi client broadcast xác nhận muốn nhận địa chỉ IP đã được đề xuất",
+    "optionC": "Offer, khi server phản hồi đề xuất một địa chỉ IP khả dụng cho client vừa gửi yêu cầu",
+    "optionD": "Acknowledge, khi server xác nhận cấp phát chính thức địa chỉ IP cho client",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 81,
+    "question": "Vì sao việc kiểm tra show interfaces trunk là bước quan trọng sau khi cấu hình đường trunk giữa hai switch?",
+    "optionA": "Giúp kiểm tra số lượng thiết bị end device đang kết nối qua đường trunk đó",
+    "optionB": "Giúp kiểm tra tốc độ băng thông tối đa mà cổng vật lý đó có thể đạt được",
+    "optionC": "Giúp xác nhận đúng các VLAN đã được cấu hình cho phép đi qua và trạng thái trunk đang hoạt động bình thường",
+    "optionD": "Giúp xác định địa chỉ MAC nào đã được học trên cổng trunk đang xét",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 82,
+    "question": "Designated Port trên mỗi segment mạng được xác định dựa trên nguyên tắc nào?",
+    "optionA": "Designated Port luôn thuộc về switch được bầu làm Root Bridge trên toàn bộ hệ thống",
+    "optionB": "Designated Port được chọn ngẫu nhiên giữa các switch có cùng cost bằng nhau",
+    "optionC": "Switch nào có cost tới Root Bridge thấp nhất trên segment đó sẽ có Designated Port để forward traffic",
+    "optionD": "Switch nào có nhiều VLAN nhất được cấu hình sẽ tự động có Designated Port trên mọi segment",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 83,
+    "question": "Sự khác biệt giữa hai chuẩn bấm dây T568A và T568B là gì?",
+    "optionA": "Không có sự khác biệt nào, đây chỉ là hai tên gọi khác nhau của cùng một chuẩn duy nhất",
+    "optionB": "T568A dùng cho cáp quang còn T568B dùng cho cáp đồng UTP truyền thống",
+    "optionC": "T568A chỉ dùng cho cáp chéo còn T568B chỉ dùng cho cáp thẳng theo quy định bắt buộc",
+    "optionD": "Khác nhau về thứ tự màu dây khi bấm đầu RJ45, trong đó T568B phổ biến hơn ở môi trường doanh nghiệp",
+    "correctAnswer": "D",
+    "points": 2
+  },
+  {
+    "id": 84,
+    "question": "Firewall trong hệ thống mạng thường được đặt ở vị trí nào và có chức năng gì?",
+    "optionA": "Thường đặt ở biên mạng (Edge), kiểm soát traffic ra/vào dựa trên các rule stateless hoặc stateful",
+    "optionB": "Thường đặt bên trong Access Point, mã hóa toàn bộ traffic không dây trước khi phát sóng",
+    "optionC": "Thường đặt tại lớp Core, chỉ chuyển tiếp traffic tốc độ cao mà không xử lý bất kỳ rule nào",
+    "optionD": "Thường đặt ở lớp Access, thay thế hoàn toàn vai trò của switch trong việc chuyển mạch nội bộ",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 85,
+    "question": "Vì sao thời gian lệch nhau giữa các thiết bị trong mạng gây khó khăn cho việc điều tra sự cố bảo mật?",
+    "optionA": "Vì đây chỉ là vấn đề thẩm mỹ khi xem log, không ảnh hưởng tới việc điều tra thực tế",
+    "optionB": "Vì các thiết bị sẽ tự động ngừng hoạt động nếu thời gian không khớp với nhau",
+    "optionC": "Vì log/sự kiện bảo mật cần đúng timestamp để đối chiếu, nếu thời gian lệch nhau việc truy vết gần như không thể thực hiện chính xác",
+    "optionD": "Vì thời gian lệch nhau khiến toàn bộ traffic trong mạng bị mã hóa sai cách",
+    "correctAnswer": "C",
+    "points": 4
+  },
+  {
+    "id": 86,
+    "question": "Một quản trị viên muốn chặn toàn bộ traffic Telnet (port 23) từ mạng ngoài vào một router, loại ACL nào phù hợp nhất để thực hiện yêu cầu này?",
+    "optionA": "Extended ACL, vì có thể lọc chi tiết theo protocol và port cụ thể như Telnet port 23",
+    "optionB": "Cả hai loại ACL đều không thể lọc được traffic theo port cụ thể như Telnet",
+    "optionC": "Standard ACL, vì chỉ cần lọc theo IP nguồn là đủ để chặn toàn bộ traffic Telnet",
+    "optionD": "Named ACL bắt buộc phải dùng thay vì Numbered ACL trong trường hợp này",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 87,
+    "question": "Port Security trên switch được dùng để chống lại loại tấn công hoặc sự cố nào?",
+    "optionA": "Tấn công DDoS từ bên ngoài Internet nhắm vào hệ thống server nội bộ của doanh nghiệp",
+    "optionB": "Tấn công giả mạo DNS nhằm chuyển hướng người dùng tới các trang web độc hại",
+    "optionC": "Tấn công brute-force nhắm vào mật khẩu đăng nhập của quản trị viên hệ thống",
+    "optionD": "MAC flooding hoặc thiết bị lạ cắm vào mạng, bằng cách giới hạn số lượng địa chỉ MAC được học trên một cổng",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 88,
+    "question": "Availability trong CIA Triad tập trung bảo vệ điều gì cho hệ thống?",
+    "optionA": "Đảm bảo mọi hành động của người dùng đều được ghi lại đầy đủ để kiểm tra sau",
+    "optionB": "Đảm bảo hệ thống và dữ liệu luôn sẵn sàng khi cần, ví dụ chống DDoS và có dự phòng đầy đủ",
+    "optionC": "Đảm bảo dữ liệu không bị chỉnh sửa trái phép trong suốt quá trình truyền tải",
+    "optionD": "Đảm bảo chỉ người có quyền mới truy cập được vào thông tin nhạy cảm của hệ thống",
+    "correctAnswer": "B",
+    "points": 1
+  },
+  {
+    "id": 89,
+    "question": "Khi gộp hai subnet 192.168.1.0/25 và 192.168.1.128/25 lại thành một route tổng hợp, kết quả summarization sẽ là gì?",
+    "optionA": "192.168.1.0/24, vì gộp hai subnet /25 liền kề lại sẽ tạo thành đúng một subnet /24 bao trùm cả hai",
+    "optionB": "192.168.0.0/23, vì cần mở rộng thêm ra ngoài phạm vi octet thứ ba đang xét",
+    "optionC": "192.168.1.0/26, vì đây là subnet nhỏ hơn nên không thể bao trùm được cả hai subnet /25",
+    "optionD": "192.168.1.0/23, vì đây là kết quả gộp thông thường khi có hai subnet liền kề bất kỳ",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 90,
+    "question": "Wildcard mask 0.0.0.255 dùng để khớp với dải địa chỉ nào?",
+    "optionA": "Chỉ khớp chính xác đúng một địa chỉ IP duy nhất, không khớp với bất kỳ địa chỉ nào khác",
+    "optionB": "Khớp với mọi địa chỉ IP bất kỳ trên toàn bộ Internet mà không có giới hạn nào",
+    "optionC": "Toàn bộ dải /24, ví dụ khớp với mọi địa chỉ trong 192.168.1.0/24 mà không quan tâm octet cuối",
+    "optionD": "Chỉ khớp với các địa chỉ thuộc dải Private IP theo chuẩn RFC 1918",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 91,
+    "question": "Trong nhóm HSRP, router đóng vai trò Standby thực hiện nhiệm vụ gì trong điều kiện bình thường?",
+    "optionA": "Xử lý song song một phần traffic cùng với router Active để cân bằng tải hệ thống",
+    "optionB": "Chỉ đóng vai trò ghi log các sự kiện xảy ra với router Active trong nhóm",
+    "optionC": "Chờ sẵn và giám sát trạng thái router Active, sẵn sàng tiếp quản ngay khi Active gặp sự cố",
+    "optionD": "Không thực hiện bất kỳ vai trò gì cho tới khi được quản trị viên kích hoạt thủ công",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 92,
+    "question": "Việc cấu hình logging [IP server] trên router Cisco IOS có tác dụng gì?",
+    "optionA": "Cấu hình router đồng bộ thời gian với NTP server có địa chỉ IP được chỉ định",
+    "optionB": "Cấu hình router giám sát tình trạng của thiết bị có địa chỉ IP được chỉ định qua SNMP",
+    "optionC": "Gửi log sự kiện của router về địa chỉ IP của Syslog server được chỉ định để lưu trữ tập trung",
+    "optionD": "Cấu hình router trở thành DHCP server cấp phát IP tự động cho các thiết bị khác",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 93,
+    "question": "Trong quá trình thiết kế ACL cho doanh nghiệp, vì sao cần kiểm tra kỹ thứ tự các dòng trước khi áp dụng lên interface thực tế?",
+    "optionA": "Vì thứ tự các dòng trong ACL không ảnh hưởng gì tới kết quả cuối cùng khi áp dụng thực tế",
+    "optionB": "Vì chỉ có Extended ACL mới cần quan tâm thứ tự, còn Standard ACL thì không cần thiết",
+    "optionC": "Vì router sẽ tự động sắp xếp lại thứ tự các dòng ACL theo mức độ ưu tiên hợp lý nhất",
+    "optionD": "Vì router xử lý top-down và dừng ở dòng khớp đầu tiên, thứ tự sai có thể khiến traffic mong muốn bị chặn nhầm hoặc traffic cần chặn lại được permit",
+    "correctAnswer": "D",
+    "points": 4
+  },
+  {
+    "id": 94,
+    "question": "PSK (Pre-Shared Key) trong bảo mật wireless có đặc điểm gì về cách xác thực người dùng?",
+    "optionA": "Dùng chung một mật khẩu cho tất cả người dùng, phù hợp với mô hình gia đình hoặc SOHO nhỏ",
+    "optionB": "Xác thực riêng biệt từng người dùng thông qua RADIUS server tập trung của doanh nghiệp",
+    "optionC": "Chỉ cho phép duy nhất một thiết bị kết nối tại một thời điểm nhất định",
+    "optionD": "Không yêu cầu bất kỳ mật khẩu nào, chỉ cần kết nối trực tiếp vào SSID là đủ",
+    "correctAnswer": "A",
+    "points": 1
+  },
+  {
+    "id": 95,
+    "question": "Vì sao cần cấu hình ip helper-address trên router khi DHCP server đặt ở một subnet khác với client?",
+    "optionA": "Vì DHCP Discover là gói broadcast, router mặc định không chuyển tiếp broadcast sang subnet khác nếu không cấu hình relay",
+    "optionB": "Vì ip helper-address giúp mã hóa toàn bộ traffic DHCP trước khi gửi qua subnet khác",
+    "optionC": "Vì DHCP server chỉ chấp nhận kết nối từ router chứ không chấp nhận kết nối trực tiếp từ client",
+    "optionD": "Vì đây là yêu cầu bắt buộc của giao thức DHCP bất kể DHCP server đặt ở đâu",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 96,
+    "question": "FTP và TFTP khác nhau như thế nào về cơ chế xác thực và giao thức tầng Transport sử dụng?",
+    "optionA": "TFTP cần xác thực username/password và chạy trên TCP, còn FTP đơn giản hơn chạy trên UDP",
+    "optionB": "Cả hai giao thức đều cần xác thực đầy đủ và đều chạy trên nền TCP giống hệt nhau",
+    "optionC": "FTP cần xác thực username/password và chạy trên TCP, còn TFTP đơn giản hơn không xác thực và chạy trên UDP",
+    "optionD": "FTP chỉ dùng để backup cấu hình router còn TFTP chỉ dùng để truyền file văn bản thông thường",
+    "correctAnswer": "C",
+    "points": 1
+  },
+  {
+    "id": 97,
+    "question": "Wildcard mask 255.255.255.255 (hoặc từ khóa any) trong ACL có ý nghĩa gì?",
+    "optionA": "Chỉ khớp chính xác với đúng một địa chỉ IP duy nhất được chỉ định trước đó",
+    "optionB": "Không khớp với bất kỳ địa chỉ IP nào, dùng để vô hiệu hóa dòng ACL đó tạm thời",
+    "optionC": "Chỉ khớp với các địa chỉ thuộc dải Private IP theo chuẩn RFC 1918 đang dùng",
+    "optionD": "Khớp với mọi địa chỉ IP bất kỳ, không quan tâm giá trị cụ thể của bất kỳ octet nào",
+    "correctAnswer": "D",
+    "points": 1
+  },
+  {
+    "id": 98,
+    "question": "Vì sao mô hình phân cấp 3-tier vẫn được xem là linh hoạt hơn dù phức tạp hơn mô hình Collapsed Core khi triển khai mạng doanh nghiệp lớn?",
+    "optionA": "Vì Collapsed Core hoàn toàn không hỗ trợ được VLAN hay Port Security như mô hình 3-tier",
+    "optionB": "Vì mô hình 3-tier không cần bất kỳ thiết bị Layer 3 nào trong toàn bộ hệ thống mạng",
+    "optionC": "Vì mô hình 3-tier luôn có chi phí đầu tư thấp hơn hẳn so với Collapsed Core trong mọi quy mô mạng",
+    "optionD": "Vì tách riêng Distribution và Core giúp phân chia rõ vai trò xử lý policy và tốc độ chuyển mạch, dễ mở rộng khi mạng phát triển thêm",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 99,
+    "question": "Router xử lý các dòng trong một ACL theo thứ tự nào khi một gói tin đi qua?",
+    "optionA": "Xử lý đồng thời toàn bộ các dòng cùng lúc rồi chọn dòng có độ ưu tiên cao nhất",
+    "optionB": "Từ trên xuống dưới (top-down), dừng lại ngay khi gặp dòng đầu tiên khớp điều kiện",
+    "optionC": "Xử lý ngẫu nhiên không theo thứ tự nào cụ thể giữa các dòng trong ACL",
+    "optionD": "Từ dưới lên trên (bottom-up), dừng lại ngay khi gặp dòng cuối cùng khớp điều kiện",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 100,
+    "question": "Cấu trúc header của UDP đơn giản hơn TCP như thế nào?",
+    "optionA": "Chỉ gồm Source port, Dest port, Length, Checksum, không có Sequence Number hay Acknowledgment Number",
+    "optionB": "Chỉ có Source port và Dest port, hoàn toàn không có trường Length hay Checksum nào cả",
+    "optionC": "Có đầy đủ Sequence Number và Acknowledgment Number giống hệt TCP nhưng thiếu phần Checksum",
+    "optionD": "Có nhiều trường hơn TCP vì cần bù đắp cho việc thiếu cơ chế bắt tay ba bước",
+    "correctAnswer": "A",
+    "points": 3
+  },
+  {
+    "id": 101,
+    "question": "Area 0 trong OSPF còn được gọi là gì và có vai trò bắt buộc như thế nào?",
+    "optionA": "Transit Area, chỉ dùng để trung chuyển traffic giữa hai Area khác mà không lưu trữ route",
+    "optionB": "Backbone Area, bắt buộc phải tồn tại và mọi Area khác phải kết nối trực tiếp hoặc gián tiếp về đây",
+    "optionC": "Stub Area, chỉ mang tính tùy chọn và không bắt buộc phải tồn tại trong mọi thiết kế OSPF",
+    "optionD": "NSSA, khu vực đặc biệt chỉ xuất hiện trong các thiết kế OSPF multi-area nâng cao",
+    "correctAnswer": "B",
+    "points": 2
+  },
+  {
+    "id": 102,
+    "question": "Dải số hiệu (number range) dành cho Standard ACL cơ bản là gì?",
+    "optionA": "100-199, dải số hiệu cơ bản dành riêng cho Standard ACL theo quy định của Cisco IOS",
+    "optionB": "2000-2699, dải số hiệu mở rộng dành riêng cho Standard ACL trong các phiên bản mới",
+    "optionC": "1-99, dải số hiệu cơ bản dành riêng cho Standard ACL theo quy định của Cisco IOS",
+    "optionD": "1-99, dải số hiệu cơ bản dành riêng cho Extended ACL theo quy định của Cisco IOS",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 103,
+    "question": "Muốn khớp chính xác một địa chỉ IP duy nhất trong ACL, có thể dùng cách viết wildcard nào hoặc từ khóa nào thay thế?",
+    "optionA": "Wildcard 0.0.0.0, hoặc dùng từ khóa host trước địa chỉ IP cần khớp chính xác",
+    "optionB": "Wildcard 0.0.0.255, hoặc dùng từ khóa subnet để khớp chính xác một địa chỉ duy nhất",
+    "optionC": "Wildcard 255.255.255.255, hoặc dùng từ khóa any để khớp chính xác một địa chỉ",
+    "optionD": "Không có cách nào để khớp chính xác một địa chỉ IP duy nhất trong ACL",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 104,
+    "question": "Vì sao Standard ACL nên được đặt gần đích (destination) nhất có thể khi áp dụng trên router?",
+    "optionA": "Vì đặt gần đích giúp Standard ACL tăng tốc độ xử lý gói tin đáng kể so với đặt gần nguồn",
+    "optionB": "Vì vị trí đặt ACL không ảnh hưởng gì tới kết quả lọc traffic trong thực tế",
+    "optionC": "Vì Extended ACL luôn phải đặt gần đích còn Standard ACL luôn phải đặt gần nguồn",
+    "optionD": "Vì Standard ACL chỉ lọc được theo IP nguồn nên đặt gần đích tránh chặn nhầm traffic cần đi tiếp tới nơi khác",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 105,
+    "question": "Authorization trong AAA Framework khác Authentication như thế nào?",
+    "optionA": "Cả hai khái niệm hoàn toàn giống nhau, chỉ khác tên gọi trong các tài liệu khác nhau",
+    "optionB": "Authorization xác thực danh tính người dùng còn Authentication xác định quyền hạn của họ",
+    "optionC": "Authorization xác định người dùng được phép làm gì sau khi đã xác thực thành công danh tính qua Authentication",
+    "optionD": "Authorization chỉ áp dụng cho quản trị viên còn Authentication chỉ áp dụng cho người dùng thường",
+    "correctAnswer": "C",
+    "points": 2
+  },
+  {
+    "id": 106,
+    "question": "Anycast trong IPv6 có đặc điểm gì khác biệt so với Unicast và Multicast?",
+    "optionA": "Chỉ dùng được cho giao tiếp giữa đúng hai thiết bị duy nhất trong toàn bộ hệ thống",
+    "optionB": "Gói tin luôn được gửi tới toàn bộ thiết bị trong mạng bất kể khoảng cách xa gần",
+    "optionC": "Anycast chỉ là tên gọi khác của Multicast, bản chất hoạt động hoàn toàn giống nhau",
+    "optionD": "Một địa chỉ được gán cho nhiều thiết bị, gói tin sẽ được gửi tới thiết bị gần nhất trong số đó",
+    "correctAnswer": "D",
+    "points": 3
+  },
+  {
+    "id": 107,
+    "question": "Dải địa chỉ Class C truyền thống có subnet mask mặc định là gì và thường dùng cho mục đích nào?",
+    "optionA": "Mặc định /32, chỉ dùng cho các địa chỉ loopback trên từng thiết bị riêng lẻ",
+    "optionB": "Mặc định /24, phổ biến trong các mạng LAN nhỏ với số lượng host vừa phải",
+    "optionC": "Mặc định /16, thường dùng cho các tổ chức tầm trung có nhiều subnet",
+    "optionD": "Mặc định /8, dành cho các mạng cực lớn với số lượng host khổng lồ",
+    "correctAnswer": "B",
+    "points": 3
+  },
+  {
+    "id": 108,
+    "question": "Root Port trên một switch không phải Root Bridge được chọn dựa trên tiêu chí nào?",
+    "optionA": "Cổng có số hiệu (port number) nhỏ nhất trong số các cổng hiện có trên switch đó",
+    "optionB": "Cổng đang có nhiều traffic đi qua nhất tại thời điểm bầu chọn Root Port",
+    "optionC": "Cổng có cost tới Root Bridge thấp nhất trong số các cổng hiện có trên switch đó",
+    "optionD": "Cổng được kết nối đầu tiên khi switch khởi động, bất kể cost là bao nhiêu",
+    "correctAnswer": "C",
+    "points": 3
+  },
+  {
+    "id": 109,
+    "question": "Trường Acknowledgment Number trong TCP Segment dùng để làm gì?",
+    "optionA": "Xác nhận bên gửi đã nhận dữ liệu tới đúng byte nào trong luồng truyền của bên kia",
+    "optionB": "Xác định loại cờ nào đang được kích hoạt trong segment đang truyền đi",
+    "optionC": "Đánh số thứ tự byte dữ liệu của chính segment đang được gửi đi hiện tại",
+    "optionD": "Chỉ ra kích thước cửa sổ nhận tối đa mà bên gửi có thể chấp nhận",
+    "correctAnswer": "A",
+    "points": 2
+  },
+  {
+    "id": 110,
+    "question": "Iterative query trong DNS khác Recursive query như thế nào?",
+    "optionA": "Server chỉ trả lời client nên hỏi server nào tiếp theo, client tự đi hỏi tiếp từng bước thay vì server tự làm hộ",
+    "optionB": "Cả hai loại truy vấn đều hoạt động hoàn toàn giống nhau, chỉ khác tên gọi trong tài liệu kỹ thuật",
+    "optionC": "Server tự đi hỏi tiếp toàn bộ các server khác cho tới khi có kết quả rồi trả về cho client",
+    "optionD": "Iterative query chỉ áp dụng cho IPv6 còn Recursive query chỉ áp dụng cho IPv4",
+    "correctAnswer": "A",
+    "points": 3
+  }
+]

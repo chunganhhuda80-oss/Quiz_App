@@ -81,11 +81,11 @@ const CONFIG = {
       id: 7,
       name: "Tuần 7",
       title: "Bảo Mật Mạng (ACL) & Quản Trị Hệ Thống (IP Services)",
-      file: "",
-      durationMinutes: 30,
-      totalQuestions: 0,
+      file: "questions_tuan7.json",
+      durationMinutes: 45,
+      totalQuestions: 110,
       isUnlocked: false,
-      description: "Chưa mở khóa - Đang cập nhật nội dung (Bảo mật ACL, Port Security, DHCP Snooping, NTP, DNS, SNMP & Syslog)"
+      description: "110 câu trắc nghiệm (Bảo mật ACL, Port Security, DHCP Snooping, NTP, DNS, SNMP & Syslog)"
     },
     {
       id: 8,

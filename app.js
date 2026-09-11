@@ -508,10 +508,18 @@ function getLocalWeeksTimestamp() {
   }
 }
 
+/**
+ * Kiểm tra xem một tuần đã được cập nhật nội dung đề thi hay chưa
+ */
+function isWeekUpdated(week) {
+  if (!week) return false;
+  return Boolean(week.file && week.file.trim() && (week.totalQuestions === undefined || week.totalQuestions > 0));
+}
+
 function isWeekUnlocked(week) {
   if (!week) return false;
-  // Nếu tuần không có file câu hỏi (chưa cập nhật đề thi), luôn luôn khóa
-  if (!week.file || !week.file.trim()) {
+  // Nếu tuần chưa cập nhật đề thi, TUYỆT ĐỐI KHÔNG MỞ KHÓA
+  if (!isWeekUpdated(week)) {
     return false;
   }
   const custom = getCustomWeeksStatus();
@@ -555,15 +563,24 @@ function saveAndSyncWeeksStatus(customState) {
 }
 
 function setWeekUnlockedStatus(weekId, status) {
+  const week = (CONFIG.WEEKS || []).find(w => w.id === Number(weekId));
+  if (!week || !isWeekUpdated(week)) {
+    console.warn(`[Weeks] Không thể thay đổi trạng thái tuần ${weekId} vì chưa cập nhật đề thi!`);
+    return false;
+  }
   const custom = getCustomWeeksStatus() || {};
   custom[weekId] = Boolean(status);
   saveAndSyncWeeksStatus(custom);
+  return true;
 }
 
 function unlockAllWeeksGlobal() {
   const custom = {};
   (CONFIG.WEEKS || []).forEach(w => {
-    custom[w.id] = true;
+    // CHỈ mở khóa các tuần đã có nội dung câu hỏi
+    if (isWeekUpdated(w)) {
+      custom[w.id] = true;
+    }
   });
   saveAndSyncWeeksStatus(custom);
 }
@@ -690,35 +707,62 @@ function initWeeksSelector() {
   const weeks = CONFIG.WEEKS || [];
 
   weeks.forEach(week => {
-    // Trạng thái mở/khóa thực tế của tuần
+    const updated = isWeekUpdated(week);
     const unlocked = isWeekUnlocked(week);
     const card = document.createElement("div");
-    card.className = `week-card ${unlocked ? "unlocked" : "locked"} ${week.id === QuizState.selectedWeekId ? "selected" : ""}`;
+
+    let cardStatusClass = "locked";
+    if (!updated) {
+      cardStatusClass = "unupdated";
+    } else if (unlocked) {
+      cardStatusClass = "unlocked";
+    } else if (isAdmin) {
+      cardStatusClass = "locked admin-can-test";
+    }
+
+    card.className = `week-card ${cardStatusClass} ${week.id === QuizState.selectedWeekId ? "selected" : ""}`;
     card.dataset.id = week.id;
 
     // Kiểm tra xem tài khoản này đã có điểm chính thức lần 1 cho tuần này chưa
     const officialAttempt = username ? getOfficialAttempt(username, week.id) : null;
     let badgeHtml = "";
 
-    if (officialAttempt) {
+    if (!updated) {
+      badgeHtml = `
+        <span class="week-status-badge unupdated" title="Nội dung câu hỏi của tuần này chưa được cập nhật">
+          Chưa cập nhật
+        </span>
+      `;
+    } else if (officialAttempt) {
       const isPassed = officialAttempt.score >= passingScore;
       badgeHtml = `
         <span class="week-status-badge ${isPassed ? 'score-passed' : 'score-failed'}" title="Điểm thi chính thức lần 1: ${officialAttempt.score}/100đ">
           ${officialAttempt.score}đ ${isPassed ? '✓' : ''}
         </span>
       `;
-    } else {
+    } else if (unlocked) {
       badgeHtml = `
-        <span class="week-status-badge ${unlocked ? 'open' : 'lock'}">
-          ${unlocked ? 'Mở' : 'Khóa'}
-        </span>
+        <span class="week-status-badge open">Mở</span>
       `;
+    } else {
+      if (isAdmin) {
+        badgeHtml = `
+          <span class="week-status-badge admin-access" title="Đang khóa với học sinh, nhưng Quản Trị Viên được làm bài">
+            Khóa (Admin làm)
+          </span>
+        `;
+      } else {
+        badgeHtml = `
+          <span class="week-status-badge lock">Khóa</span>
+        `;
+      }
     }
 
     // Nút chuyển đổi nhanh Mở/Khóa trên góc thẻ (dành riêng cho Quản Trị Viên)
-    const adminToggleHtml = isAdmin ? `
+    // TUYỆT ĐỐI CHỈ HIỆN VỚI TUẦN ĐÃ CẬP NHẬT CÂU HỎI
+    const adminToggleHtml = (isAdmin && updated) ? `
       <button type="button" class="week-card-admin-toggle ${unlocked ? 'is-open' : 'is-closed'}"
-              title="Quản Trị Viên: Nhấp để ${unlocked ? 'KHÓA' : 'MỞ'} riêng ${week.name}">
+              title="Quản Trị Viên: Nhấp để ${unlocked ? 'KHÓA LẠI' : 'MỞ KHÓA'} cho học sinh">
         ${unlocked ? '🔓' : '🔒'}
       </button>
     ` : '';
@@ -726,7 +770,11 @@ function initWeeksSelector() {
     card.innerHTML = `
       ${adminToggleHtml}
       <div class="week-icon-box">
-        ${unlocked ? `
+        ${!updated ? `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        ` : unlocked ? `
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
@@ -742,8 +790,8 @@ function initWeeksSelector() {
       ${badgeHtml}
     `;
 
-    // Gắn sự kiện nút toggle nhanh cho Admin
-    if (isAdmin) {
+    // Gắn sự kiện nút toggle nhanh cho Admin (chỉ có trên tuần đã cập nhật)
+    if (isAdmin && updated) {
       const toggleBtn = card.querySelector(".week-card-admin-toggle");
       if (toggleBtn) {
         toggleBtn.addEventListener("click", async (e) => {
@@ -780,7 +828,18 @@ function initWeeksSelector() {
     }
 
     card.addEventListener("click", async () => {
+      if (!updated) {
+        playWrongSound();
+        await showAppAlert({
+          title: "CHƯA CẬP NHẬT ĐỀ THI",
+          message: `<strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> hiện chưa được cập nhật dữ liệu đề thi trên hệ thống.<br><br>Vui lòng chọn tuần đã có đề thi để làm bài!`,
+          type: "info"
+        });
+        return;
+      }
+
       if (unlocked || isAdmin) {
+        // Quản trị viên có thể chọn và làm bài bất kỳ tuần nào đã cập nhật mà không cần mở khóa!
         selectWeek(week.id);
       } else {
         playWrongSound();
@@ -795,19 +854,21 @@ function initWeeksSelector() {
     container.appendChild(card);
   });
 
-  // Chọn tuần mặc định ban đầu: Ưu tiên tuần đang mở và có sẵn file đề thi
-  const unlockedWeeksWithData = weeks.filter(w => isWeekUnlocked(w) && w.file && w.file.trim());
+  // Chọn tuần mặc định ban đầu: Ưu tiên tuần đang mở hoặc tuần có sẵn file đề thi
+  const updatedWeeks = weeks.filter(w => isWeekUpdated(w));
   let targetWeekId = QuizState.selectedWeekId || 1;
 
   if (!isAdmin) {
     const currentWeek = weeks.find(w => w.id === targetWeekId);
-    if (!currentWeek || !isWeekUnlocked(currentWeek) || !currentWeek.file || !currentWeek.file.trim()) {
-      if (unlockedWeeksWithData.length > 0) {
-        targetWeekId = unlockedWeeksWithData[0].id;
-      } else {
-        const firstUnlocked = weeks.find(w => isWeekUnlocked(w));
-        targetWeekId = firstUnlocked ? firstUnlocked.id : 1;
-      }
+    if (!currentWeek || !isWeekUnlocked(currentWeek)) {
+      const firstUnlocked = weeks.find(w => isWeekUnlocked(w));
+      targetWeekId = firstUnlocked ? firstUnlocked.id : (updatedWeeks.length > 0 ? updatedWeeks[0].id : 1);
+    }
+  } else {
+    // Với Admin: nếu tuần được chọn hiện tại chưa cập nhật câu hỏi, tự chọn tuần đã có đề thi đầu tiên
+    const currentWeek = weeks.find(w => w.id === targetWeekId);
+    if (!currentWeek || !isWeekUpdated(currentWeek)) {
+      targetWeekId = updatedWeeks.length > 0 ? updatedWeeks[0].id : 1;
     }
   }
 
@@ -935,9 +996,35 @@ async function loadWeekQuestions(week) {
   const scaleEl = document.getElementById("info-scale");
   const btnStart = document.getElementById("btn-start");
   const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
+  const updated = isWeekUpdated(week);
   const unlocked = isWeekUnlocked(week);
 
-  // 1. TRƯỜNG HỢP TUẦN THI ĐANG BỊ KHÓA ĐỐI VỚI HỌC SINH
+  // 1. TRƯỜNG HỢP TUẦN THI CHƯA CẬP NHẬT ĐỀ THI
+  if (!updated) {
+    QuizState.rawQuestions = [];
+    if (totalQEl) {
+      totalQEl.textContent = "Chưa cập nhật ⏳";
+      totalQEl.style.color = "#94a3b8";
+    }
+    if (durationEl) durationEl.textContent = "0 phút";
+    if (scaleEl) scaleEl.textContent = "0 điểm";
+
+    if (btnStart) {
+      btnStart.classList.add("btn-locked");
+      btnStart.disabled = true;
+      btnStart.style.opacity = "0.55";
+      btnStart.style.cursor = "not-allowed";
+      btnStart.innerHTML = `
+        <span>Chưa cập nhật đề thi ⏳</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+      `;
+    }
+    return;
+  }
+
+  // 2. TRƯỜNG HỢP TUẦN THI ĐANG BỊ KHÓA ĐỐI VỚI HỌC SINH (ADMIN ĐƯỢC PHÉP LÀM BÀI)
   if (!unlocked && !isAdmin) {
     QuizState.rawQuestions = [];
     if (totalQEl) {
@@ -962,32 +1049,7 @@ async function loadWeekQuestions(week) {
     return;
   }
 
-  // 2. TRƯỜNG HỢP TUẦN THI CHƯA CÓ FILE ĐỀ THI (CHƯA UPLOAD ĐỀ)
-  if (!week.file || !week.file.trim()) {
-    QuizState.rawQuestions = [];
-    if (totalQEl) {
-      totalQEl.textContent = "Chưa có đề ⏳";
-      totalQEl.style.color = "var(--danger)";
-    }
-    if (durationEl) durationEl.textContent = "0 phút";
-    if (scaleEl) scaleEl.textContent = "0 điểm";
-
-    if (btnStart) {
-      btnStart.classList.add("btn-locked");
-      btnStart.disabled = true;
-      btnStart.style.opacity = "0.55";
-      btnStart.style.cursor = "not-allowed";
-      btnStart.innerHTML = `
-        <span>Chưa có dữ liệu đề thi ⏳</span>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-        </svg>
-      `;
-    }
-    return;
-  }
-
-  // 3. TUẦN CÓ FILE ĐỀ THI VÀ ĐƯỢC PHÉP TRUY CẬP: NẠP ĐỀ THI THẬT
+  // 3. TUẦN ĐÃ CẬP NHẬT ĐỀ THI VÀ ĐƯỢC PHÉP LÀM BÀI
   if (totalQEl) {
     totalQEl.textContent = "Đang tải...";
     totalQEl.style.color = "";
@@ -1013,6 +1075,24 @@ async function loadWeekQuestions(week) {
     if (totalQEl) totalQEl.textContent = `${data.length} câu`;
     if (durationEl) durationEl.textContent = `${week.durationMinutes || 30} phút`;
     if (scaleEl) scaleEl.textContent = `${CONFIG.QUIZ.targetScale || 100} điểm`;
+
+    if (btnStart) {
+      if (isAdmin && !unlocked) {
+        btnStart.innerHTML = `
+          <span>Vào Thi (Admin Test - Đang Khóa Với User) 🛡️</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        `;
+      } else {
+        btnStart.innerHTML = `
+          <span>Bắt Đầu Làm Bài Ngay</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        `;
+      }
+    }
 
     updateOfficialScoreDisplay(week.id);
   } catch (err) {
@@ -1146,26 +1226,27 @@ async function startQuiz() {
 
   const week = (CONFIG.WEEKS || []).find(w => w.id === QuizState.selectedWeekId);
   const isAdmin = AuthState.currentUser && AuthState.currentUser.role === "admin";
+  const updated = isWeekUpdated(week);
   const unlocked = isWeekUnlocked(week);
 
-  // 2. CHẶN NẾU TUẦN THI ĐANG BỊ KHÓA ĐỐI VỚI HỌC SINH
+  // 2. CHẶN NẾU TUẦN THI CHƯA CẬP NHẬT ĐỀ THI
+  if (!updated) {
+    playWrongSound();
+    await showAppAlert({
+      title: "CHƯA CẬP NHẬT ĐỀ THI",
+      message: `<strong>${week ? escapeHtml(week.name) : 'Tuần này'}</strong> hiện chưa được cập nhật dữ liệu đề thi trên hệ thống.<br><br>Vui lòng chọn tuần đã có đề thi để làm bài!`,
+      type: "info"
+    });
+    return;
+  }
+
+  // 3. CHẶN NẾU TUẦN THI ĐANG BỊ KHÓA ĐỐI VỚI HỌC SINH (ADMIN ĐƯỢC PHÉP THI)
   if (!unlocked && !isAdmin) {
     playWrongSound();
     await showAppAlert({
       title: "BÀI THI ĐANG BỊ KHÓA",
       message: `<strong>${week ? escapeHtml(week.name) : 'Tuần này'}</strong> hiện đang bị khóa bởi Quản trị viên.<br><br>Học sinh không thể bắt đầu làm bài thi!`,
       type: "warning"
-    });
-    return;
-  }
-
-  // 3. CHẶN NẾU TUẦN THI CHƯA CÓ FILE CÂU HỎI
-  if (!week || !week.file || !week.file.trim()) {
-    playWrongSound();
-    await showAppAlert({
-      title: "CHƯA CÓ DỮ LIỆU ĐỀ THI",
-      message: `<strong>${week ? escapeHtml(week.name) : 'Tuần này'}</strong> chưa có bộ câu hỏi thi (giáo viên chưa tải file câu hỏi lên hệ thống).<br><br>Vui lòng chọn <strong>Tuần 1 đến Tuần 6</strong> để làm bài.`,
-      type: "info"
     });
     return;
   }
@@ -2815,17 +2896,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Nút Mở khóa toàn bộ 15 tuần ở Dashboard ngoài
+  // Nút Mở khóa toàn bộ tuần đã có đề ở Dashboard ngoài
   const btnAdminUnlock = document.getElementById("btn-admin-unlock-all");
   if (btnAdminUnlock) {
     btnAdminUnlock.addEventListener("click", async () => {
-      const allOpen = (CONFIG.WEEKS || []).every(w => isWeekUnlocked(w));
-      if (allOpen) {
+      const updatedWeeks = (CONFIG.WEEKS || []).filter(w => isWeekUpdated(w));
+      const allUpdatedOpen = updatedWeeks.every(w => isWeekUnlocked(w));
+
+      if (allUpdatedOpen) {
         const ok = await showAppConfirm({
-          title: "KHÓA CÁC TUẦN 3 - 15",
-          message: "Khóa lại các tuần 3 đến 15, chỉ giữ mở Tuần 1 & Tuần 2 theo tiến độ?",
+          title: "KHÓA LẠI CÁC TUẦN SAU",
+          message: "Khóa lại các tuần từ Tuần 3 trở đi, chỉ giữ mở Tuần 1 & Tuần 2 theo tiến độ chuẩn?",
           type: "question",
-          confirmText: "Đồng Ý",
+          confirmText: "Đồng Ý Khóa",
           cancelText: "Hủy Bỏ"
         });
         if (ok) {
@@ -2833,16 +2916,16 @@ document.addEventListener("DOMContentLoaded", () => {
           initWeeksSelector();
           await showAppAlert({
             title: "THÀNH CÔNG",
-            message: "Đã đưa về chuẩn tiến độ học tập (chỉ mở Tuần 1 & 2) thành công.",
+            message: "Đã đưa về chuẩn tiến độ học tập (chỉ mở Tuần 1 & Tuần 2) thành công.",
             type: "success"
           });
         }
       } else {
         const ok = await showAppConfirm({
-          title: "MỞ KHÓA TOÀN BỘ 15 TUẦN",
-          message: "Mở khóa toàn bộ 15 tuần đề thi cho học sinh?",
+          title: "MỞ KHÓA TẤT CẢ TUẦN ĐÃ CÓ ĐỀ THI",
+          message: `Mở khóa toàn bộ <strong>${updatedWeeks.length} tuần đã có đề thi</strong> cho học sinh?<br><span style="color:#64748b;font-size:0.85rem;">(Các tuần chưa cập nhật đề thi sẽ tự động được giữ nguyên trạng thái Chưa cập nhật)</span>`,
           type: "question",
-          confirmText: "Mở Toàn Bộ",
+          confirmText: "Mở Khóa Ngay",
           cancelText: "Hủy Bỏ"
         });
         if (ok) {
@@ -2850,7 +2933,7 @@ document.addEventListener("DOMContentLoaded", () => {
           initWeeksSelector();
           await showAppAlert({
             title: "THÀNH CÔNG",
-            message: "Đã mở khóa toàn bộ 15 tuần đề thi thành công.",
+            message: `Đã mở khóa thành công toàn bộ ${updatedWeeks.length} tuần đã có đề thi cho học sinh.`,
             type: "success"
           });
         }
@@ -2912,59 +2995,101 @@ function renderAdminWeeksModalList() {
   const weeks = CONFIG.WEEKS || [];
 
   weeks.forEach(week => {
+    const updated = isWeekUpdated(week);
     const unlocked = isWeekUnlocked(week);
     const row = document.createElement("div");
-    row.className = `admin-week-item-row ${unlocked ? "is-open" : "is-closed"}`;
+
+    let rowClass = "is-closed";
+    if (!updated) {
+      rowClass = "is-unupdated";
+    } else if (unlocked) {
+      rowClass = "is-open";
+    }
+    row.className = `admin-week-item-row ${rowClass}`;
     row.dataset.weekId = week.id;
+
+    let rightHtml = "";
+    if (!updated) {
+      rightHtml = `
+        <span class="admin-unupdated-badge" title="Tuần này chưa cập nhật câu hỏi - Không thể mở khóa">
+          ⏳ Chưa cập nhật
+        </span>
+      `;
+    } else {
+      rightHtml = `
+        <button type="button" class="admin-toggle-switch ${unlocked ? 'active' : ''}" data-week-id="${week.id}"
+                title="Quản Trị Viên: Nhấp để ${unlocked ? 'KHÓA LẠI' : 'MỞ KHÓA'} cho học sinh">
+          <span class="switch-dot"></span>
+          <span class="switch-text">${unlocked ? 'MỞ' : 'KHÓA'}</span>
+        </button>
+      `;
+    }
 
     row.innerHTML = `
       <div class="admin-week-item-left">
         <span class="admin-week-item-badge">${week.name}</span>
         <div class="admin-week-item-details">
           <div class="admin-week-item-title">${escapeHtml(week.title || week.name)}</div>
-          <div class="admin-week-item-meta">${week.durationMinutes || 30} phút • ${week.totalQuestions || 0} câu trắc nghiệm</div>
+          <div class="admin-week-item-meta">
+            ${updated 
+              ? `${week.durationMinutes || 30} phút • ${week.totalQuestions || 0} câu trắc nghiệm` 
+              : `<span style="color:#94a3b8;font-style:italic;">Chưa cập nhật nội dung câu hỏi</span>`}
+          </div>
         </div>
       </div>
       <div class="admin-week-item-right">
-        <button type="button" class="admin-toggle-switch ${unlocked ? 'active' : ''}" data-week-id="${week.id}">
-          <span class="switch-dot"></span>
-          <span class="switch-text">${unlocked ? 'MỞ' : 'KHÓA'}</span>
-        </button>
+        ${rightHtml}
       </div>
     `;
 
-    const switchBtn = row.querySelector(".admin-toggle-switch");
-    if (switchBtn) {
-      switchBtn.addEventListener("click", async () => {
-        const nextState = !isWeekUnlocked(week);
-        const actionWord = nextState ? "MỞ KHÓA" : "KHÓA LẠI";
+    // Chỉ gắn sự kiện mở/khóa đối với các tuần ĐÃ CẬP NHẬT ĐỀ THI
+    if (updated) {
+      const switchBtn = row.querySelector(".admin-toggle-switch");
+      if (switchBtn) {
+        switchBtn.addEventListener("click", async () => {
+          const nextState = !isWeekUnlocked(week);
+          const actionWord = nextState ? "MỞ KHÓA" : "KHÓA LẠI";
 
-        const confirmed = await showAppConfirm({
-          title: nextState ? "XÁC NHẬN MỞ KHÓA TUẦN THI" : "CẢNH BÁO KHÓA TUẦN THI",
-          message: nextState
-            ? `Bạn có chắc chắn muốn <strong>MỞ KHÓA</strong> <strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> cho học sinh vào thi không?`
-            : `Bạn có chắc chắn muốn <strong>KHÓA</strong> <strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> không?<br><span class="dialog-highlight-warn">⚠️ Khi khóa, tất cả học sinh sẽ BỊ CHẶN NGAY LẬP TỨC và không thể vào thi tuần này!</span>`,
-          type: nextState ? "question" : "warning",
-          confirmText: nextState ? "Mở Khóa Ngay" : "Khóa Ngay",
-          cancelText: "Hủy Bỏ"
+          const confirmed = await showAppConfirm({
+            title: nextState ? "XÁC NHẬN MỞ KHÓA TUẦN THI" : "CẢNH BÁO KHÓA TUẦN THI",
+            message: nextState
+              ? `Bạn có chắc chắn muốn <strong>MỞ KHÓA</strong> <strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> cho học sinh vào thi không?`
+              : `Bạn có chắc chắn muốn <strong>KHÓA</strong> <strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> không?<br><span class="dialog-highlight-warn">⚠️ Khi khóa, tất cả học sinh sẽ BỊ CHẶN NGAY LẬP TỨC và không thể vào thi tuần này!</span>`,
+            type: nextState ? "question" : "warning",
+            confirmText: nextState ? "Mở Khóa Ngay" : "Khóa Ngay",
+            cancelText: "Hủy Bỏ"
+          });
+
+          if (!confirmed) {
+            return;
+          }
+
+          setWeekUnlockedStatus(week.id, nextState);
+          renderAdminWeeksModalList();
+          initWeeksSelector();
+          if (QuizState.selectedWeekId === week.id) {
+            selectWeek(week.id);
+          }
+          await showAppAlert({
+            title: "CẬP NHẬT THÀNH CÔNG",
+            message: `Đã <strong>${actionWord}</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> thành công.<br>Học sinh đã có thể tiếp cận theo cài đặt mới.`,
+            type: "success"
+          });
         });
-
-        if (!confirmed) {
-          return;
-        }
-
-        setWeekUnlockedStatus(week.id, nextState);
-        renderAdminWeeksModalList();
-        initWeeksSelector();
-        if (QuizState.selectedWeekId === week.id) {
-          selectWeek(week.id);
-        }
-        await showAppAlert({
-          title: "CẬP NHẬT THÀNH CÔNG",
-          message: `Đã <strong>${actionWord}</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> thành công.`,
-          type: "success"
+      }
+    } else {
+      // Đối với tuần chưa cập nhật: nhấp vào badge sẽ thông báo lý do không thể mở khóa
+      const unupdatedBadge = row.querySelector(".admin-unupdated-badge");
+      if (unupdatedBadge) {
+        unupdatedBadge.style.cursor = "pointer";
+        unupdatedBadge.addEventListener("click", async () => {
+          await showAppAlert({
+            title: "CHƯA CẬP NHẬT ĐỀ THI",
+            message: `<strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> hiện chưa có file câu hỏi.<br><br>Hệ thống không cho phép mở khóa tuần chưa có nội dung đề thi để bảo đảm học sinh không gặp lỗi rỗng!`,
+            type: "info"
+          });
         });
-      });
+      }
     }
 
     container.appendChild(row);
@@ -4993,6 +5118,7 @@ function renderProfileModal() {
   if (historyList) {
     historyList.innerHTML = weeks.map(w => {
       const att = attempts[w.id];
+      const updated = isWeekUpdated(w);
       const unlocked = isWeekUnlocked(w);
 
       if (att && typeof att.score === "number") {
@@ -5015,6 +5141,25 @@ function renderProfileModal() {
                 <div class="profile-week-score-meta">Điểm chính thức</div>
               </div>
               <span class="profile-week-status-pill pass">Đã hoàn thành</span>
+            </div>
+          </div>
+        `;
+      } else if (!updated) {
+        return `
+          <div class="profile-week-row unupdated-week">
+            <div class="profile-week-left">
+              <div class="profile-week-num-badge" style="background: #f8fafc; color: #94a3b8;">⏳</div>
+              <div>
+                <div class="profile-week-title" style="color: #64748b;">Tuần ${w.id}: ${escapeHtml(w.title || w.name)}</div>
+                <div class="profile-week-desc">Chưa cập nhật dữ liệu đề thi trên hệ thống</div>
+              </div>
+            </div>
+            <div class="profile-week-right">
+              <div class="profile-week-score-box">
+                <div class="profile-week-score-number" style="color: #cbd5e1;">--</div>
+                <div class="profile-week-score-meta">Chưa cập nhật</div>
+              </div>
+              <span class="profile-week-status-pill unupdated">Chưa cập nhật</span>
             </div>
           </div>
         `;

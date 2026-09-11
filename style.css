@@ -792,6 +792,38 @@ body.auth-mode .app-container {
   color: #64748b;
 }
 
+.week-status-badge.unupdated {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border: 1px dashed #cbd5e1;
+  font-size: 0.62rem;
+  padding: 2px 4px;
+}
+
+.week-status-badge.admin-access {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  font-size: 0.62rem;
+  padding: 2px 4px;
+}
+
+.week-card.unupdated {
+  opacity: 0.65;
+  background: #f8fafc;
+  border: 1.5px dashed #cbd5e1;
+  cursor: pointer;
+}
+
+.week-card.unupdated:hover {
+  border-color: #94a3b8;
+  box-shadow: none;
+}
+
+.week-card.admin-can-test {
+  border-color: #93c5fd;
+}
+
 .form-group {
   margin-bottom: 20px;
   text-align: left;
@@ -2138,6 +2170,27 @@ body.auth-mode .app-container {
   border-color: #f1f5f9;
   background: #ffffff;
   opacity: 0.75;
+}
+
+.admin-week-item-row.is-unupdated {
+  border-color: #e2e8f0;
+  background: #f8fafc;
+  opacity: 0.7;
+  border-style: dashed;
+}
+
+.admin-unupdated-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px dashed #cbd5e1;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  user-select: none;
 }
 
 .admin-week-item-row:hover {
@@ -5506,6 +5559,12 @@ body.auth-mode .app-container {
   opacity: 0.78;
 }
 
+.profile-week-row.unupdated-week {
+  border-left: 4px dashed #cbd5e1;
+  background: #f8fafc;
+  opacity: 0.65;
+}
+
 .profile-week-left {
   display: flex;
   align-items: center;
@@ -5591,6 +5650,12 @@ body.auth-mode .app-container {
   background: #f1f5f9;
   color: #64748b;
   border: 1px solid #e2e8f0;
+}
+
+.profile-week-status-pill.unupdated {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border: 1px dashed #cbd5e1;
 }
 
 /* Tab 2: Huy hiệu danh hiệu */
