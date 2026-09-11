@@ -2423,13 +2423,14 @@ function updateAuthUI() {
 function updateSyncButtonsVisibility() {
   const btnHomeSync = document.getElementById("btn-home-sync-sheet");
   const btnModalSync = document.getElementById("btn-sync-ranking-sheet");
+  const btnPopupSync = document.getElementById("btn-sync-ranking-sheet-modal");
 
   const isAdmin = AuthState.currentUser && (
     AuthState.currentUser.role === "admin" ||
     AuthState.currentUser.username === ((CONFIG.ADMIN && CONFIG.ADMIN.username) || "rappergaming")
   );
 
-  [btnHomeSync, btnModalSync].forEach(btn => {
+  [btnHomeSync, btnModalSync, btnPopupSync].forEach(btn => {
     if (btn) {
       btn.style.display = isAdmin ? "inline-flex" : "none";
     }
@@ -3248,7 +3249,7 @@ function switchToQuizTab(targetWeekId) {
   document.querySelectorAll("#sidebar-tab-quiz, #tab-btn-quiz, #roadmap-tab-btn-quiz").forEach(btn => {
     btn.classList.add("active");
   });
-  document.querySelectorAll("#sidebar-tab-roadmap, #tab-btn-roadmap, #roadmap-tab-btn-roadmap").forEach(btn => {
+  document.querySelectorAll("#sidebar-tab-roadmap, #tab-btn-roadmap, #roadmap-tab-btn-roadmap, #sidebar-tab-ranking, #sidebar-tab-profile").forEach(btn => {
     btn.classList.remove("active");
   });
 
@@ -3263,7 +3264,7 @@ function switchToQuizTab(targetWeekId) {
  * Chuyển sang Tab Lộ Trình (Mindmap)
  */
 async function switchToRoadmapTab(targetWeekId) {
-  document.querySelectorAll("#sidebar-tab-quiz, #tab-btn-quiz, #roadmap-tab-btn-quiz").forEach(btn => {
+  document.querySelectorAll("#sidebar-tab-quiz, #tab-btn-quiz, #roadmap-tab-btn-quiz, #sidebar-tab-ranking, #sidebar-tab-profile").forEach(btn => {
     btn.classList.remove("active");
   });
   document.querySelectorAll("#sidebar-tab-roadmap, #tab-btn-roadmap, #roadmap-tab-btn-roadmap").forEach(btn => {
@@ -3285,15 +3286,39 @@ async function switchToRoadmapTab(targetWeekId) {
  * Chuyển sang Tab Bảng Xếp Hạng (Toàn Màn Hình Độc Lập)
  */
 function switchToRankingTab() {
-  document.querySelectorAll("#sidebar-tab-quiz, #tab-btn-quiz, #roadmap-tab-btn-quiz").forEach(btn => {
+  document.querySelectorAll("#sidebar-tab-quiz, #tab-btn-quiz, #roadmap-tab-btn-quiz, #sidebar-tab-roadmap, #tab-btn-roadmap, #roadmap-tab-btn-roadmap, #sidebar-tab-profile").forEach(btn => {
     btn.classList.remove("active");
   });
-  document.querySelectorAll("#sidebar-tab-roadmap, #tab-btn-roadmap, #roadmap-tab-btn-roadmap").forEach(btn => {
-    btn.classList.remove("active");
+  document.querySelectorAll("#sidebar-tab-ranking").forEach(btn => {
+    btn.classList.add("active");
   });
 
   renderRankingModal();
   showScreen("ranking-screen");
+
+  // Mặc định: nếu chưa có ai hoàn thành đủ số tuần thì tự động mở tab 'pending' để xem danh sách thi đua
+  const btnRanked = document.getElementById("filter-btn-ranked");
+  const btnPending = document.getElementById("filter-btn-pending");
+  const listRanked = document.getElementById("ranking-list-ranked");
+  const listPending = document.getElementById("ranking-list-pending");
+
+  if (btnRanked && btnPending && listRanked && listPending) {
+    const { rankedUsers, pendingUsers } = calculateLeaderboardData();
+    const shouldDefaultToPending = rankedUsers.length === 0 && pendingUsers.some(u => u.completedWeeksCount > 0);
+
+    if (shouldDefaultToPending) {
+      btnPending.classList.add("active");
+      btnRanked.classList.remove("active");
+      listPending.style.display = "flex";
+      listRanked.style.display = "none";
+    } else {
+      btnRanked.classList.add("active");
+      btnPending.classList.remove("active");
+      listRanked.style.display = "flex";
+      listPending.style.display = "none";
+    }
+  }
+
   if (typeof updateSyncButtonsVisibility === "function") {
     updateSyncButtonsVisibility();
   }
@@ -4231,7 +4256,7 @@ function initSidebarNavigation() {
   const tabRanking = document.getElementById("sidebar-tab-ranking");
   if (tabRanking) {
     tabRanking.addEventListener("click", () => {
-      openRankingModal();
+      switchToRankingTab();
       sidebar.classList.remove("is-hovered");
       if (backdrop) {
         backdrop.classList.remove("active");
@@ -4469,13 +4494,19 @@ function renderRankingModal() {
   const { unlockedWeeks, totalUnlocked, rankedUsers, pendingUsers } = calculateLeaderboardData();
   const currentUser = AuthState.currentUser;
 
-  // 1. Cập nhật thẻ Thành Tích Cá Nhân (#user-achievement-card)
+  // 1. Cập nhật thẻ Thành Tích Cá Nhân (hỗ trợ cả trên màn hình lớn và trong popup modal chữ nhật)
   const userCard = document.getElementById("user-achievement-card");
-  if (userCard) {
+  const popupUserCard = document.getElementById("popup-user-achievement-card");
+  const achievementCards = [userCard, popupUserCard].filter(Boolean);
+
+  if (achievementCards.length > 0) {
+    let cardClass = "user-achievement-card status-guest";
+    let cardHtml = "";
+
     if (currentUser) {
       if (currentUser.role === "admin") {
-        userCard.className = "user-achievement-card status-admin";
-        userCard.innerHTML = `
+        cardClass = "user-achievement-card status-admin";
+        cardHtml = `
           <div class="achievement-left">
             <span class="achievement-icon">🛡️</span>
             <div>
@@ -4485,7 +4516,7 @@ function renderRankingModal() {
               </div>
             </div>
           </div>
-          <div class="achievement-rank-tag" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecdd3; cursor: pointer;" onclick="closeRankingModal(); openProfileModal();" title="Nhấp để xem Hồ Sơ Cá Nhân">🛡️ Quản Trị Hệ Thống • Xem Hồ Sơ 👤</div>
+          <div class="achievement-rank-tag" style="background: #fee2e2; color: #dc2626; border: 1px solid #fecdd3; cursor: pointer;" onclick="closeRankingModal(); switchToProfileTab();" title="Nhấp để xem Hồ Sơ Cá Nhân">🛡️ Quản Trị Hệ Thống • Xem Hồ Sơ 👤</div>
         `;
       } else {
         const rankedIndex = rankedUsers.findIndex(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
@@ -4493,8 +4524,8 @@ function renderRankingModal() {
           const rankNum = rankedIndex + 1;
           const userStat = rankedUsers[rankedIndex];
           const medal = rankNum === 1 ? "🥇" : rankNum === 2 ? "🥈" : rankNum === 3 ? "🥉" : "🎖️";
-          userCard.className = "user-achievement-card status-ranked";
-          userCard.innerHTML = `
+          cardClass = "user-achievement-card status-ranked";
+          cardHtml = `
             <div class="achievement-left">
               <span class="achievement-icon">${medal}</span>
               <div>
@@ -4504,7 +4535,7 @@ function renderRankingModal() {
                 </div>
               </div>
             </div>
-            <div class="achievement-rank-tag" style="cursor: pointer;" onclick="closeRankingModal(); openProfileModal();" title="Nhấp để xem Hồ Sơ Cá Nhân & Thành Tích">🏆 Hạng #${rankNum} Toàn Hệ Thống • Xem Hồ Sơ 👤</div>
+            <div class="achievement-rank-tag" style="cursor: pointer;" onclick="closeRankingModal(); switchToProfileTab();" title="Nhấp để xem Hồ Sơ Cá Nhân & Thành Tích">🏆 Hạng #${rankNum} Toàn Hệ Thống • Xem Hồ Sơ 👤</div>
           `;
         } else {
           const pendingStat = pendingUsers.find(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
@@ -4512,8 +4543,8 @@ function renderRankingModal() {
           const currentScore = pendingStat ? pendingStat.totalScore : 0;
           const remaining = totalUnlocked - doneCount;
 
-          userCard.className = "user-achievement-card status-pending";
-          userCard.innerHTML = `
+          cardClass = "user-achievement-card status-pending";
+          cardHtml = `
             <div class="achievement-left">
               <span class="achievement-icon">⏳</span>
               <div>
@@ -4523,13 +4554,13 @@ function renderRankingModal() {
                 </div>
               </div>
             </div>
-            <div class="achievement-rank-tag" style="color: #b45309; border-color: #fde68a; cursor: pointer;" onclick="closeRankingModal(); openProfileModal();" title="Nhấp để xem Hồ Sơ Cá Nhân & Thành Tích">⏳ Chờ (${doneCount}/${totalUnlocked} tuần) • Xem Hồ Sơ 👤</div>
+            <div class="achievement-rank-tag" style="color: #b45309; border-color: #fde68a; cursor: pointer;" onclick="closeRankingModal(); switchToProfileTab();" title="Nhấp để xem Hồ Sơ Cá Nhân & Thành Tích">⏳ Chờ (${doneCount}/${totalUnlocked} tuần) • Xem Hồ Sơ 👤</div>
           `;
         }
       }
     } else {
-      userCard.className = "user-achievement-card status-guest";
-      userCard.innerHTML = `
+      cardClass = "user-achievement-card status-guest";
+      cardHtml = `
         <div class="achievement-left">
           <span class="achievement-icon">👤</span>
           <div>
@@ -4542,11 +4573,19 @@ function renderRankingModal() {
         </button>
       `;
     }
+
+    achievementCards.forEach(c => {
+      c.className = cardClass;
+      c.innerHTML = cardHtml;
+    });
   }
 
-  // 2. Cập nhật bục Vinh Danh Top 3 Podium (#ranking-podium-section)
+  // 2. Cập nhật bục Vinh Danh Top 3 Podium (hỗ trợ cả màn hình và popup)
   const podiumSection = document.getElementById("ranking-podium-section");
-  if (podiumSection) {
+  const popupPodiumSection = document.getElementById("popup-ranking-podium-section");
+  const podiumSections = [podiumSection, popupPodiumSection].filter(Boolean);
+
+  if (podiumSections.length > 0) {
     const hasOfficial = rankedUsers.length > 0;
     const activePending = pendingUsers.filter(u => u.completedWeeksCount > 0);
     const sourceList = hasOfficial ? rankedUsers : activePending;
@@ -4591,12 +4630,15 @@ function renderRankingModal() {
       `;
     };
 
-    // Thứ tự hiển thị: Hạng 2 (trái) -> Hạng 1 (giữa, cao nhất) -> Hạng 3 (phải)
-    podiumSection.innerHTML = `
+    const podiumHtml = `
       ${renderPodiumCol(top2, 2, "🥈", "TOP 2")}
       ${renderPodiumCol(top1, 1, "👑", "TOP 1")}
       ${renderPodiumCol(top3, 3, "🥉", "TOP 3")}
     `;
+
+    podiumSections.forEach(p => {
+      p.innerHTML = podiumHtml;
+    });
   }
 
   // 3. Cập nhật số đếm trên Tab
@@ -4628,7 +4670,7 @@ function renderRankingModal() {
         }).join("");
 
         return `
-          <div class="ranking-row-item ${isSelf ? 'is-current-user' : ''}" ${isSelf ? 'style="cursor: pointer;" onclick="closeRankingModal(); openProfileModal();" title="Nhấn để xem chi tiết Hồ Sơ Cá Nhân & Thành Tích"' : ''}>
+          <div class="ranking-row-item ${isSelf ? 'is-current-user' : ''}" ${isSelf ? 'style="cursor: pointer;" onclick="closeRankingModal(); switchToProfileTab();" title="Nhấn để xem chi tiết Hồ Sơ Cá Nhân & Thành Tích"' : ''}>
             <div class="ranking-row-left">
               <div class="rank-number-box">${rankIcon}</div>
               <div class="rank-avatar-small">${initial}</div>
@@ -4674,7 +4716,7 @@ function renderRankingModal() {
         }).join("");
 
         return `
-          <div class="ranking-row-item ${isSelf ? 'is-current-user' : ''}" ${isSelf ? 'style="cursor: pointer;" onclick="closeRankingModal(); openProfileModal();" title="Nhấn để xem chi tiết Hồ Sơ Cá Nhân & Thành Tích"' : ''}>
+          <div class="ranking-row-item ${isSelf ? 'is-current-user' : ''}" ${isSelf ? 'style="cursor: pointer;" onclick="closeRankingModal(); switchToProfileTab();" title="Nhấn để xem chi tiết Hồ Sơ Cá Nhân & Thành Tích"' : ''}>
             <div class="ranking-row-left">
               <div class="rank-number-box">⏳</div>
               <div class="rank-avatar-small" style="background: #94a3b8;">${initial}</div>
@@ -4696,55 +4738,72 @@ function renderRankingModal() {
       }).join("");
     }
   }
+
+  // 6. Render danh sách Top 5 học sinh trong modal popup hình chữ nhật (#popup-ranking-list)
+  const popupRankingList = document.getElementById("popup-ranking-list");
+  if (popupRankingList) {
+    const displayList = rankedUsers.length > 0 ? rankedUsers.slice(0, 5) : pendingUsers.slice(0, 5);
+    if (displayList.length === 0) {
+      popupRankingList.innerHTML = `
+        <div class="rank-card-empty" style="background: #f8fafc; border-radius: 12px; padding: 18px 14px; font-size: 0.84rem;">
+          Chưa có học sinh nào hoàn thành bài thi tuần. Hãy là người đầu tiên bứt phá điểm số! 🎯
+        </div>
+      `;
+    } else {
+      popupRankingList.innerHTML = displayList.map((user, idx) => {
+        const rankNum = idx + 1;
+        const isSelf = currentUser && user.username.toLowerCase() === currentUser.username.toLowerCase();
+        const initial = (user.fullName || "H").trim().charAt(0).toUpperCase();
+        const rankIcon = rankNum === 1 ? "🥇" : rankNum === 2 ? "🥈" : rankNum === 3 ? "🥉" : `#${rankNum}`;
+
+        return `
+          <div class="ranking-row-item ${isSelf ? 'is-current-user' : ''}" style="padding: 10px 14px; cursor: pointer;" onclick="closeRankingModal(); switchToRankingTab();" title="Bấm để xem Bảng Xếp Hạng Toàn Diện">
+            <div class="ranking-row-left">
+              <div class="rank-number-box">${rankIcon}</div>
+              <div class="rank-avatar-small" style="width: 32px; height: 32px; font-size: 0.82rem;">${initial}</div>
+              <div class="rank-user-info">
+                <div class="rank-name-line">
+                  <strong>${escapeHtml(user.fullName)}</strong>
+                  ${isSelf ? '<span class="tag-you">BẠN</span>' : ''}
+                </div>
+                <div class="rank-class-text">${escapeHtml(user.className)}</div>
+              </div>
+            </div>
+            <div class="ranking-row-right">
+              <div class="total-score-text">${user.totalScore} đ</div>
+              <div class="avg-score-text">TB: ${user.avgScore} đ</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+  }
 }
 
 /**
- * Mở Màn Hình Bảng Xếp Hạng & Bảng Thành Tích
+ * Mở Modal Hình Chữ Nhật Bảng Vinh Danh & Thành Tích (Popup nổi trên màn hình hiện tại)
  */
 function openRankingModal(isAutoAfterLogin = false) {
   const modal = document.getElementById("ranking-modal");
   if (modal) {
+    renderRankingModal();
     modal.style.display = "flex";
   }
 
-  switchToRankingTab();
-
-  // Mặc định: nếu chưa có ai hoàn thành đủ số tuần thì tự động mở tab 'pending' để xem danh sách thi đua
-  const btnRanked = document.getElementById("filter-btn-ranked");
-  const btnPending = document.getElementById("filter-btn-pending");
-  const listRanked = document.getElementById("ranking-list-ranked");
-  const listPending = document.getElementById("ranking-list-pending");
-
-  if (btnRanked && btnPending && listRanked && listPending) {
-    const { rankedUsers, pendingUsers } = calculateLeaderboardData();
-    const shouldDefaultToPending = rankedUsers.length === 0 && pendingUsers.some(u => u.completedWeeksCount > 0);
-
-    if (shouldDefaultToPending) {
-      btnPending.classList.add("active");
-      btnRanked.classList.remove("active");
-      listPending.style.display = "flex";
-      listRanked.style.display = "none";
-    } else {
-      btnRanked.classList.add("active");
-      btnPending.classList.remove("active");
-      listRanked.style.display = "flex";
-      listPending.style.display = "none";
-    }
-  }
-
   // Đảm bảo nút đồng bộ chỉ hiện cho tài khoản Quản Trị Viên
-  updateSyncButtonsVisibility();
+  if (typeof updateSyncButtonsVisibility === "function") {
+    updateSyncButtonsVisibility();
+  }
 }
 
 /**
- * Đóng Màn Hình Bảng Xếp Hạng (Quay về màn hình Bài Thi)
+ * Đóng Modal Bảng Vinh Danh & Thành Tích (Giữ nguyên màn hình hiện tại)
  */
 function closeRankingModal() {
   const modal = document.getElementById("ranking-modal");
   if (modal) {
     modal.style.display = "none";
   }
-  showScreen("start-screen");
 }
 
 /**
@@ -4760,7 +4819,7 @@ function initRankingFeature() {
   // 3. Cập nhật quyền hiển thị nút Đồng bộ Sheet (Chỉ Admin)
   updateSyncButtonsVisibility();
 
-  // 3. Thiết lập nút đóng modal (tương thích ngược)
+  // 4. Thiết lập các nút đóng modal popup hình chữ nhật
   const btnClose = document.getElementById("btn-close-ranking-modal");
   const backdrop = document.getElementById("ranking-modal-backdrop");
   const btnDismiss = document.getElementById("btn-ranking-dismiss");
@@ -4769,18 +4828,50 @@ function initRankingFeature() {
   if (backdrop) backdrop.addEventListener("click", closeRankingModal);
   if (btnDismiss) btnDismiss.addEventListener("click", closeRankingModal);
 
-  // 4. Thiết lập nút mở màn hình từ widget trang chủ
-  const btnHomeOpen = document.getElementById("btn-home-open-ranking");
-  if (btnHomeOpen) {
-    btnHomeOpen.addEventListener("click", () => openRankingModal());
+  // 5. Nút "Xem Trang Toàn Diện" và "Xem tất cả" trong modal popup hình chữ nhật
+  const btnPopupViewFull = document.getElementById("btn-popup-view-full-ranking");
+  if (btnPopupViewFull) {
+    btnPopupViewFull.addEventListener("click", () => {
+      closeRankingModal();
+      switchToRankingTab();
+    });
   }
 
-  // 5. Thiết lập nút "Vào Làm Bài Thi Ngay" và các nút chuyển hướng trên màn hình Bảng Xếp Hạng
+  const linkPopupViewAll = document.getElementById("link-popup-view-all");
+  if (linkPopupViewAll) {
+    linkPopupViewAll.addEventListener("click", () => {
+      closeRankingModal();
+      switchToRankingTab();
+    });
+  }
+
+  // 6. Thiết lập nút mở màn hình toàn trang từ widget trang chủ
+  const btnHomeOpen = document.getElementById("btn-home-open-ranking");
+  if (btnHomeOpen) {
+    btnHomeOpen.addEventListener("click", () => switchToRankingTab());
+  }
+
+  // 7. Nút "Vào Làm Bài Thi Ngay" trong modal popup
   const btnGoQuiz = document.getElementById("btn-ranking-go-quiz");
   if (btnGoQuiz) {
     btnGoQuiz.addEventListener("click", () => {
       closeRankingModal();
       switchToQuizTab();
+    });
+  }
+
+  // 8. Thiết lập các nút chuyển hướng trên màn hình lớn Bảng Xếp Hạng (#ranking-screen)
+  const btnScreenGoQuiz = document.getElementById("btn-ranking-screen-go-quiz");
+  if (btnScreenGoQuiz) {
+    btnScreenGoQuiz.addEventListener("click", () => {
+      switchToQuizTab();
+    });
+  }
+
+  const btnScreenGoRoadmap = document.getElementById("btn-ranking-screen-go-roadmap");
+  if (btnScreenGoRoadmap) {
+    btnScreenGoRoadmap.addEventListener("click", () => {
+      switchToRoadmapTab();
     });
   }
 
@@ -4794,13 +4885,6 @@ function initRankingFeature() {
   const btnGoRoadmapTop = document.getElementById("btn-ranking-go-roadmap-top");
   if (btnGoRoadmapTop) {
     btnGoRoadmapTop.addEventListener("click", () => {
-      switchToRoadmapTab();
-    });
-  }
-
-  const btnGoRoadmap = document.getElementById("btn-ranking-go-roadmap");
-  if (btnGoRoadmap) {
-    btnGoRoadmap.addEventListener("click", () => {
       switchToRoadmapTab();
     });
   }
@@ -4822,7 +4906,7 @@ function initRankingFeature() {
     });
   }
 
-  // 6. Chuyển đổi tab: Xếp Hạng Chính Thức vs Danh Sách Chờ (Pending)
+  // 9. Chuyển đổi tab: Xếp Hạng Chính Thức vs Danh Sách Chờ (Pending) trên màn hình ranking
   const filterBtnRanked = document.getElementById("filter-btn-ranked");
   const filterBtnPending = document.getElementById("filter-btn-pending");
   const listRanked = document.getElementById("ranking-list-ranked");
@@ -4844,9 +4928,10 @@ function initRankingFeature() {
     });
   }
 
-  // 7. Thiết lập các nút Đồng bộ Google Sheet trực tiếp
+  // 10. Thiết lập các nút Đồng bộ Google Sheet (cả trên trang chủ, toàn màn hình và modal popup)
   const btnHomeSync = document.getElementById("btn-home-sync-sheet");
   const btnModalSync = document.getElementById("btn-sync-ranking-sheet");
+  const btnPopupSync = document.getElementById("btn-sync-ranking-sheet-modal");
 
   if (btnHomeSync) {
     btnHomeSync.addEventListener("click", () => syncLeaderboardFromGoogleSheet(true));
@@ -4854,13 +4939,16 @@ function initRankingFeature() {
   if (btnModalSync) {
     btnModalSync.addEventListener("click", () => syncLeaderboardFromGoogleSheet(true));
   }
+  if (btnPopupSync) {
+    btnPopupSync.addEventListener("click", () => syncLeaderboardFromGoogleSheet(true));
+  }
 
-  // 8. Tự động kiểm tra và đồng bộ ngầm khi mở ứng dụng
+  // 11. Tự động kiểm tra và đồng bộ ngầm khi mở ứng dụng
   setTimeout(() => {
     syncLeaderboardFromGoogleSheet(false);
   }, 1200);
 
-  // 9. Tự động hiển thị Modal Bảng Vinh Danh & Xếp Hạng khi vừa truy cập hoặc reset/tải lại trang (F5)
+  // 12. Tự động hiển thị Modal Popup Bảng Vinh Danh & Xếp Hạng khi vừa truy cập hoặc reset/tải lại trang (F5)
   setTimeout(() => {
     const quizScreen = document.getElementById("quiz-screen");
     const isCurrentlyTesting = quizScreen && quizScreen.classList.contains("active");
