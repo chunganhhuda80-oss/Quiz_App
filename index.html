@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Inter:wght@400;500;600;700;800&display=swap&subset=vietnamese" rel="stylesheet">
 
   <!-- File CSS tùy chỉnh -->
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="stylesheet" href="style.css?v=17">
 
 </head>
 <body>
@@ -103,12 +103,12 @@
   <div class="app-container">
 
     <!-- =================================================================== -->
-    <!-- MÀN HÌNH 0: ĐĂNG NHẬP & ĐĂNG KÝ (AUTH SCREEN - CỔNG VÀO HỌC SINH) -->
+    <!-- MÀN HÌNH 0: ĐĂNG NHẬP & ĐĂNG KÝ (AUTH SCREEN - CỔNG VÀO SINH VIÊN) -->
     <!-- =================================================================== -->
     <section id="auth-screen" class="screen-card active">
       <div class="header-badge">
         <span class="badge-dot"></span>
-        <span>Cổng Học Sinh Trực Tuyến</span>
+        <span>Cổng Sinh Viên Trực Tuyến</span>
       </div>
 
       <div class="brand-header">
@@ -119,7 +119,7 @@
           </svg>
         </div>
         <h1>HỆ THỐNG THI TRẮC NGHIỆM</h1>
-        <p class="subtitle" id="auth-screen-subtitle">Vui lòng đăng nhập tài khoản học sinh để vào làm bài kiểm tra</p>
+        <p class="subtitle" id="auth-screen-subtitle">Vui lòng đăng nhập tài khoản sinh viên để vào làm bài kiểm tra</p>
       </div>
 
       <!-- Tab chuyển Đăng nhập / Đăng ký -->
@@ -176,7 +176,7 @@
       <!-- ================= FORM ĐĂNG KÝ ================= -->
       <form id="form-register" class="auth-form-panel" onsubmit="return false;" style="display: none;">
         <div class="form-group">
-          <label for="reg-fullname">Họ và Tên học sinh <span class="required">*</span></label>
+          <label for="reg-fullname">Họ và Tên sinh viên <span class="required">*</span></label>
           <div class="input-wrapper">
             <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
@@ -275,7 +275,7 @@
           <div class="user-profile-chip" id="user-profile-chip" style="display: none;" title="Nhấp để xem Hồ Sơ Cá Nhân & Toàn Bộ Thành Tích">
             <div class="user-avatar" id="nav-user-avatar">A</div>
             <div class="user-details">
-              <span class="user-name" id="nav-user-name">Học sinh</span>
+              <span class="user-name" id="nav-user-name">Sinh viên</span>
               <span class="user-class-badge" id="nav-user-class">Lớp</span>
             </div>
             <button type="button" class="btn-logout-small" id="btn-logout" title="Đăng xuất khỏi tài khoản">
@@ -307,13 +307,13 @@
         </div>
       </div>
 
-      <!-- BẢNG VINH DANH TOP 5 HỌC SINH XUẤT SẮC TRÊN TRANG CHỦ -->
+      <!-- BẢNG VINH DANH TOP 5 SINH VIÊN XUẤT SẮC TRÊN TRANG CHỦ -->
       <div class="ranking-home-widget" id="ranking-home-widget">
         <div class="ranking-widget-header">
           <div class="ranking-widget-title-box">
             <span class="ranking-widget-trophy">🏆</span>
             <div>
-              <h3 class="ranking-widget-title">BẢNG VINH DANH TOP 5 HỌC SINH XUẤT SẮC</h3>
+              <h3 class="ranking-widget-title">BẢNG VINH DANH TOP 5 SINH VIÊN XUẤT SẮC</h3>
               <p class="ranking-widget-sub" id="ranking-widget-condition-text">Đang tải xếp hạng...</p>
             </div>
           </div>
@@ -333,7 +333,7 @@
           </div>
         </div>
         <div class="ranking-top5-container" id="ranking-top5-home-list">
-          <!-- Render danh sách 5 thẻ Top học sinh -->
+          <!-- Render danh sách 5 thẻ Top sinh viên -->
         </div>
       </div>
 
@@ -380,11 +380,11 @@
         </div>
       </div>
 
-      <!-- Form nhập thông tin học sinh & Chọn tuần làm bài -->
+      <!-- Form nhập thông tin sinh viên & Chọn tuần làm bài -->
       <form id="start-form" onsubmit="return false;">
         <div class="form-row-2col">
           <div class="form-group">
-            <label for="student-name">Họ và Tên học sinh <span class="required">*</span></label>
+            <label for="student-name">Họ và Tên sinh viên <span class="required">*</span></label>
             <div class="input-wrapper">
               <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
@@ -465,7 +465,7 @@
           </div>
         </div>
 
-        <!-- Khung hiển thị điểm số chính thức lần 1 (nếu học sinh đã làm bài) -->
+        <!-- Khung hiển thị điểm số chính thức lần 1 (nếu sinh viên đã làm bài) -->
         <div id="official-score-banner" class="official-score-banner" style="display: none;"></div>
 
         <!-- Dòng chú thích quy chế thi 1 lần -->
@@ -473,7 +473,7 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
           </svg>
-          <span id="exam-attempt-notice-text">Mỗi học sinh chỉ có <strong>01 lần làm bài thi chính thức</strong> tính điểm.</span>
+          <span id="exam-attempt-notice-text">Mỗi sinh viên chỉ có <strong>01 lần làm bài thi chính thức</strong> tính điểm.</span>
         </p>
 
         <button type="button" id="btn-start" class="btn-primary btn-block">
@@ -508,7 +508,7 @@
           <div class="user-profile-chip" id="roadmap-user-profile-chip" title="Nhấp để xem Hồ Sơ Cá Nhân & Toàn Bộ Thành Tích">
             <div class="user-avatar" id="roadmap-nav-avatar">A</div>
             <div class="user-details">
-              <span class="user-name" id="roadmap-nav-name">Học sinh</span>
+              <span class="user-name" id="roadmap-nav-name">Sinh viên</span>
               <span class="user-class-badge" id="roadmap-nav-class">Lớp</span>
             </div>
             <button type="button" class="btn-logout-small" id="roadmap-btn-logout" title="Đăng xuất khỏi tài khoản">
@@ -635,7 +635,7 @@
             <div class="user-profile-chip" id="ranking-user-profile-chip" title="Nhấp để xem Hồ Sơ Cá Nhân & Toàn Bộ Thành Tích">
               <div class="user-avatar" id="ranking-nav-avatar">A</div>
               <div class="user-details">
-                <span class="user-name" id="ranking-nav-name">Học sinh</span>
+                <span class="user-name" id="ranking-nav-name">Sinh viên</span>
                 <span class="user-class-badge" id="ranking-nav-class">Lớp</span>
               </div>
               <button type="button" class="btn-logout-small" id="ranking-btn-logout" title="Đăng xuất khỏi tài khoản">
@@ -653,7 +653,7 @@
       <!-- 2. TIÊU ĐỀ BẢNG XẾP HẠNG -->
       <div class="brand-header">
         <h1>BẢNG VINH DANH & XẾP HẠNG THÀNH TÍCH</h1>
-        <p class="subtitle">Tôn vinh những học sinh có thành tích xuất sắc nhất trong suốt 15 tuần học và thi trắc nghiệm.</p>
+        <p class="subtitle">Tôn vinh những sinh viên có thành tích xuất sắc nhất trong suốt 15 tuần học và thi trắc nghiệm.</p>
       </div>
 
       <!-- 3. NỘI DUNG CHÍNH CỦA TRANG BẢNG XẾP HẠNG -->
@@ -666,7 +666,7 @@
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
           </svg>
-          <span id="ranking-rules-text">Quy chế: Chỉ xét thứ hạng chính thức cho học sinh đã <strong>hoàn thành tất cả các tuần thi đã mở</strong>. Học sinh chưa làm đủ số tuần sẽ hiển thị ở danh sách <strong>Chờ (Pending)</strong>.</span>
+          <span id="ranking-rules-text">Quy chế: Chỉ xét thứ hạng chính thức cho sinh viên đã <strong>hoàn thành tất cả các tuần thi đã mở</strong>. Sinh viên chưa làm đủ số tuần sẽ hiển thị ở danh sách <strong>Chờ (Pending)</strong>.</span>
         </div>
 
         <!-- Bục vinh danh Top 3 Podium (Top 1 Gold, Top 2 Silver, Top 3 Bronze) -->
@@ -750,7 +750,7 @@
             <div class="user-profile-chip" id="profile-user-profile-chip" title="Hồ sơ cá nhân">
               <div class="user-avatar" id="profile-nav-avatar">A</div>
               <div class="user-details">
-                <span class="user-name" id="profile-nav-name">Học sinh</span>
+                <span class="user-name" id="profile-nav-name">Sinh viên</span>
                 <span class="user-class-badge" id="profile-nav-class">Lớp</span>
               </div>
               <button type="button" class="btn-logout-small" id="profile-btn-logout-nav" title="Đăng xuất khỏi tài khoản">
@@ -893,13 +893,13 @@
           <div class="progress-fill" id="progress-bar-fill" style="width: 2%;"></div>
         </div>
 
-        <!-- Hàng hiển thị tên học sinh, cảnh báo vi phạm & đồng hồ đếm ngược -->
+        <!-- Hàng hiển thị tên sinh viên, cảnh báo vi phạm & đồng hồ đếm ngược -->
         <div class="quiz-status-row">
           <div class="student-pill">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
             </svg>
-            <span id="display-student-name">Học sinh</span>
+            <span id="display-student-name">Sinh viên</span>
           </div>
 
           <!-- Huy hiệu phân biệt lượt thi Ôn tập / Luyện tập -->
@@ -981,7 +981,7 @@
         </div>
       </div>
 
-      <!-- Thông báo gửi kết quả tự động cho giáo viên (Theo yêu cầu học sinh yên tâm) -->
+      <!-- Thông báo gửi kết quả tự động cho giáo viên (Theo yêu cầu sinh viên yên tâm) -->
       <div class="auto-save-banner" id="cloud-status-banner">
         <div class="banner-icon-box">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
@@ -1133,7 +1133,7 @@
           </div>
           <div>
             <h3 id="admin-weeks-modal-title">Quản Lý Đóng / Mở Riêng Lẻ 15 Tuần</h3>
-            <p class="admin-modal-sub">Chủ động kiểm soát quyền truy cập đề thi của học sinh theo tiến độ giảng dạy</p>
+            <p class="admin-modal-sub">Chủ động kiểm soát quyền truy cập đề thi của sinh viên theo tiến độ giảng dạy</p>
           </div>
         </div>
         <button type="button" class="btn-close-admin-modal" id="btn-close-admin-weeks-modal" title="Đóng">&times;</button>
@@ -1153,7 +1153,7 @@
       </div>
 
       <div class="admin-modal-footer">
-        <span class="admin-modal-note">💡 Cài đặt được lưu tự động trên trình duyệt và áp dụng tức thì cho học sinh.</span>
+        <span class="admin-modal-note">💡 Cài đặt được lưu tự động trên trình duyệt và áp dụng tức thì cho sinh viên.</span>
         <button type="button" class="btn-primary admin-modal-confirm-btn" id="btn-done-admin-weeks">
           Hoàn Tất & Đóng
         </button>
@@ -1222,7 +1222,7 @@
         <div class="ranking-modal-title-group">
           <div class="ranking-trophy-badge">🏆</div>
           <div>
-            <h2>BẢNG VINH DANH & THÀNH TÍCH HỌC SINH</h2>
+            <h2>BẢNG VINH DANH & THÀNH TÍCH SINH VIÊN</h2>
             <p class="ranking-modal-subtitle">Thành tích xuất sắc các tuần kiểm tra trắc nghiệm</p>
           </div>
         </div>
@@ -1251,16 +1251,16 @@
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
           </svg>
-          <span id="popup-ranking-rules-text">Quy chế: Chỉ xét thứ hạng chính thức cho học sinh đã <strong>hoàn thành tất cả các tuần thi đã mở</strong>. Học sinh chưa làm đủ số tuần sẽ hiển thị ở danh sách <strong>Chờ (Pending)</strong>.</span>
+          <span id="popup-ranking-rules-text">Quy chế: Chỉ xét thứ hạng chính thức cho sinh viên đã <strong>hoàn thành tất cả các tuần thi đã mở</strong>. Sinh viên chưa làm đủ số tuần sẽ hiển thị ở danh sách <strong>Chờ (Pending)</strong>.</span>
         </div>
 
         <!-- Bục vinh danh Top 3 Podium trong Popup -->
         <div class="ranking-podium-section" id="popup-ranking-podium-section"></div>
 
-        <!-- Danh sách Top 5 học sinh xuất sắc tiêu biểu -->
+        <!-- Danh sách Top 5 sinh viên xuất sắc tiêu biểu -->
         <div class="popup-top-students-section">
           <div class="popup-section-title-row">
-            <span class="popup-section-title">🌟 Top 5 Học Sinh Dẫn Đầu Hệ Thống</span>
+            <span class="popup-section-title">🌟 Top 5 Sinh Viên Dẫn Đầu Hệ Thống</span>
             <button type="button" class="btn-popup-view-all-link" id="link-popup-view-all">Xem toàn bộ bảng xếp hạng ➔</button>
           </div>
           <div class="ranking-list-view" id="popup-ranking-list">
@@ -1327,7 +1327,7 @@
   <div id="admin-toast" class="admin-toast" style="display: none;"></div>
 
   <!-- Nạp cấu hình và script xử lý (có chống cache) -->
-  <script src="config.js?v=16"></script>
-  <script src="app.js?v=16"></script>
+  <script src="config.js?v=17"></script>
+  <script src="app.js?v=17"></script>
 </body>
 </html>

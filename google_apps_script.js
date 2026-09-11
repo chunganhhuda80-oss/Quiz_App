@@ -1,6 +1,6 @@
 /**
  * ==============================================================================
- * GOOGLE APPS SCRIPT - HỆ THỐNG QUẢN LÝ BÀI THI & TÀI KHOẢN HỌC SINH TỰ ĐỘNG
+ * GOOGLE APPS SCRIPT - HỆ THỐNG QUẢN LÝ BÀI THI & TÀI KHOẢN SINH VIÊN TỰ ĐỘNG
  * ==============================================================================
  * HƯỚNG DẪN CÀI ĐẶT / CẬP NHẬT NHANH:
  * 1. Mở trang Google Sheets của bạn.
@@ -11,9 +11,9 @@
  *    -> Bấm biểu tượng cây bút (Chỉnh sửa / Edit) -> Tại mục "Phiên bản" chọn "Phiên bản mới" (New version) -> Bấm "Triển khai" (Deploy).
  *
  * TÍNH NĂNG TỰ ĐỘNG:
- * - Tab 1: "KetQuaThi" - Tự động ghi kết quả bài thi, câu đúng, điểm số, thời gian và tài khoản học sinh.
- * - Tab 2: "TaiKhoan" - Tự động ghi danh sách học sinh đăng ký (Username, Mật khẩu, Họ tên, Lớp).
- *   Giáo viên có thể trực tiếp xem, sửa mật khẩu hoặc xóa học sinh ngay trên trang tính Google Sheet!
+ * - Tab 1: "KetQuaThi" - Tự động ghi kết quả bài thi, câu đúng, điểm số, thời gian và tài khoản sinh viên.
+ * - Tab 2: "TaiKhoan" - Tự động ghi danh sách sinh viên đăng ký (Username, Mật khẩu, Họ tên, Lớp).
+ *   Giáo viên có thể trực tiếp xem, sửa mật khẩu hoặc xóa sinh viên ngay trên trang tính Google Sheet!
  * ==============================================================================
  */
 
@@ -39,7 +39,7 @@ const HEADERS_ACCOUNTS = [
   "Thời gian đăng ký",
   "Tên đăng nhập (Username)",
   "Mật khẩu",
-  "Họ và tên học sinh",
+  "Họ và tên sinh viên",
   "Lớp / MSSV",
   "Lần đăng nhập cuối"
 ];
@@ -76,7 +76,7 @@ function doPost(e) {
     }
     cache.put(clientKey, String(cachedCount + 1), 30);
 
-    // KHÓA ĐỒNG THỜI (LOCKSERVICE) - Chống nghẽn dữ liệu khi hàng chục học sinh cùng nộp bài 1 lúc
+    // KHÓA ĐỒNG THỜI (LOCKSERVICE) - Chống nghẽn dữ liệu khi hàng chục sinh viên cùng nộp bài 1 lúc
     lock = LockService.getScriptLock();
     try {
       lock.waitLock(15000); // Chờ tối đa 15 giây để xếp hàng ghi an toàn
@@ -187,7 +187,7 @@ function doPost(e) {
     }
 
     // ==========================================================================
-    // 3. XỬ LÝ CẬP NHẬT THÔNG TIN HỌC SINH (action === "update_profile")
+    // 3. XỬ LÝ CẬP NHẬT THÔNG TIN SINH VIÊN (action === "update_profile")
     // ==========================================================================
     if (data.action === "update_profile") {
       const accSheet = ss.getSheetByName(SHEET_NAME_ACCOUNTS);
@@ -255,7 +255,7 @@ function doPost(e) {
       }
 
       return ContentService.createTextOutput(
-        JSON.stringify({ status: "success", message: "Cập nhật thông tin học sinh thành công!" })
+        JSON.stringify({ status: "success", message: "Cập nhật thông tin sinh viên thành công!" })
       ).setMimeType(ContentService.MimeType.JSON);
     }
 
@@ -389,7 +389,7 @@ function doPost(e) {
       resultSheet.getRange(lastRow, scoreColIndex).setHorizontalAlignment("center").setFontWeight("bold");
       resultSheet.getRange(lastRow, statsStartColIndex, 1, 3).setHorizontalAlignment("center");
 
-      // Đổi màu cho học sinh đạt hoặc chưa đạt
+      // Đổi màu cho sinh viên đạt hoặc chưa đạt
       if (data.isCheatingAutoSubmit) {
         resultSheet.getRange(lastRow, 1, 1, newRow.length).setBackground("#fee2e2");
         resultSheet.getRange(lastRow, scoreColIndex).setFontColor("#b91c1c");
@@ -436,7 +436,7 @@ function doPost(e) {
 }
 
 /**
- * Hàm hỗ trợ: Lọc CHỈ LẤY LẦN THI ĐẦU TIÊN của mỗi học sinh theo từng tuần
+ * Hàm hỗ trợ: Lọc CHỈ LẤY LẦN THI ĐẦU TIÊN của mỗi sinh viên theo từng tuần
  * Bất kỳ lần thi sau nào (thi lại / nộp đè) sẽ được tự động bỏ qua để đảm bảo tính công bằng.
  * Hỗ trợ linh hoạt cả chuẩn 10 cột, 11 cột và các dòng cũ đã nộp.
  */
@@ -576,7 +576,7 @@ function doGet(e) {
       return ContentService.createTextOutput(output).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // 2. API Lấy danh sách tài khoản học sinh đã đăng ký từ tab TaiKhoan (cho phép đồng bộ đa thiết bị/tab)
+    // 2. API Lấy danh sách tài khoản sinh viên đã đăng ký từ tab TaiKhoan (cho phép đồng bộ đa thiết bị/tab)
     if (action === "get_accounts") {
       const accSheet = ss.getSheetByName(SHEET_NAME_ACCOUNTS);
       if (!accSheet || accSheet.getLastRow() <= 1) {

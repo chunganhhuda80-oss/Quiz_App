@@ -10,9 +10,9 @@ const QuizState = {
   rawQuestions: [],        // Dữ liệu gốc nạp từ file questions của tuần đã chọn
   activeQuestions: [],     // Danh sách câu hỏi sau khi xáo trộn cho lượt thi hiện tại
   currentIndex: 0,         // Vị trí câu hỏi hiện tại (bắt đầu từ 0)
-  studentName: "",         // Họ và tên học sinh
+  studentName: "",         // Họ và tên sinh viên
   studentClass: "",        // Lớp hoặc MSSV
-  username: "",            // Tên tài khoản nếu học sinh đã đăng nhập
+  username: "",            // Tên tài khoản nếu sinh viên đã đăng nhập
   selectedWeekId: 1,       // Tuần đang chọn (mặc định Tuần 1)
   currentWeekInfo: null,   // Thông tin tuần hiện tại từ CONFIG.WEEKS
   answersLog: [],          // Lưu lịch sử làm bài: { questionId, selectedOption, correctAnswer, isCorrect, pointsEarned }
@@ -123,7 +123,7 @@ function playWrongSound() {
 }
 
 /**
- * Phát âm thanh còi báo động khẩn cấp khi học sinh vi phạm chuyển tab
+ * Phát âm thanh còi báo động khẩn cấp khi sinh viên vi phạm chuyển tab
  */
 function playAlarmSound() {
   if (!CONFIG.ANTI_CHEAT || !CONFIG.ANTI_CHEAT.enableSoundAlert) return;
@@ -602,7 +602,7 @@ function resetWeeksStatusToDefault() {
 }
 
 /**
- * Tự động đồng bộ trạng thái tuần thi từ Cloud về thiết bị của học sinh
+ * Tự động đồng bộ trạng thái tuần thi từ Cloud về thiết bị của sinh viên
  */
 async function syncWeeksStatusFromCloud() {
   let cloudPayload = null;
@@ -747,7 +747,7 @@ function initWeeksSelector() {
     } else {
       if (isAdmin) {
         badgeHtml = `
-          <span class="week-status-badge admin-access" title="Đang khóa với học sinh, nhưng Quản Trị Viên được làm bài">
+          <span class="week-status-badge admin-access" title="Đang khóa với sinh viên, nhưng Quản Trị Viên được làm bài">
             Khóa (Admin làm)
           </span>
         `;
@@ -762,7 +762,7 @@ function initWeeksSelector() {
     // TUYỆT ĐỐI CHỈ HIỆN VỚI TUẦN ĐÃ CẬP NHẬT CÂU HỎI
     const adminToggleHtml = (isAdmin && updated) ? `
       <button type="button" class="week-card-admin-toggle ${unlocked ? 'is-open' : 'is-closed'}"
-              title="Quản Trị Viên: Nhấp để ${unlocked ? 'KHÓA LẠI' : 'MỞ KHÓA'} cho học sinh">
+              title="Quản Trị Viên: Nhấp để ${unlocked ? 'KHÓA LẠI' : 'MỞ KHÓA'} cho sinh viên">
         ${unlocked ? '🔓' : '🔒'}
       </button>
     ` : '';
@@ -802,8 +802,8 @@ function initWeeksSelector() {
           const confirmed = await showAppConfirm({
             title: newStatus ? "XÁC NHẬN MỞ KHÓA TUẦN THI" : "CẢNH BÁO KHÓA TUẦN THI",
             message: newStatus
-              ? `Bạn có chắc chắn muốn <strong>MỞ KHÓA</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> cho học sinh vào thi không?`
-              : `Bạn có chắc chắn muốn <strong>KHÓA</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> không?<br><span class="dialog-highlight-warn">⚠️ Khi khóa, tất cả học sinh sẽ bị chặn ngay lập tức và không thể vào thi tuần này!</span>`,
+              ? `Bạn có chắc chắn muốn <strong>MỞ KHÓA</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> cho sinh viên vào thi không?`
+              : `Bạn có chắc chắn muốn <strong>KHÓA</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> không?<br><span class="dialog-highlight-warn">⚠️ Khi khóa, tất cả sinh viên sẽ bị chặn ngay lập tức và không thể vào thi tuần này!</span>`,
             type: newStatus ? "question" : "warning",
             confirmText: newStatus ? "Mở Khóa Ngay" : "Khóa Ngay",
             cancelText: "Hủy Bỏ"
@@ -820,7 +820,7 @@ function initWeeksSelector() {
           }
           await showAppAlert({
             title: "CẬP NHẬT THÀNH CÔNG",
-            message: `Đã <strong>${actionWord}</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> thành công.<br>Cài đặt đã có hiệu lực ngay lập tức cho toàn bộ học sinh.`,
+            message: `Đã <strong>${actionWord}</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> thành công.<br>Cài đặt đã có hiệu lực ngay lập tức cho toàn bộ sinh viên.`,
             type: "success"
           });
         });
@@ -845,7 +845,7 @@ function initWeeksSelector() {
         playWrongSound();
         await showAppAlert({
           title: "BÀI THI ĐANG BỊ KHÓA",
-          message: `<strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> hiện đang bị khóa bởi Quản trị viên.<br><br>Học sinh chưa thể vào làm bài tuần này. Vui lòng quay lại sau!`,
+          message: `<strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> hiện đang bị khóa bởi Quản trị viên.<br><br>Sinh viên chưa thể vào làm bài tuần này. Vui lòng quay lại sau!`,
           type: "warning"
         });
       }
@@ -933,7 +933,7 @@ function updateOfficialScoreDisplay(weekId) {
   } else {
     if (banner) banner.style.display = "none";
     if (noticeText) {
-      noticeText.innerHTML = `Mỗi học sinh chỉ có <strong>01 lần làm bài thi chính thức</strong> tính điểm. Hãy chuẩn bị kỹ trước khi bắt đầu!`;
+      noticeText.innerHTML = `Mỗi sinh viên chỉ có <strong>01 lần làm bài thi chính thức</strong> tính điểm. Hãy chuẩn bị kỹ trước khi bắt đầu!`;
     }
     if (btnStart) {
       btnStart.classList.remove("practice-mode");
@@ -1024,7 +1024,7 @@ async function loadWeekQuestions(week) {
     return;
   }
 
-  // 2. TRƯỜNG HỢP TUẦN THI ĐANG BỊ KHÓA ĐỐI VỚI HỌC SINH (ADMIN ĐƯỢC PHÉP LÀM BÀI)
+  // 2. TRƯỜNG HỢP TUẦN THI ĐANG BỊ KHÓA ĐỐI VỚI SINH VIÊN (ADMIN ĐƯỢC PHÉP LÀM BÀI)
   if (!unlocked && !isAdmin) {
     QuizState.rawQuestions = [];
     if (totalQEl) {
@@ -1130,7 +1130,7 @@ function shuffleQuestions(arr) {
 
 /**
  * Chuẩn bị và xáo trộn ngẫu nhiên bộ câu hỏi thi cũng như vị trí các đáp án A, B, C, D
- * Đảm bảo mỗi học sinh vào thi và mỗi lần bấm "Làm lại bài thi" (Retry) đều có:
+ * Đảm bảo mỗi sinh viên vào thi và mỗi lần bấm "Làm lại bài thi" (Retry) đều có:
  * 1. Thứ tự câu hỏi ngẫu nhiên mới hoàn toàn.
  * 2. Vị trí các đáp án A, B, C, D được tráo đổi ngẫu nhiên, phân phối đều đáp án đúng.
  */
@@ -1237,10 +1237,10 @@ function showScreen(screenId) {
 // BẮT ĐẦU BÀI THI
 // ==============================================================================
 async function startQuiz() {
-  // 1. BẮT BUỘC HỌC SINH PHẢI ĐĂNG NHẬP TRƯỚC KHI LÀM BÀI
+  // 1. BẮT BUỘC SINH VIÊN PHẢI ĐĂNG NHẬP TRƯỚC KHI LÀM BÀI
   if (!AuthState.currentUser) {
     showScreen("auth-screen");
-    showAuthAlert("⚠️ Bạn cần ĐĂNG NHẬP hoặc ĐĂNG KÝ tài khoản học sinh trước khi bắt đầu làm bài!", "error");
+    showAuthAlert("⚠️ Bạn cần ĐĂNG NHẬP hoặc ĐĂNG KÝ tài khoản sinh viên trước khi bắt đầu làm bài!", "error");
     return;
   }
 
@@ -1260,12 +1260,12 @@ async function startQuiz() {
     return;
   }
 
-  // 3. CHẶN NẾU TUẦN THI ĐANG BỊ KHÓA ĐỐI VỚI HỌC SINH (ADMIN ĐƯỢC PHÉP THI)
+  // 3. CHẶN NẾU TUẦN THI ĐANG BỊ KHÓA ĐỐI VỚI SINH VIÊN (ADMIN ĐƯỢC PHÉP THI)
   if (!unlocked && !isAdmin) {
     playWrongSound();
     await showAppAlert({
       title: "BÀI THI ĐANG BỊ KHÓA",
-      message: `<strong>${week ? escapeHtml(week.name) : 'Tuần này'}</strong> hiện đang bị khóa bởi Quản trị viên.<br><br>Học sinh không thể bắt đầu làm bài thi!`,
+      message: `<strong>${week ? escapeHtml(week.name) : 'Tuần này'}</strong> hiện đang bị khóa bởi Quản trị viên.<br><br>Sinh viên không thể bắt đầu làm bài thi!`,
       type: "warning"
     });
     return;
@@ -1296,7 +1296,7 @@ async function startQuiz() {
   QuizState.currentIndex = 0;
   QuizState.answersLog = [];
 
-  // Hiển thị tên học sinh trên thanh trạng thái
+  // Hiển thị tên sinh viên trên thanh trạng thái
   const displayName = document.getElementById("display-student-name");
   if (displayName) displayName.textContent = QuizState.studentName;
 
@@ -1458,7 +1458,7 @@ function handleOptionSelect(selectedKey, qData) {
 
   const allButtons = container.querySelectorAll(".option-btn");
 
-  // Khóa tất cả các nút ngay lập tức để học sinh không bấm nhiều lần
+  // Khóa tất cả các nút ngay lập tức để sinh viên không bấm nhiều lần
   allButtons.forEach(btn => btn.classList.add("disabled"));
 
   const normalizedCorrect = String(qData.correctAnswer || "A").trim().toUpperCase();
@@ -1518,7 +1518,7 @@ function handleOptionSelect(selectedKey, qData) {
       }
     }
 
-    // Làm nổi bật đáp án đúng để học sinh ghi nhớ kiến thức
+    // Làm nổi bật đáp án đúng để sinh viên ghi nhớ kiến thức
     const correctBtn = Array.from(allButtons).find(b => b.dataset.key === normalizedCorrect);
     if (correctBtn) {
       correctBtn.classList.add("is-correct-hint");
@@ -1911,7 +1911,7 @@ async function autoSaveResultsToCloud(summary) {
     console.info("Chưa cấu hình GOOGLE_APPS_SCRIPT_URL trong config.js. Dữ liệu tạm thời lưu trên trình duyệt.");
   }
 
-  // Cập nhật thông báo hoàn tất cho học sinh
+  // Cập nhật thông báo hoàn tất cho sinh viên
   if (statusTitle) {
     statusTitle.textContent = "Kết quả đã được gửi cho giáo viên";
   }
@@ -2021,7 +2021,7 @@ function showViolationModal(isMaxExceeded) {
 }
 
 /**
- * Xử lý khi phát hiện học sinh vi phạm chuyển tab / rời màn hình
+ * Xử lý khi phát hiện sinh viên vi phạm chuyển tab / rời màn hình
  */
 function triggerViolation(reason) {
   // Chỉ kiểm tra khi tính năng được bật trong config và thí sinh đang thực sự làm bài
@@ -2058,7 +2058,7 @@ function triggerViolation(reason) {
     QuizState.isAutoSubmitDueToCheat = true;
     QuizState.isExamActive = false; // Khóa không cho tiếp tục làm bài
 
-    // Tự động thu bài và nộp sau 2.2 giây để học sinh đọc được thông báo
+    // Tự động thu bài và nộp sau 2.2 giây để sinh viên đọc được thông báo
     setTimeout(() => {
       const modal = document.getElementById("violation-modal");
       if (modal) modal.style.display = "none";
@@ -2126,7 +2126,7 @@ function escapeHtml(str) {
 }
 
 // ==============================================================================
-// HỆ THỐNG QUẢN LÝ TÀI KHOẢN HỌC SINH (AUTH SYSTEM)
+// HỆ THỐNG QUẢN LÝ TÀI KHOẢN SINH VIÊN (AUTH SYSTEM)
 // ==============================================================================
 const AuthState = {
   currentUser: null, // { username, fullName, className, loggedAt }
@@ -2152,7 +2152,7 @@ function saveLocalAccounts(accounts) {
 }
 
 /**
- * Đồng bộ danh sách tài khoản học sinh từ Google Sheet tab TaiKhoan
+ * Đồng bộ danh sách tài khoản sinh viên từ Google Sheet tab TaiKhoan
  * Cho phép đăng nhập liên thông giữa các tab, thiết bị hoặc trình duyệt khác
  */
 async function syncAccountsFromGoogleSheet() {
@@ -2237,7 +2237,7 @@ function switchAuthTab(tab) {
     if (tabRegBtn) tabRegBtn.classList.remove("active");
     if (formLogin) formLogin.style.display = "flex";
     if (formRegister) formRegister.style.display = "none";
-    if (screenSubtitle) screenSubtitle.textContent = "Vui lòng đăng nhập tài khoản học sinh để vào làm bài kiểm tra";
+    if (screenSubtitle) screenSubtitle.textContent = "Vui lòng đăng nhập tài khoản sinh viên để vào làm bài kiểm tra";
     const usernameInput = document.getElementById("login-username");
     if (usernameInput) setTimeout(() => usernameInput.focus(), 100);
   } else {
@@ -2245,7 +2245,7 @@ function switchAuthTab(tab) {
     if (tabRegBtn) tabRegBtn.classList.add("active");
     if (formLogin) formLogin.style.display = "none";
     if (formRegister) formRegister.style.display = "flex";
-    if (screenSubtitle) screenSubtitle.textContent = "Tạo tài khoản học sinh chỉ trong 10 giây để vào thi";
+    if (screenSubtitle) screenSubtitle.textContent = "Tạo tài khoản sinh viên chỉ trong 10 giây để vào thi";
     const fullnameInput = document.getElementById("reg-fullname");
     if (fullnameInput) setTimeout(() => fullnameInput.focus(), 100);
   }
@@ -2389,7 +2389,7 @@ function updateAuthUI() {
       authHintBanner.style.display = "";
     }
     if (authHintText) {
-      authHintText.innerHTML = `Bạn cần <strong>Đăng nhập</strong> tài khoản học sinh để được cấp quyền thi.`;
+      authHintText.innerHTML = `Bạn cần <strong>Đăng nhập</strong> tài khoản sinh viên để được cấp quyền thi.`;
     }
     if (nameInput) {
       nameInput.value = "";
@@ -2826,7 +2826,7 @@ document.addEventListener("DOMContentLoaded", () => {
   syncWeeksStatusFromCloud();
   setInterval(syncWeeksStatusFromCloud, 10000);
 
-  // 2. Khởi tạo hệ thống tài khoản & xác thực học sinh
+  // 2. Khởi tạo hệ thống tài khoản & xác thực sinh viên
   initAuth();
 
   // 3. Khởi tạo hệ thống giám sát chống gian lận (Anti-Cheat)
@@ -2929,7 +2929,7 @@ document.addEventListener("DOMContentLoaded", () => {
     presetOpenAll.addEventListener("click", async () => {
       const ok = await showAppConfirm({
         title: "MỞ KHÓA TOÀN BỘ 15 TUẦN",
-        message: "Bạn có chắc chắn muốn <strong>MỞ KHÓA TOÀN BỘ 15 TUẦN</strong> đề thi cho học sinh không?",
+        message: "Bạn có chắc chắn muốn <strong>MỞ KHÓA TOÀN BỘ 15 TUẦN</strong> đề thi cho sinh viên không?",
         type: "question",
         confirmText: "Mở Toàn Bộ",
         cancelText: "Hủy Bỏ"
@@ -2975,7 +2975,7 @@ document.addEventListener("DOMContentLoaded", () => {
     presetLockAll.addEventListener("click", async () => {
       const ok = await showAppConfirm({
         title: "CẢNH BÁO: KHÓA TẤT CẢ 15 TUẦN",
-        message: "Bạn có chắc chắn muốn <strong>KHÓA TẤT CẢ 15 TUẦN THI KHÔNG</strong>?<br><br><span class='dialog-highlight-warn'>⚠️ Học sinh sẽ bị chặn hoàn toàn, không thể vào thi bất kỳ tuần nào!</span>",
+        message: "Bạn có chắc chắn muốn <strong>KHÓA TẤT CẢ 15 TUẦN THI KHÔNG</strong>?<br><br><span class='dialog-highlight-warn'>⚠️ Sinh viên sẽ bị chặn hoàn toàn, không thể vào thi bất kỳ tuần nào!</span>",
         type: "danger",
         confirmText: "Khóa Toàn Bộ",
         cancelText: "Hủy Bỏ"
@@ -3020,7 +3020,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         const ok = await showAppConfirm({
           title: "MỞ KHÓA TẤT CẢ TUẦN ĐÃ CÓ ĐỀ THI",
-          message: `Mở khóa toàn bộ <strong>${updatedWeeks.length} tuần đã có đề thi</strong> cho học sinh?<br><span style="color:#64748b;font-size:0.85rem;">(Các tuần chưa cập nhật đề thi sẽ tự động được giữ nguyên trạng thái Chưa cập nhật)</span>`,
+          message: `Mở khóa toàn bộ <strong>${updatedWeeks.length} tuần đã có đề thi</strong> cho sinh viên?<br><span style="color:#64748b;font-size:0.85rem;">(Các tuần chưa cập nhật đề thi sẽ tự động được giữ nguyên trạng thái Chưa cập nhật)</span>`,
           type: "question",
           confirmText: "Mở Khóa Ngay",
           cancelText: "Hủy Bỏ"
@@ -3030,7 +3030,7 @@ document.addEventListener("DOMContentLoaded", () => {
           initWeeksSelector();
           await showAppAlert({
             title: "THÀNH CÔNG",
-            message: `Đã mở khóa thành công toàn bộ ${updatedWeeks.length} tuần đã có đề thi cho học sinh.`,
+            message: `Đã mở khóa thành công toàn bộ ${updatedWeeks.length} tuần đã có đề thi cho sinh viên.`,
             type: "success"
           });
         }
@@ -3115,7 +3115,7 @@ function renderAdminWeeksModalList() {
     } else {
       rightHtml = `
         <button type="button" class="admin-toggle-switch ${unlocked ? 'active' : ''}" data-week-id="${week.id}"
-                title="Quản Trị Viên: Nhấp để ${unlocked ? 'KHÓA LẠI' : 'MỞ KHÓA'} cho học sinh">
+                title="Quản Trị Viên: Nhấp để ${unlocked ? 'KHÓA LẠI' : 'MỞ KHÓA'} cho sinh viên">
           <span class="switch-dot"></span>
           <span class="switch-text">${unlocked ? 'MỞ' : 'KHÓA'}</span>
         </button>
@@ -3150,8 +3150,8 @@ function renderAdminWeeksModalList() {
           const confirmed = await showAppConfirm({
             title: nextState ? "XÁC NHẬN MỞ KHÓA TUẦN THI" : "CẢNH BÁO KHÓA TUẦN THI",
             message: nextState
-              ? `Bạn có chắc chắn muốn <strong>MỞ KHÓA</strong> <strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> cho học sinh vào thi không?`
-              : `Bạn có chắc chắn muốn <strong>KHÓA</strong> <strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> không?<br><span class="dialog-highlight-warn">⚠️ Khi khóa, tất cả học sinh sẽ BỊ CHẶN NGAY LẬP TỨC và không thể vào thi tuần này!</span>`,
+              ? `Bạn có chắc chắn muốn <strong>MỞ KHÓA</strong> <strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> cho sinh viên vào thi không?`
+              : `Bạn có chắc chắn muốn <strong>KHÓA</strong> <strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> không?<br><span class="dialog-highlight-warn">⚠️ Khi khóa, tất cả sinh viên sẽ BỊ CHẶN NGAY LẬP TỨC và không thể vào thi tuần này!</span>`,
             type: nextState ? "question" : "warning",
             confirmText: nextState ? "Mở Khóa Ngay" : "Khóa Ngay",
             cancelText: "Hủy Bỏ"
@@ -3169,7 +3169,7 @@ function renderAdminWeeksModalList() {
           }
           await showAppAlert({
             title: "CẬP NHẬT THÀNH CÔNG",
-            message: `Đã <strong>${actionWord}</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> thành công.<br>Học sinh đã có thể tiếp cận theo cài đặt mới.`,
+            message: `Đã <strong>${actionWord}</strong> <strong>${escapeHtml(week.name)} (${escapeHtml(week.title)})</strong> thành công.<br>Sinh viên đã có thể tiếp cận theo cài đặt mới.`,
             type: "success"
           });
         });
@@ -3182,7 +3182,7 @@ function renderAdminWeeksModalList() {
         unupdatedBadge.addEventListener("click", async () => {
           await showAppAlert({
             title: "CHƯA CẬP NHẬT ĐỀ THI",
-            message: `<strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> hiện chưa có file câu hỏi.<br><br>Hệ thống không cho phép mở khóa tuần chưa có nội dung đề thi để bảo đảm học sinh không gặp lỗi rỗng!`,
+            message: `<strong>${escapeHtml(week.name)}: ${escapeHtml(week.title)}</strong> hiện chưa có file câu hỏi.<br><br>Hệ thống không cho phép mở khóa tuần chưa có nội dung đề thi để bảo đảm sinh viên không gặp lỗi rỗng!`,
             type: "info"
           });
         });
@@ -4428,7 +4428,7 @@ function renderHomeRankingWidget() {
 
   // Xác định danh sách hiển thị trên widget Top 5:
   // 1. Ưu tiên rankedUsers (những ai đã hoàn thành toàn bộ các tuần đã mở)
-  // 2. Nếu chưa có ai hoàn thành đủ, hiển thị các học sinh đang thi đua tạm dẫn từ pendingUsers (có completedWeeksCount > 0)
+  // 2. Nếu chưa có ai hoàn thành đủ, hiển thị các sinh viên đang thi đua tạm dẫn từ pendingUsers (có completedWeeksCount > 0)
   const hasOfficial = rankedUsers.length > 0;
   const activePending = pendingUsers.filter(u => u.completedWeeksCount > 0);
   const displayList = hasOfficial ? rankedUsers.slice(0, 5) : activePending.slice(0, 5);
@@ -4447,7 +4447,7 @@ function renderHomeRankingWidget() {
   if (displayList.length === 0) {
     container.innerHTML = `
       <div class="rank-card-empty">
-        Chưa có học sinh nào hoàn thành bài thi cho các tuần đã mở. Hãy làm bài thi để là người đầu tiên ghi danh Top 1! 🚀
+        Chưa có sinh viên nào hoàn thành bài thi cho các tuần đã mở. Hãy làm bài thi để là người đầu tiên ghi danh Top 1! 🚀
       </div>
     `;
     return;
@@ -4512,7 +4512,7 @@ function renderRankingModal() {
             <div>
               <div class="achievement-text-title">Tài khoản Quản Trị Viên (${escapeHtml(currentUser.fullName)})</div>
               <div class="achievement-text-desc">
-                Bạn đang xem Bảng Vinh Danh & Xếp Hạng thời gian thực của học sinh toàn trường.
+                Bạn đang xem Bảng Vinh Danh & Xếp Hạng thời gian thực của sinh viên toàn trường.
               </div>
             </div>
           </div>
@@ -4565,7 +4565,7 @@ function renderRankingModal() {
           <span class="achievement-icon">👤</span>
           <div>
             <div class="achievement-text-title">Bạn đang truy cập ở chế độ Khách</div>
-            <div class="achievement-text-desc">Đăng nhập tài khoản học sinh để hệ thống lưu điểm và vinh danh bạn trên Bảng Xếp Hạng!</div>
+            <div class="achievement-text-desc">Đăng nhập tài khoản sinh viên để hệ thống lưu điểm và vinh danh bạn trên Bảng Xếp Hạng!</div>
           </div>
         </div>
         <button type="button" class="btn-primary" style="padding: 7px 16px; font-size: 0.82rem;" onclick="closeRankingModal(); openAuthModal('login');">
@@ -4653,7 +4653,7 @@ function renderRankingModal() {
     if (rankedUsers.length === 0) {
       rankedContainer.innerHTML = `
         <div class="rank-card-empty" style="background: #f8fafc; border-radius: 12px; padding: 28px 16px;">
-          Chưa có học sinh nào hoàn thành đủ ${totalUnlocked} tuần đã mở để xếp hạng chính thức. Hãy làm bài thi ngay! 🎯
+          Chưa có sinh viên nào hoàn thành đủ ${totalUnlocked} tuần đã mở để xếp hạng chính thức. Hãy làm bài thi ngay! 🎯
         </div>
       `;
     } else {
@@ -4699,7 +4699,7 @@ function renderRankingModal() {
     if (pendingUsers.length === 0) {
       pendingContainer.innerHTML = `
         <div class="rank-card-empty" style="background: #f8fafc; border-radius: 12px; padding: 28px 16px;">
-          Hiện tại không có học sinh nào ở trạng thái chờ (Tất cả học sinh đều đã làm đủ tuần hoặc chưa đăng ký).
+          Hiện tại không có sinh viên nào ở trạng thái chờ (Tất cả sinh viên đều đã làm đủ tuần hoặc chưa đăng ký).
         </div>
       `;
     } else {
@@ -4739,14 +4739,14 @@ function renderRankingModal() {
     }
   }
 
-  // 6. Render danh sách Top 5 học sinh trong modal popup hình chữ nhật (#popup-ranking-list)
+  // 6. Render danh sách Top 5 sinh viên trong modal popup hình chữ nhật (#popup-ranking-list)
   const popupRankingList = document.getElementById("popup-ranking-list");
   if (popupRankingList) {
     const displayList = rankedUsers.length > 0 ? rankedUsers.slice(0, 5) : pendingUsers.slice(0, 5);
     if (displayList.length === 0) {
       popupRankingList.innerHTML = `
         <div class="rank-card-empty" style="background: #f8fafc; border-radius: 12px; padding: 18px 14px; font-size: 0.84rem;">
-          Chưa có học sinh nào hoàn thành bài thi tuần. Hãy là người đầu tiên bứt phá điểm số! 🎯
+          Chưa có sinh viên nào hoàn thành bài thi tuần. Hãy là người đầu tiên bứt phá điểm số! 🎯
         </div>
       `;
     } else {
@@ -5031,7 +5031,7 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
         let uname = (r.username || "").toLowerCase().trim();
         if (!uname || uname.includes("khách")) return;
 
-        // TUYỆT ĐỐI BỎ QUA QUẢN TRỊ VIÊN: Không đưa vào danh sách xếp hạng học sinh
+        // TUYỆT ĐỐI BỎ QUA QUẢN TRỊ VIÊN: Không đưa vào danh sách xếp hạng sinh viên
         if (
           uname === adminUname ||
           uname === "admin" ||
@@ -5115,7 +5115,7 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
         }
       });
 
-      // 3. DỌN DẸP LỊCH SỬ THI CỦA HỌC SINH ĐÃ BỊ XÓA KHỎI GOOGLE SHEET:
+      // 3. DỌN DẸP LỊCH SỬ THI CỦA SINH VIÊN ĐÃ BỊ XÓA KHỎI GOOGLE SHEET:
       const activeSheetUsers = new Set(sheetFirstAttemptsByUser.keys());
 
       for (let i = existingAccounts.length - 1; i >= 0; i--) {
@@ -5124,7 +5124,7 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
         // Bỏ qua tài khoản Quản Trị Viên (Admin)
         if (acc.role === "admin" || u === adminUname || u === "rappergaming") continue;
 
-        // Nếu học sinh này không còn bài thi nào trên Google Sheet
+        // Nếu sinh viên này không còn bài thi nào trên Google Sheet
         if (!activeSheetUsers.has(u)) {
           localStorage.removeItem(getUserHistoryKey(u));
           // TUYỆT ĐỐI KHÔNG xóa tài khoản đăng ký của người dùng (tài khoản có password hoặc createdAt)
@@ -5187,7 +5187,7 @@ async function syncLeaderboardFromGoogleSheet(notifyUser = false) {
         }
         await showAppAlert({
           title: "ĐỒNG BỘ THÀNH CÔNG",
-          message: `Hệ thống đã đồng bộ thành công <strong>${json.results.length} bài thi</strong> từ Google Sheet!<br>Dữ liệu bảng xếp hạng và học sinh đã được làm mới tức thì.`,
+          message: `Hệ thống đã đồng bộ thành công <strong>${json.results.length} bài thi</strong> từ Google Sheet!<br>Dữ liệu bảng xếp hạng và sinh viên đã được làm mới tức thì.`,
           type: "success"
         });
       }
@@ -5331,7 +5331,7 @@ function renderProfileModal() {
           <div class="profile-name-row">
             <h3 class="profile-hero-name">${escapeHtml(account.fullName || account.username)}</h3>
             <span class="profile-role-badge ${isAdmin ? 'admin' : 'student'}">
-              ${isAdmin ? '🛡️ Quản Trị Viên' : '🎓 Học Viên'}
+              ${isAdmin ? '🛡️ Quản Trị Viên' : '🎓 Sinh Viên'}
             </span>
           </div>
           <div class="profile-sub-details">
@@ -5589,7 +5589,7 @@ function renderProfileModal() {
       {
         icon: "🏅",
         name: "Cao Thủ Top 3",
-        desc: "Xuất sắc nằm trong Top 3 học viên dẫn đầu Bảng Vinh Danh.",
+        desc: "Xuất sắc nằm trong Top 3 sinh viên dẫn đầu Bảng Vinh Danh.",
         unlocked: isTop3
       },
       {

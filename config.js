@@ -176,7 +176,7 @@ const CONFIG = {
     title: "HỆ THỐNG KIỂM TRA TRẮC NGHIỆM THEO TUẦN",
     subject: "Mạng Máy Tính (Networking Fundamentals)",
 
-    // Tự động xáo trộn thứ tự câu hỏi mỗi lần học sinh mở bài hoặc làm lại bài (true / false)
+    // Tự động xáo trộn thứ tự câu hỏi mỗi lần sinh viên mở bài hoặc làm lại bài (true / false)
     shuffleQuestions: true,
 
     // Tự động đảo ngẫu nhiên các phương án A, B, C, D trong từng câu hỏi (true / false)
@@ -208,7 +208,7 @@ const CONFIG = {
     // Tự động thu bài và nộp bài ngay khi vượt quá số lần vi phạm
     autoSubmitOnExceed: true,
 
-    // Phát âm thanh còi cảnh báo khi học sinh vi phạm
+    // Phát âm thanh còi cảnh báo khi sinh viên vi phạm
     enableSoundAlert: true
   },
 
