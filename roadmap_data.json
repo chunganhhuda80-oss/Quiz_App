@@ -1,0 +1,2050 @@
+[
+  {
+    "weekId": 1,
+    "hasData": true,
+    "title": "Nền tảng mạng + Mô hình OSI/TCP-IP",
+    "fullTitle": "Tuần 1: Nền tảng mạng + Mô hình OSI/TCP-IP",
+    "domain": "Networking",
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "Thiết bị & Topology mạng",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Thiết bị mạng:",
+            "details": [
+              "- Router: hoạt động ở Layer 3, định tuyến giữa các mạng khác nhau (khác subnet), dựa vào địa chỉ IP đích để chọn đường đi tốt nhất",
+              "- Switch Layer 2: chuyển mạch trong cùng 1 mạng LAN, dựa vào địa chỉ MAC, học và lưu MAC vào bảng CAM",
+              "- Switch Layer 3 (Multilayer Switch): vừa switch vừa có khả năng routing (SVI - Switched Virtual Interface), thường dùng ở tầng Distribution/Core",
+              "- Access Point (AP): cầu nối giữa thiết bị không dây và mạng có dây, hoạt động ở Layer 2",
+              "- Firewall: kiểm soát traffic ra/vào dựa trên rule (stateless/stateful), thường đặt ở biên mạng (Edge)",
+              "- End device: PC, laptop, máy in, camera IP, điện thoại VoIP...",
+              "- Nguyên tắc chọn thiết bị: số lượng port cần, tốc độ (100Mbps/1Gbps/10Gbps), có cần PoE (Power over Ethernet) không"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Network Topology:",
+            "details": [
+              "- Star Topology: tất cả thiết bị nối về 1 điểm trung tâm (switch) — phổ biến nhất trong LAN hiện đại, dễ quản lý, dễ cô lập lỗi",
+              "- Mesh Topology: mỗi thiết bị nối trực tiếp với nhiều thiết bị khác — Full Mesh (nối tất cả với tất cả) vs Partial Mesh, độ dự phòng cao nhưng tốn chi phí",
+              "- Hybrid Topology: kết hợp nhiều loại topology trong 1 mạng lớn",
+              "- Mô hình phân cấp 3-tier (Three-Tier Hierarchical Model):",
+              "- Access Layer: nơi end device kết nối vào (switch access), thực hiện VLAN, Port Security",
+              "- Distribution Layer: tổng hợp traffic từ nhiều Access switch, thực hiện routing giữa VLAN, ACL, QoS policy",
+              "- Core Layer: chỉ chuyển tiếp traffic tốc độ cao, không xử lý policy phức tạp, ưu tiên tốc độ và độ ổn định",
+              "- Mô hình 2-tier (Collapsed Core): gộp Distribution và Core làm 1, dùng cho mạng vừa/nhỏ"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Physical vs Logical Topology:",
+            "details": [
+              "- Physical: cách dây cáp và thiết bị được nối vật lý thực tế",
+              "- Logical: cách dữ liệu thực sự di chuyển (có thể khác physical, ví dụ VLAN tạo ra topology logic riêng dù cùng switch vật lý)"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Cáp mạng:",
+            "details": [
+              "- UTP (Unshielded Twisted Pair):",
+              "- Cat5e: hỗ trợ tới 1Gbps, khoảng cách tối đa 100m",
+              "- Cat6: hỗ trợ 10Gbps ở khoảng cách ngắn (~55m), 1Gbps ở 100m",
+              "- Cat6a: hỗ trợ 10Gbps đầy đủ ở 100m",
+              "- Fiber Optic:",
+              "- Single-mode: dùng laser, truyền xa (hàng chục km), dùng cho kết nối liên tòa nhà/ISP",
+              "- Multi-mode: dùng LED, truyền gần hơn (vài trăm mét đến 2km), dùng trong datacenter",
+              "- Đầu nối: LC (nhỏ gọn, phổ biến), SC (vuông, cũ hơn)",
+              "- Đầu nối đồng: RJ45 (chuẩn 8 pin cho Ethernet)",
+              "- Cáp thẳng (Straight-through): dùng nối 2 thiết bị khác loại (PC-Switch, Switch-Router)",
+              "- Cáp chéo (Crossover): dùng nối 2 thiết bị cùng loại (Switch-Switch, PC-PC) — trên thiết bị đời mới có Auto-MDIX nên không còn bắt buộc phân biệt",
+              "- Chuẩn bấm dây: T568A và T568B (thứ tự màu dây khác nhau, T568B phổ biến hơn ở doanh nghiệp)"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Mô hình SOHO:",
+            "details": [
+              "- Đặc điểm: quy mô nhỏ, thường dùng 1 thiết bị tích hợp (router + switch + AP + modem trong 1 box)",
+              "- Khác biệt so với mạng doanh nghiệp: không phân tầng Access/Distribution/Core, ít yêu cầu về dự phòng"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "Mô hình OSI & TCP/IP",
+        "items": [
+          {
+            "index": "1.",
+            "title": "7 tầng OSI (từ trên xuống, cần thuộc thứ tự và chức năng):",
+            "details": [
+              "- Layer 7 - Application: giao diện cho ứng dụng người dùng tương tác với mạng (HTTP, FTP, SMTP, DNS)",
+              "- Layer 6 - Presentation: định dạng/mã hóa/nén dữ liệu (SSL/TLS encryption, JPEG, ASCII)",
+              "- Layer 5 - Session: thiết lập, duy trì, kết thúc phiên làm việc giữa 2 ứng dụng (quản lý session ID)",
+              "- Layer 4 - Transport: phân đoạn dữ liệu, đảm bảo truyền tin cậy hoặc không (TCP/UDP), quản lý port",
+              "- Layer 3 - Network: định tuyến (routing), đánh địa chỉ logic (IP address)",
+              "- Layer 2 - Data Link: đóng gói thành frame, đánh địa chỉ vật lý (MAC address), kiểm soát lỗi cơ bản (FCS)",
+              "- Layer 1 - Physical: truyền bit thô qua môi trường vật lý (điện áp, ánh sáng, sóng vô tuyến)",
+              "- Mẹo nhớ thứ tự (từ L7 xuống L1): \"All People Seem To Need Data Processing\""
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Mô hình TCP/IP 4 tầng:",
+            "details": [
+              "- Application layer (gộp OSI Layer 5,6,7)",
+              "- Transport layer (= OSI Layer 4)",
+              "- Internet layer (= OSI Layer 3)",
+              "- Network Access layer (gộp OSI Layer 1,2)"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Encapsulation (đóng gói) - quy trình 5 bước khi gửi dữ liệu:",
+            "details": []
+          },
+          {
+            "index": "1.",
+            "title": "Data: ứng dụng tạo dữ liệu (VD: nội dung email)",
+            "details": []
+          },
+          {
+            "index": "2.",
+            "title": "Segment (Layer 4): Transport layer thêm TCP/UDP header (chứa source port, dest port)",
+            "details": []
+          },
+          {
+            "index": "3.",
+            "title": "Packet (Layer 3): Network layer thêm IP header (chứa source IP, dest IP)",
+            "details": []
+          },
+          {
+            "index": "4.",
+            "title": "Frame (Layer 2): Data Link layer thêm Ethernet header + trailer (chứa MAC nguồn/đích, FCS để kiểm tra lỗi)",
+            "details": []
+          },
+          {
+            "index": "5.",
+            "title": "Bits (Layer 1): chuyển thành tín hiệu điện/quang/sóng để truyền đi",
+            "details": [
+              "- De-encapsulation: quá trình ngược lại ở thiết bị nhận, bóc từng lớp header ra để lấy dữ liệu gốc"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "PDU (Protocol Data Unit) từng tầng — cần thuộc tên gọi:",
+            "details": [
+              "- Layer 4: Segment (TCP) / Datagram (UDP)",
+              "- Layer 3: Packet",
+              "- Layer 2: Frame",
+              "- Layer 1: Bits"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Nguyên tắc Peer-to-peer Communication:",
+            "details": [
+              "- Mỗi tầng trên máy gửi chỉ \"nói chuyện\" logic với đúng tầng tương ứng trên máy nhận (VD: Transport layer máy A hiểu Transport layer máy B), dù dữ liệu thực tế đi qua tất cả các tầng vật lý ở giữa (switch, router)"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Dựng LAN cơ bản trong Packet Tracer: 2 PC qua switch, `ping` kiểm tra",
+      "Wireshark: bắt gói khi load 1 website, chỉ rõ từng lớp header (Ethernet/IP/TCP/HTTP) trong 1 gói tin thực tế, xác định đúng byte nào thuộc header nào"
+    ]
+  },
+  {
+    "weekId": 2,
+    "hasData": true,
+    "title": "Data Link/Ethernet + IPv4 Addressing & Subnetting",
+    "fullTitle": "Tuần 2: Data Link/Ethernet + IPv4 Addressing & Subnetting",
+    "domain": "Networking",
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "Ethernet & Data Link",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Cấu trúc khung Ethernet II (cần thuộc từng trường):",
+            "details": [
+              "- Preamble (7 byte) + SFD (1 byte): đồng bộ tín hiệu, báo hiệu bắt đầu frame",
+              "- Destination MAC (6 byte): địa chỉ MAC đích",
+              "- Source MAC (6 byte): địa chỉ MAC nguồn",
+              "- Type/Length (2 byte): loại giao thức lớp trên (VD: 0x0800 = IPv4, 0x86DD = IPv6, 0x0806 = ARP)",
+              "- Data (46-1500 byte): payload chứa packet lớp 3",
+              "- FCS - Frame Check Sequence (4 byte): dùng CRC để kiểm tra lỗi, nếu sai thì frame bị loại bỏ"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "MAC Address:",
+            "details": [
+              "- Cấu trúc 48-bit (12 ký tự hex), chia 2 phần: 24-bit đầu là OUI (Organizationally Unique Identifier - do IEEE cấp cho hãng sản xuất), 24-bit sau do hãng tự đặt cho từng thiết bị",
+              "- Unicast: gửi tới 1 thiết bị cụ thể (bit thấp nhất của byte đầu = 0)",
+              "- Multicast: gửi tới nhóm thiết bị (bit thấp nhất của byte đầu = 1, VD MAC bắt đầu bằng 01:00:5E cho IPv4 multicast)",
+              "- Broadcast: gửi tới tất cả thiết bị trong broadcast domain (MAC = FF:FF:FF:FF:FF:FF)"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Cách Switch học địa chỉ MAC:",
+            "details": [
+              "- Khi frame vào 1 cổng, switch ghi lại (Source MAC, cổng vào) vào MAC Address Table (CAM Table)",
+              "- Nếu Dest MAC đã có trong bảng → forward thẳng ra đúng cổng (unicast có định hướng)",
+              "- Nếu Dest MAC chưa có trong bảng → flood ra tất cả cổng (trừ cổng vào) — gọi là \"unknown unicast flooding\"",
+              "- Bảng MAC có thời gian timeout (mặc định thường 300 giây), hết hạn sẽ bị xóa nếu không có traffic mới"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Switching Methods:",
+            "details": [
+              "- Store-and-forward: nhận toàn bộ frame, kiểm tra FCS trước khi forward — chậm hơn nhưng phát hiện lỗi tốt hơn, là phương pháp mặc định trên hầu hết switch hiện đại",
+              "- Cut-through: chỉ đọc Dest MAC (12 byte đầu) rồi forward ngay — nhanh hơn nhưng không kiểm tra lỗi, có thể forward cả frame lỗi"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Collision Domain & Broadcast Domain:",
+            "details": [
+              "- Collision domain: vùng mà các thiết bị có thể gây xung đột tín hiệu nếu gửi cùng lúc — mỗi cổng switch là 1 collision domain riêng (khác với hub, cả hub là 1 collision domain chung)",
+              "- Broadcast domain: vùng mà broadcast frame được lan truyền tới — bị giới hạn bởi router hoặc ranh giới VLAN, switch không chặn broadcast domain (trừ khi có VLAN)"
+            ]
+          },
+          {
+            "index": "6.",
+            "title": "Duplex:",
+            "details": [
+              "- Half-duplex: chỉ gửi hoặc nhận tại 1 thời điểm (cũ, dùng hub)",
+              "- Full-duplex: gửi và nhận đồng thời (chuẩn hiện tại)",
+              "- Duplex mismatch: lỗi khi 1 đầu cấu hình half-duplex, đầu kia full-duplex → gây collision, hiệu năng giảm mạnh, cần kiểm tra bằng `show interfaces`"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "IPv4 Addressing & Subnetting (trọng tâm nặng nhất — cần luyện tay nhiều)",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Cấu trúc địa chỉ IPv4:",
+            "details": [
+              "- 32-bit, chia thành 4 octet (mỗi octet 8-bit = 0-255), viết dạng dotted decimal (VD: 192.168.1.1)",
+              "- Mỗi địa chỉ IP gồm 2 phần: Network portion (xác định mạng nào) và Host portion (xác định thiết bị nào trong mạng đó) — ranh giới giữa 2 phần do subnet mask quyết định"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Subnet mask & CIDR:",
+            "details": [
+              "- Subnet mask cũng là 32-bit, gồm dãy bit 1 liên tục (network) rồi tới dãy bit 0 (host) — VD 255.255.255.0 = /24",
+              "- CIDR notation: viết gọn số bit mạng sau dấu `/` (VD 192.168.1.0/24)",
+              "- Bảng subnet mask thường gặp cần thuộc: /24 = 255.255.255.0, /25 = 255.255.255.128, /26 = .192, /27 = .224, /28 = .240, /29 = .248, /30 = .252"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Class địa chỉ (lịch sử, vẫn cần biết cho thi):",
+            "details": [
+              "- Class A: 1.0.0.0 - 126.255.255.255 (mặc định /8), dành cho mạng cực lớn",
+              "- Class B: 128.0.0.0 - 191.255.255.255 (mặc định /16)",
+              "- Class C: 192.0.0.0 - 223.255.255.255 (mặc định /24), phổ biến trong LAN nhỏ",
+              "- Class D: 224.0.0.0 - 239.255.255.255, dùng cho Multicast",
+              "- Class E: 240.0.0.0 - 255.255.255.255, dùng cho nghiên cứu/thử nghiệm"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Private IP (RFC 1918) — cần thuộc chính xác 3 dải:",
+            "details": [
+              "- 10.0.0.0 – 10.255.255.255 (/8)",
+              "- 172.16.0.0 – 172.31.255.255 (/12)",
+              "- 192.168.0.0 – 192.168.255.255 (/16)",
+              "- Public IP: mọi địa chỉ còn lại, định tuyến được trên Internet"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Kỹ thuật Subnetting (phải luyện tới mức phản xạ):",
+            "details": [
+              "- Bước 1: xác định số bit mượn (borrowed bits) từ phần host để tạo subnet",
+              "- Bước 2: tính Increment/Block size = 256 - giá trị octet thay đổi trong subnet mask (VD mask 255.255.255.192 → increment = 256-192 = 64)",
+              "- Bước 3: liệt kê các Network Address theo bội số của increment (VD: .0, .64, .128, .192)",
+              "- Bước 4: với mỗi subnet, xác định:",
+              "- Network Address (địa chỉ đầu tiên, toàn bit host = 0)",
+              "- First usable host (Network Address + 1)",
+              "- Last usable host (Broadcast Address - 1)",
+              "- Broadcast Address (địa chỉ cuối, toàn bit host = 1)",
+              "- Công thức số host khả dụng: 2^(số bit host) - 2 (trừ Network và Broadcast)",
+              "- Công thức số subnet tạo được: 2^(số bit mượn)"
+            ]
+          },
+          {
+            "index": "6.",
+            "title": "VLSM (Variable Length Subnet Mask):",
+            "details": [
+              "- Thay vì chia đều các subnet cùng kích thước, VLSM cho phép chia subnet với kích thước khác nhau tùy nhu cầu thực tế của từng phòng ban — tiết kiệm IP hơn nhiều so với chia đều (Fixed Length Subnet Mask)",
+              "- Nguyên tắc: chia từ subnet cần nhiều host nhất trước, xuống dần subnet nhỏ nhất"
+            ]
+          },
+          {
+            "index": "7.",
+            "title": "Route Summarization/Supernetting:",
+            "details": [
+              "- Gộp nhiều subnet nhỏ liền kề thành 1 route lớn hơn để giảm số dòng trong routing table",
+              "- Cách tìm: tìm bit chung của các subnet cần gộp, mask sẽ ngắn lại tương ứng"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "`show mac address-table` quan sát switch học MAC theo thời gian thực",
+      "Giải tối thiểu 25 bài tập subnetting tay (không dùng công cụ online) — làm đủ dạng: cho network+mask tính subnet, cho số host yêu cầu tính mask cần dùng, cho IP xác định thuộc subnet nào — mục tiêu: giải 1 bài dưới 30 giây",
+      "Bài VLSM: thiết kế IP cho công ty có 4 phòng ban (VD: 50 máy, 20 máy, 10 máy, 2 máy point-to-point link) từ 1 dải /24 cho trước"
+    ]
+  },
+  {
+    "weekId": 3,
+    "hasData": true,
+    "title": "IPv6 + Tầng Giao vận (TCP/UDP)",
+    "fullTitle": "Tuần 3: IPv6 + Tầng Giao vận (TCP/UDP)",
+    "domain": "Networking",
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "IPv6",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Lý do ra đời:",
+            "details": [
+              "- IPv4 chỉ có ~4.3 tỷ địa chỉ, không đủ cho số lượng thiết bị kết nối Internet ngày càng tăng (IoT, smartphone...)"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Cấu trúc địa chỉ:",
+            "details": [
+              "- 128-bit, viết dạng 8 nhóm hexa, mỗi nhóm 16-bit, ngăn cách bởi dấu `:` (VD: 2001:0db8:0000:0000:0000:ff00:0042:8329)",
+              "- Quy tắc rút gọn:",
+              "- Bỏ số 0 đứng đầu mỗi nhóm (0db8 → db8)",
+              "- Thay 1 dãy nhóm toàn số 0 liên tiếp bằng `::` (chỉ được dùng 1 lần trong 1 địa chỉ)"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Các loại địa chỉ IPv6:",
+            "details": [
+              "- Global Unicast Address (GUA): định tuyến được trên Internet, tương đương Public IP của IPv4, bắt đầu bằng 2000::/3",
+              "- Link-Local Address: chỉ dùng trong 1 segment mạng, tự động sinh ra trên mọi interface IPv6, dải fe80::/10",
+              "- Unique Local Address (ULA): tương đương Private IP của IPv4, dải fc00::/7",
+              "- Multicast: dải ff00::/8, không có khái niệm Broadcast trong IPv6 (thay bằng Multicast)",
+              "- Anycast: 1 địa chỉ được gán cho nhiều thiết bị, gói tin đi tới thiết bị gần nhất"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Prefix length: tương đương CIDR của IPv4 (VD /64 là prefix phổ biến nhất cho LAN)",
+            "details": []
+          },
+          {
+            "index": "5.",
+            "title": "Cách gán địa chỉ tự động:",
+            "details": [
+              "- SLAAC (Stateless Address Autoconfiguration): thiết bị tự tạo địa chỉ dựa trên prefix router quảng bá (Router Advertisement) + Interface ID (thường từ MAC address theo chuẩn EUI-64)",
+              "- DHCPv6: cấp phát địa chỉ tập trung qua DHCP server (Stateful), khác cơ chế với DHCP IPv4"
+            ]
+          },
+          {
+            "index": "6.",
+            "title": "Dual-stack: thiết bị/router chạy đồng thời cả IPv4 và IPv6 song song, đây là phương pháp chuyển đổi phổ biến nhất hiện nay",
+            "details": []
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "Tầng Giao vận - TCP & UDP",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Cấu trúc TCP Segment (cần thuộc các trường chính):",
+            "details": [
+              "- Source Port (16-bit), Destination Port (16-bit)",
+              "- Sequence Number: đánh số byte dữ liệu để sắp xếp đúng thứ tự khi nhận",
+              "- Acknowledgment Number: xác nhận đã nhận tới byte nào",
+              "- Flags: SYN (khởi tạo kết nối), ACK (xác nhận), FIN (kết thúc kết nối bình thường), RST (reset kết nối đột ngột), PSH (đẩy dữ liệu ngay), URG (khẩn cấp)",
+              "- Window Size: số byte có thể nhận trước khi cần ACK (dùng cho flow control)"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "TCP 3-way Handshake (thiết lập kết nối) — thuộc lòng thứ tự:",
+            "details": []
+          },
+          {
+            "index": "1.",
+            "title": "Client gửi SYN (kèm số Sequence khởi tạo)",
+            "details": []
+          },
+          {
+            "index": "2.",
+            "title": "Server phản hồi SYN-ACK (xác nhận + gửi Sequence của mình)",
+            "details": []
+          },
+          {
+            "index": "3.",
+            "title": "Client gửi ACK xác nhận lại → kết nối chính thức thiết lập",
+            "details": []
+          },
+          {
+            "index": "3.",
+            "title": "TCP 4-way Termination (kết thúc kết nối):",
+            "details": []
+          },
+          {
+            "index": "1.",
+            "title": "Bên A gửi FIN",
+            "details": []
+          },
+          {
+            "index": "2.",
+            "title": "Bên B gửi ACK xác nhận",
+            "details": []
+          },
+          {
+            "index": "3.",
+            "title": "Bên B gửi FIN của chính mình",
+            "details": []
+          },
+          {
+            "index": "4.",
+            "title": "Bên A gửi ACK xác nhận cuối cùng",
+            "details": []
+          },
+          {
+            "index": "4.",
+            "title": "Flow Control & Congestion Control:",
+            "details": [
+              "- Windowing: bên gửi chỉ gửi số lượng byte trong giới hạn Window Size trước khi cần ACK, tránh làm ngập bên nhận",
+              "- Congestion control: TCP tự điều chỉnh tốc độ gửi khi phát hiện mất gói (nghi ngờ nghẽn mạng), giảm dần rồi tăng lại từ từ (Slow Start, Congestion Avoidance)",
+              "- Reliable delivery: mỗi segment gửi đi đều cần ACK, nếu không nhận được ACK trong thời gian timeout → gửi lại (retransmission)"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "UDP (User Datagram Protocol):",
+            "details": [
+              "- Cấu trúc đơn giản: chỉ có Source port, Dest port, Length, Checksum — không có Sequence/ACK",
+              "- Connectionless: không bắt tay trước khi gửi, không đảm bảo gói đến nơi, không đảm bảo đúng thứ tự",
+              "- Dùng khi cần tốc độ hơn độ tin cậy: DNS query, DHCP, streaming video/audio, VoIP, gaming online"
+            ]
+          },
+          {
+            "index": "6.",
+            "title": "Well-known Ports (0-1023) — bảng cần thuộc chính xác:",
+            "details": [
+              "- 20/21: FTP (data/control)",
+              "- 22: SSH",
+              "- 23: Telnet",
+              "- 25: SMTP",
+              "- 53: DNS",
+              "- 67/68: DHCP (server/client)",
+              "- 80: HTTP",
+              "- 110: POP3",
+              "- 143: IMAP",
+              "- 161/162: SNMP",
+              "- 443: HTTPS",
+              "- 3389: RDP",
+              "- Registered ports: 1024-49151 (ứng dụng đăng ký với IANA)",
+              "- Dynamic/Private ports: 49152-65535 (dùng tạm thời cho client khi kết nối ra ngoài)"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Cấu hình IPv6 tĩnh trên router/PC, kiểm tra `ping6`, quan sát địa chỉ link-local tự sinh (bắt đầu fe80::)",
+      "Wireshark: filter `tcp.flags.syn==1` để tìm đúng gói SYN, theo dõi toàn bộ handshake theo dòng thời gian",
+      "So sánh 1 phiên TCP (VD tải trang HTTP) và 1 phiên UDP (VD DNS query) trong cùng 1 file capture, chỉ ra khác biệt trong cấu trúc header"
+    ]
+  },
+  {
+    "weekId": 4,
+    "hasData": true,
+    "title": "Switching - VLAN + STP/EtherChannel",
+    "fullTitle": "Tuần 4: Switching - VLAN + STP/EtherChannel",
+    "domain": "Networking",
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "Cấu hình Switch cơ bản & VLAN",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Các chế độ trong Cisco IOS CLI:",
+            "details": [
+              "- User EXEC mode: dấu nhắc `Switch>`, chỉ xem thông tin cơ bản, không đổi được cấu hình",
+              "- Privileged EXEC mode: vào bằng lệnh `enable`, dấu nhắc `Switch#`, xem được toàn bộ thông tin (running-config, ...)",
+              "- Global Configuration mode: vào bằng `configure terminal`, dấu nhắc `Switch(config)#`, thay đổi cấu hình toàn cục",
+              "- Interface Configuration mode: vào bằng `interface [tên]`, dấu nhắc `Switch(config-if)#`, cấu hình riêng từng cổng"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Các lệnh cơ bản cần thuộc:",
+            "details": [
+              "- `hostname [tên]`: đặt tên thiết bị",
+              "- `show running-config`: xem cấu hình đang chạy (RAM)",
+              "- `show startup-config`: xem cấu hình lưu (NVRAM, sẽ load khi khởi động lại)",
+              "- `no shutdown`: bật cổng (mặc định cổng switch bật sẵn, nhưng cổng router mặc định tắt)"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "VLAN (Virtual LAN):",
+            "details": [
+              "- Là kỹ thuật chia 1 switch vật lý thành nhiều broadcast domain logic riêng biệt",
+              "- Lý do dùng VLAN:",
+              "- Giảm kích thước broadcast domain → giảm traffic broadcast không cần thiết",
+              "- Tăng bảo mật: cô lập traffic giữa các phòng ban dù cùng chạy trên 1 switch vật lý",
+              "- Tổ chức mạng theo logic công việc (Sales, IT, Guest...) thay vì theo vị trí vật lý",
+              "- VLAN mặc định: VLAN 1 (tất cả cổng switch mặc định thuộc VLAN 1 nếu chưa cấu hình)",
+              "- VLAN ID hợp lệ: 1-4094 (1-1005 là normal range, 1006-4094 là extended range)"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Access Port vs Trunk Port:",
+            "details": [
+              "- Access port: chỉ thuộc 1 VLAN duy nhất, dùng để nối end device (PC, máy in)",
+              "- Trunk port: cho phép nhiều VLAN đi qua cùng 1 link vật lý, dùng để nối switch-switch hoặc switch-router",
+              "- 802.1Q Tagging: chuẩn gắn thẻ VLAN ID (4 byte) vào frame Ethernet khi đi qua trunk, để switch nhận biết frame thuộc VLAN nào",
+              "- Native VLAN: VLAN duy nhất trên trunk KHÔNG bị gắn tag (mặc định là VLAN 1) — cần đảm bảo Native VLAN khớp nhau ở 2 đầu trunk, nếu không sẽ gây lỗi mismatch"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "VTP (VLAN Trunking Protocol):",
+            "details": [
+              "- Dùng để đồng bộ thông tin VLAN tự động giữa nhiều switch trong cùng domain, tránh phải cấu hình tay từng switch",
+              "- Server mode: tạo/sửa/xóa VLAN, gửi thông tin cho switch khác",
+              "- Client mode: chỉ nhận thông tin VLAN từ Server, không tự tạo được",
+              "- Transparent mode: không tham gia đồng bộ VTP, chỉ chuyển tiếp thông tin VTP qua, tự quản lý VLAN riêng"
+            ]
+          },
+          {
+            "index": "6.",
+            "title": "Voice VLAN: VLAN riêng dành cho điện thoại IP (VoIP), tách biệt traffic thoại (ưu tiên độ trễ thấp) khỏi traffic dữ liệu thông thường trên cùng 1 cổng switch (cổng vừa nối PC vừa nối điện thoại IP qua switch tích hợp trong điện thoại)",
+            "details": []
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "STP & EtherChannel",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Vấn đề Switching Loop:",
+            "details": [
+              "- Khi có nhiều đường kết nối dự phòng giữa các switch (để tránh single point of failure), frame Broadcast/Unknown unicast có thể bị lặp vô hạn giữa các switch → gây Broadcast Storm, MAC Address Table bị loạn (MAC flapping), mạng bị nghẽn hoàn toàn"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "STP (Spanning Tree Protocol) hoạt động:",
+            "details": [
+              "- Bước 1 - Bầu Root Bridge: tất cả switch trao đổi BPDU (Bridge Protocol Data Unit) chứa Bridge ID (= Priority + MAC address); switch có Bridge ID nhỏ nhất thắng, trở thành Root Bridge",
+              "- Bước 2 - Xác định Root Port: mỗi switch không phải Root chọn ra 1 cổng có đường đi (cost) tới Root Bridge thấp nhất, gọi là Root Port",
+              "- Bước 3 - Xác định Designated Port: trên mỗi segment mạng, switch nào có cost tới Root thấp nhất sẽ có Designated Port trên segment đó (forward traffic)",
+              "- Bước 4 - Các cổng còn lại → Blocking: không forward traffic để tránh loop, nhưng vẫn lắng nghe BPDU"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "STP Port States (thứ tự chuyển đổi):",
+            "details": [
+              "- Blocking: không forward, chỉ nhận BPDU",
+              "- Listening: bắt đầu tham gia bầu chọn Root/Designated Port, chưa học MAC, chưa forward",
+              "- Learning: bắt đầu học MAC Address nhưng vẫn chưa forward data",
+              "- Forwarding: forward traffic bình thường",
+              "- Disabled: cổng bị tắt thủ công"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Phiên bản STP:",
+            "details": [
+              "- PVST+ (Per-VLAN Spanning Tree Plus): chạy 1 instance STP riêng cho mỗi VLAN (đặc trưng của Cisco), thời gian hội tụ chậm (~30-50 giây)",
+              "- Rapid-PVST+ (802.1w): cải tiến tốc độ hội tụ nhanh hơn nhiều (vài giây) nhờ cơ chế trao đổi trạng thái trực tiếp giữa các switch thay vì chờ timer"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "EtherChannel:",
+            "details": [
+              "- Gộp 2-8 link vật lý riêng biệt thành 1 logical link (Port-Channel) → vừa tăng băng thông tổng vừa có dự phòng (nếu 1 link đứt, các link còn lại vẫn hoạt động) mà STP coi đó là 1 link duy nhất (tránh bị block)",
+              "- PAgP (Port Aggregation Protocol): giao thức độc quyền Cisco để đàm phán EtherChannel tự động",
+              "- LACP (Link Aggregation Control Protocol): chuẩn mở (802.3ad), tương thích đa hãng, phổ biến hơn PAgP trong thực tế"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Cấu hình VLAN: `vlan 10` → `name SALES`, gán cổng: `switchport mode access` → `switchport access vlan 10`",
+      "Cấu hình Trunk: `switchport mode trunk`, `switchport trunk allowed vlan [danh sách]`, `switchport trunk native vlan [id]`",
+      "Kiểm tra: `show vlan brief`, `show interfaces trunk`",
+      "Dựng topology có 2 switch nối 2 đường (tạo loop chủ động), quan sát STP tự động block 1 cổng bằng `show spanning-tree`",
+      "Cấu hình EtherChannel bằng LACP: `channel-group [số] mode active`, kiểm tra bằng `show etherchannel summary`"
+    ]
+  },
+  {
+    "weekId": 5,
+    "hasData": true,
+    "title": "FHRP/Wireless + Static Routing",
+    "fullTitle": "Tuần 5: FHRP/Wireless + Static Routing",
+    "domain": "Networking",
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "First Hop Redundancy & Wireless",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Vấn đề Single Point of Failure ở Default Gateway:",
+            "details": [
+              "- Nếu toàn bộ PC trong 1 subnet chỉ trỏ default gateway về 1 router duy nhất, khi router đó chết → toàn bộ subnet mất kết nối ra ngoài, dù các đường khác trong mạng vẫn sống"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "FHRP (First Hop Redundancy Protocol):",
+            "details": [
+              "- HSRP (Hot Standby Router Protocol): giao thức độc quyền Cisco",
+              "- 2+ router tạo thành 1 nhóm, chia sẻ 1 Virtual IP và Virtual MAC chung",
+              "- 1 router làm Active (xử lý traffic thực tế), 1+ router làm Standby (chờ sẵn)",
+              "- PC chỉ cần trỏ default gateway về Virtual IP, không cần biết router vật lý nào đang Active",
+              "- Khi Active chết, Standby tự động lên thay thế (failover) trong vài giây",
+              "- VRRP (Virtual Router Redundancy Protocol): chuẩn mở tương đương HSRP, tương thích đa hãng",
+              "- GLBP (Gateway Load Balancing Protocol): giao thức Cisco, khác biệt là cho phép load balancing - nhiều router cùng active xử lý traffic song song (không chỉ 1 Active như HSRP/VRRP)"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Wireless Fundamentals:",
+            "details": [
+              "- Chuẩn 802.11:",
+              "- 802.11a: 5GHz, tốc độ tối đa 54Mbps (cũ)",
+              "- 802.11b/g: 2.4GHz, tốc độ tối đa 11Mbps/54Mbps",
+              "- 802.11n (Wi-Fi 4): hỗ trợ cả 2.4GHz và 5GHz, tốc độ tới 600Mbps",
+              "- 802.11ac (Wi-Fi 5): chỉ 5GHz, tốc độ hàng Gbps",
+              "- 802.11ax (Wi-Fi 6): cả 2 băng tần, hiệu năng cao hơn khi nhiều thiết bị cùng kết nối",
+              "- Băng tần: 2.4GHz (vùng phủ xa hơn, nhiều nhiễu hơn vì nhiều thiết bị dùng chung) vs 5GHz (tốc độ cao hơn, vùng phủ ngắn hơn)"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Bảo mật Wireless:",
+            "details": [
+              "- SSID: tên mạng wifi phát ra",
+              "- WPA2: dùng mã hóa AES, chuẩn phổ biến hiện tại",
+              "- WPA3: cải tiến mới nhất, chống brute-force tốt hơn",
+              "- PSK (Pre-Shared Key): dùng 1 mật khẩu chung cho tất cả người dùng (phù hợp gia đình/SOHO)",
+              "- Enterprise (802.1X): mỗi người dùng xác thực riêng qua RADIUS server (phù hợp doanh nghiệp, truy vết được từng user)"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Kiến trúc Access Point:",
+            "details": [
+              "- Autonomous AP: hoạt động độc lập, tự cấu hình riêng từng AP — phù hợp mạng nhỏ",
+              "- Lightweight AP + WLC (Wireless LAN Controller): AP chỉ là \"chân tay\", toàn bộ cấu hình/quản lý tập trung tại WLC — phù hợp mạng lớn có nhiều AP, dễ quản lý đồng loạt"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "Static Routing & Inter-VLAN Routing",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Cách Router forward gói tin:",
+            "details": [
+              "- Router nhận gói tin, đọc IP đích, tra trong Routing Table để tìm route khớp nhất (longest prefix match — route có subnet mask dài nhất khớp được ưu tiên)",
+              "- Routing Table gồm: Network đích, Subnet mask, Next-hop (IP router kế tiếp) hoặc Exit interface, Metric, Administrative Distance (AD)"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Các loại route:",
+            "details": [
+              "- Directly Connected (C): mạng gắn trực tiếp vào interface của router, AD = 0",
+              "- Static route: route cấu hình tay, AD mặc định = 1",
+              "- Default route: route \"bắt tất cả\" khi không có route nào khớp cụ thể hơn, ký hiệu `0.0.0.0/0`, thường trỏ ra hướng Internet"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Cấu hình Static Route:",
+            "details": [
+              "- Cú pháp: `ip route [network đích] [subnet mask] [next-hop IP hoặc exit interface]`",
+              "- VD: `ip route 192.168.2.0 255.255.255.0 10.0.0.2`"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Floating Static Route:",
+            "details": [
+              "- Route dự phòng, cấu hình với AD cao hơn route chính (VD AD=5) → chỉ được dùng khi route chính (AD thấp hơn) bị mất, dùng cho kịch bản backup link"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Administrative Distance (AD) — cần thuộc bảng so sánh độ tin cậy giữa các loại route:",
+            "details": [
+              "| Loại route | AD |",
+              "|---|---|",
+              "| Directly Connected | 0 |",
+              "| Static route | 1 |",
+              "| OSPF | 110 |",
+              "| RIP | 120 |",
+              "- AD càng thấp càng được ưu tiên khi có nhiều nguồn route cùng tới 1 đích"
+            ]
+          },
+          {
+            "index": "6.",
+            "title": "Inter-VLAN Routing (định tuyến giữa các VLAN):",
+            "details": [
+              "- Vì VLAN là các broadcast domain riêng biệt, PC ở VLAN 10 muốn nói chuyện với PC ở VLAN 20 bắt buộc phải đi qua thiết bị Layer 3",
+              "- Router-on-a-stick: dùng 1 cổng vật lý duy nhất trên router, chia thành nhiều subinterface (VD Gi0/0.10, Gi0/0.20), mỗi subinterface gắn với 1 VLAN qua trunk từ switch, mỗi subinterface đóng vai trò default gateway cho VLAN tương ứng",
+              "- Layer 3 Switch (dùng SVI - Switched Virtual Interface): tạo interface ảo cho từng VLAN ngay trên switch (`interface vlan 10`), switch tự routing giữa các VLAN nội bộ mà không cần router riêng — hiệu năng cao hơn Router-on-a-stick vì routing bằng phần cứng (ASIC)"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Cấu hình HSRP giữa 2 router cùng phục vụ 1 subnet, gán cùng Virtual IP, kiểm tra role Active/Standby bằng `show standby brief`, tắt router Active để test failover",
+      "Cấu hình 1 AP ảo trong Packet Tracer với WPA2-PSK, kết nối PC qua wifi, kiểm tra bằng `ipconfig`",
+      "Dựng topology 3 router, cấu hình static route đầy đủ 2 chiều để toàn bộ các mạng ping được nhau",
+      "Cấu hình Router-on-a-stick: tạo subinterface, gán `encapsulation dot1Q [vlan-id]`, gán IP cho từng subinterface, test ping xuyên VLAN"
+    ]
+  },
+  {
+    "weekId": 6,
+    "hasData": true,
+    "title": "OSPF + DHCP/NAT",
+    "fullTitle": "Tuần 6: OSPF + DHCP/NAT",
+    "domain": "Networking",
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "OSPF (Open Shortest Path First)",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Tại sao cần Dynamic Routing:",
+            "details": [
+              "- Static route không tự cập nhật khi mạng thay đổi (thêm/bớt subnet, link đứt) → với mạng lớn, cấu hình tay không khả thi và dễ lỗi",
+              "- Dynamic routing protocol tự động trao đổi thông tin route giữa các router và tự cập nhật khi có thay đổi"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Phân loại giao thức định tuyến:",
+            "details": [
+              "- Distance Vector (VD RIP): mỗi router chỉ biết thông tin từ hàng xóm trực tiếp, chọn đường theo số hop, hội tụ chậm, dễ bị loop nếu không có cơ chế chống loop",
+              "- Link-State (OSPF thuộc nhóm này): mỗi router có bản đồ đầy đủ toàn bộ topology mạng (không chỉ hàng xóm), tự tính đường đi ngắn nhất bằng thuật toán riêng, hội tụ nhanh hơn nhiều"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Cơ chế hoạt động của OSPF:",
+            "details": [
+              "- Bước 1 - Gửi Hello packet: router gửi Hello định kỳ (mặc định 10 giây trên mạng Ethernet) tới địa chỉ multicast 224.0.0.5 để tìm hàng xóm (neighbor)",
+              "- Bước 2 - Hình thành Neighbor Adjacency: 2 router trở thành neighbor nếu thông số khớp nhau (Area ID, Hello/Dead timer, Subnet, Authentication...)",
+              "- Bước 3 - Bầu DR/BDR (trên mạng multi-access như Ethernet): DR (Designated Router) và BDR (Backup DR) được bầu để giảm số lượng adjacency cần thiết lập (tất cả router chỉ cần đồng bộ với DR/BDR thay vì với nhau), bầu dựa trên OSPF Priority cao nhất, nếu bằng nhau thì Router ID cao nhất thắng",
+              "- Bước 4 - Trao đổi LSA, xây dựng LSDB (Link-State Database): mỗi router quảng bá thông tin về các link của mình (LSA - Link State Advertisement), tất cả router trong cùng Area sẽ có LSDB giống hệt nhau",
+              "- Bước 5 - Chạy thuật toán Dijkstra (SPF - Shortest Path First): mỗi router tự tính cây đường đi ngắn nhất tới mọi đích dựa trên LSDB, kết quả đưa vào Routing Table"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "OSPF Area:",
+            "details": [
+              "- Area 0 (Backbone Area) bắt buộc phải tồn tại, mọi Area khác phải kết nối trực tiếp hoặc gián tiếp về Area 0",
+              "- Trong phạm vi CCNA, chủ yếu học single-area OSPF (toàn bộ router trong Area 0), multi-area là kiến thức nâng cao hơn (CCNP)"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Router ID: định danh duy nhất cho mỗi router trong OSPF domain, chọn theo thứ tự ưu tiên: cấu hình tay (`router-id`) > IP cao nhất trên Loopback interface > IP cao nhất trên interface vật lý",
+            "details": []
+          },
+          {
+            "index": "6.",
+            "title": "Cost Metric: OSPF tính cost dựa trên bandwidth của interface (công thức: Cost = Reference Bandwidth / Bandwidth interface, mặc định Reference Bandwidth = 100Mbps) — interface băng thông càng cao thì cost càng thấp, càng được ưu tiên",
+            "details": []
+          },
+          {
+            "index": "7.",
+            "title": "Cấu hình OSPF cơ bản:",
+            "details": [
+              "```",
+              "router ospf 1",
+              "network [ip mạng] [wildcard mask] area 0",
+              "```",
+              "- Wildcard mask là \"mask đảo ngược\" của subnet mask (VD subnet mask 255.255.255.0 → wildcard 0.0.0.255)"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "DHCP & NAT",
+        "items": [
+          {
+            "index": "1.",
+            "title": "DHCP - quy trình DORA (4 bước, thuộc lòng thứ tự):",
+            "details": []
+          },
+          {
+            "index": "1.",
+            "title": "Discover: client broadcast tìm DHCP server (\"Có ai cấp IP không?\")",
+            "details": []
+          },
+          {
+            "index": "2.",
+            "title": "Offer: server phản hồi đề xuất 1 địa chỉ IP khả dụng",
+            "details": []
+          },
+          {
+            "index": "3.",
+            "title": "Request: client broadcast xác nhận muốn nhận địa chỉ IP đó (broadcast vì có thể có nhiều DHCP server cùng offer)",
+            "details": []
+          },
+          {
+            "index": "4.",
+            "title": "Acknowledge (ACK): server xác nhận cấp phát chính thức, client bắt đầu dùng IP đó",
+            "details": []
+          },
+          {
+            "index": "2.",
+            "title": "DHCP Relay:",
+            "details": [
+              "- Vì DHCP Discover là broadcast, không tự vượt qua được router sang subnet khác",
+              "- Nếu DHCP server đặt ở subnet khác với client, cần cấu hình `ip helper-address [IP DHCP server]` trên interface router phía client, để router chuyển tiếp (relay) request dạng unicast tới đúng server"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Cấu hình DHCP Server trên Router Cisco:",
+            "details": [
+              "```",
+              "ip dhcp pool [tên pool]",
+              "network [network] [mask]",
+              "default-router [gateway IP]",
+              "dns-server [DNS IP]",
+              "ip dhcp excluded-address [start IP] [end IP]",
+              "```",
+              "- `excluded-address` dùng để loại các IP đã gán tĩnh (như chính IP gateway) ra khỏi vùng cấp phát tự động"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "NAT (Network Address Translation):",
+            "details": [
+              "- Giải quyết vấn đề thiếu địa chỉ IPv4 Public bằng cách cho phép nhiều thiết bị dùng Private IP nội bộ chia sẻ chung 1 (hoặc vài) địa chỉ Public khi ra Internet"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Các loại NAT:",
+            "details": [
+              "- Static NAT: ánh xạ cố định 1-1 giữa 1 Private IP và 1 Public IP (dùng cho server cần truy cập từ ngoài vào theo IP cố định)",
+              "- Dynamic NAT: ánh xạ từ 1 dải Private IP sang 1 dải Public IP có sẵn (pool), nhưng vẫn theo tỷ lệ 1-1 tại 1 thời điểm",
+              "- PAT (Port Address Translation / NAT Overload): nhiều Private IP cùng dùng chung 1 Public IP, phân biệt bằng số port khác nhau — đây là loại phổ biến nhất trong thực tế (dùng ở hầu hết router gia đình/doanh nghiệp)"
+            ]
+          },
+          {
+            "index": "6.",
+            "title": "Thuật ngữ NAT (4 khái niệm cần phân biệt rõ):",
+            "details": [
+              "- Inside Local: IP nội bộ (Private) của thiết bị trong LAN, nhìn từ góc độ nội bộ",
+              "- Inside Global: IP Public đại diện cho thiết bị đó khi ra ngoài Internet (sau khi NAT)",
+              "- Outside Local: IP của thiết bị bên ngoài, nhìn từ góc độ mạng nội bộ",
+              "- Outside Global: IP thật (Public) của thiết bị bên ngoài Internet"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Cấu hình OSPF single-area trên 3-4 router, kiểm tra neighbor bằng `show ip ospf neighbor`, kiểm tra route học được bằng `show ip route ospf` (route OSPF được đánh dấu bằng chữ O)",
+      "Cấu hình DHCP server trên router, PC nhận IP tự động, kiểm tra bằng `ipconfig /all` trên PC",
+      "Cấu hình PAT: `ip nat inside source list [ACL] interface [outside interface] overload`, xác định đúng cổng nào là `ip nat inside`, cổng nào là `ip nat outside`"
+    ]
+  },
+  {
+    "weekId": 7,
+    "hasData": true,
+    "title": "ACL/Security Fundamentals + IP Services",
+    "fullTitle": "Tuần 7: ACL/Security Fundamentals + IP Services",
+    "domain": "Networking",
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "ACL & Security",
+        "items": [
+          {
+            "index": "1.",
+            "title": "ACL (Access Control List) là gì:",
+            "details": [
+              "- Danh sách các rule (điều kiện) để router/switch quyết định cho phép (permit) hay chặn (deny) traffic, dựa trên: IP nguồn, IP đích, giao thức (TCP/UDP/ICMP...), số port"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Standard ACL vs Extended ACL:",
+            "details": [
+              "- Standard ACL: chỉ lọc được dựa trên IP nguồn, dải số hiệu 1-99 (hoặc 1300-1999 expanded) — vì không lọc được chi tiết, nên nguyên tắc đặt gần đích nhất có thể (để tránh chặn nhầm traffic cần đi tiếp tới nơi khác)",
+              "- Extended ACL: lọc được cả IP nguồn, IP đích, protocol, port, dải số hiệu 100-199 (hoặc 2000-2699 expanded) — nên đặt gần nguồn nhất có thể (chặn sớm, tiết kiệm băng thông toàn mạng)"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Named ACL vs Numbered ACL:",
+            "details": [
+              "- Numbered: định danh bằng số hiệu như trên",
+              "- Named: định danh bằng tên gợi nhớ (VD `ip access-list extended BLOCK_SALES`), dễ quản lý và sửa từng dòng hơn (numbered ACL cũ không sửa được từng dòng, phải xóa hết làm lại)"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Wildcard Mask:",
+            "details": [
+              "- Khác với Subnet mask (bit 1 = phần cố định), Wildcard mask hoạt động ngược: bit 0 = phải khớp chính xác, bit 1 = bỏ qua (không quan tâm)",
+              "- VD: muốn khớp toàn bộ dải 192.168.1.0/24 → wildcard = 0.0.0.255",
+              "- Muốn khớp chính xác 1 IP duy nhất → wildcard = 0.0.0.0 (hoặc dùng từ khóa `host`)",
+              "- Muốn khớp mọi IP → wildcard = 255.255.255.255 (hoặc dùng từ khóa `any`)"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Thứ tự xử lý ACL:",
+            "details": [
+              "- Router xử lý các dòng ACL từ trên xuống dưới (top-down), dừng lại ngay khi gặp dòng đầu tiên khớp điều kiện — các dòng phía sau không được xét tới nữa dù có khớp hơn",
+              "- Cuối mỗi ACL luôn có 1 dòng implicit deny ẩn (không hiện ra khi xem cấu hình) chặn tất cả traffic còn lại chưa được permit — vì vậy ACL cần ít nhất 1 dòng `permit` nếu không sẽ chặn hết traffic"
+            ]
+          },
+          {
+            "index": "6.",
+            "title": "CIA Triad (nền tảng bảo mật):",
+            "details": [
+              "- Confidentiality (Bảo mật): đảm bảo thông tin chỉ người có quyền mới xem được (mã hóa, phân quyền)",
+              "- Integrity (Toàn vẹn): đảm bảo dữ liệu không bị thay đổi trái phép trong quá trình truyền/lưu (hash, checksum)",
+              "- Availability (Sẵn sàng): đảm bảo hệ thống/dữ liệu luôn sẵn sàng khi cần (chống DDoS, dự phòng)"
+            ]
+          },
+          {
+            "index": "7.",
+            "title": "AAA Framework:",
+            "details": [
+              "- Authentication: xác thực danh tính (bạn là ai) — VD nhập username/password",
+              "- Authorization: phân quyền (bạn được làm gì) — VD chỉ được xem, không được sửa",
+              "- Accounting: ghi log lại hành động đã làm (ai làm gì, lúc nào) để kiểm tra/audit sau này"
+            ]
+          },
+          {
+            "index": "8.",
+            "title": "Port Security trên Switch:",
+            "details": [
+              "- Giới hạn số lượng địa chỉ MAC được phép học trên 1 cổng switch, chống tấn công MAC flooding hoặc thiết bị lạ cắm vào mạng",
+              "- Các hành động khi vi phạm (violation mode):",
+              "- Protect: âm thầm drop traffic vi phạm, không log",
+              "- Restrict: drop traffic vi phạm + ghi log + tăng biến đếm vi phạm",
+              "- Shutdown (mặc định): tắt hẳn cổng (err-disable), cần can thiệp tay để bật lại"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "IP Services",
+        "items": [
+          {
+            "index": "1.",
+            "title": "NTP (Network Time Protocol):",
+            "details": [
+              "- Đồng bộ thời gian chính xác giữa các thiết bị trong mạng — cực kỳ quan trọng vì log/sự kiện bảo mật cần đúng timestamp để đối chiếu, điều tra sự cố (nếu thời gian lệch nhau giữa các thiết bị, việc truy vết log gần như không thể)",
+              "- Router/switch có thể làm NTP client (đồng bộ từ server) hoặc NTP server (cấp thời gian cho thiết bị khác)"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "SNMP (Simple Network Management Protocol):",
+            "details": [
+              "- Dùng để giám sát và quản lý thiết bị mạng từ xa (CPU, RAM, trạng thái interface...)",
+              "- SNMPv2c: dùng \"community string\" như mật khẩu đơn giản, truyền dạng clear-text (không an toàn)",
+              "- SNMPv3: có mã hóa và xác thực đầy đủ, an toàn hơn nhiều, nên ưu tiên dùng trong thực tế",
+              "- MIB (Management Information Base): cấu trúc dữ liệu chứa các thông tin thiết bị có thể giám sát",
+              "- OID (Object Identifier): địa chỉ định danh duy nhất cho từng thông số trong MIB (VD OID cho CPU load)"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Syslog:",
+            "details": [
+              "- Giao thức gửi log sự kiện từ thiết bị mạng về 1 server tập trung để lưu trữ/phân tích",
+              "- Mức độ nghiêm trọng (Severity Level 0-7), cần thuộc thứ tự:",
+              "- 0 Emergency, 1 Alert, 2 Critical, 3 Error, 4 Warning, 5 Notice, 6 Informational, 7 Debug",
+              "- Số càng nhỏ càng nghiêm trọng"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "QoS (Quality of Service) cơ bản:",
+            "details": [
+              "- Cơ chế ưu tiên xử lý 1 số loại traffic quan trọng hơn (VD traffic thoại VoIP cần độ trễ thấp) so với traffic thường (VD tải file)",
+              "- Các khái niệm cơ bản: Classification (phân loại traffic), Marking (đánh dấu ưu tiên), Queuing (xếp hàng theo độ ưu tiên)"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "DNS chi tiết hơn:",
+            "details": [
+              "- Recursive query: client hỏi DNS server, server đó có trách nhiệm tự đi hỏi tiếp các server khác cho tới khi có kết quả rồi trả về cho client",
+              "- Iterative query: server chỉ trả lời \"tôi không biết nhưng bạn nên hỏi server X\", client tự đi hỏi tiếp từng bước"
+            ]
+          },
+          {
+            "index": "6.",
+            "title": "FTP/TFTP:",
+            "details": [
+              "- Dùng để backup/restore file cấu hình router hoặc IOS image",
+              "- FTP cần xác thực (username/password), chạy trên TCP port 20/21",
+              "- TFTP đơn giản hơn, không xác thực, chạy trên UDP port 69, thường dùng nội bộ để backup nhanh cấu hình"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Viết Extended Named ACL chặn 1 subnet cụ thể truy cập HTTP (port 80) vào 1 server, nhưng vẫn cho phép các traffic khác đi qua bình thường, áp ACL vào đúng interface + đúng chiều (`in`/`out`)",
+      "Cấu hình Port Security: `switchport port-security maximum [số]`, `switchport port-security violation [protect/restrict/shutdown]`, test bằng cách cắm thêm 1 thiết bị lạ vào cổng đã giới hạn",
+      "Cấu hình NTP client trỏ về 1 NTP server, kiểm tra bằng `show ntp status`",
+      "Cấu hình gửi log về Syslog server bằng `logging [IP server]`"
+    ]
+  },
+  {
+    "weekId": 8,
+    "hasData": true,
+    "title": "Automation & Programmability + Ôn tập/Dự án tổng hợp",
+    "fullTitle": "Tuần 8: Automation & Programmability + Ôn tập/Dự án tổng hợp",
+    "domain": "Networking",
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "Automation & Programmability",
+        "items": [
+          {
+            "index": "1.",
+            "title": "So sánh mạng truyền thống vs SDN:",
+            "details": [
+              "- Mạng truyền thống: mỗi thiết bị tự quản lý Control Plane (quyết định routing) và Data Plane (forward traffic thực tế) riêng lẻ, cấu hình tay từng thiết bị qua CLI",
+              "- SDN (Software-Defined Networking): tách Control Plane ra khỏi thiết bị, đưa về 1 bộ điều khiển trung tâm (Controller) quản lý toàn bộ mạng, các thiết bị chỉ còn giữ Data Plane để forward theo lệnh từ Controller"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Control Plane vs Data Plane:",
+            "details": [
+              "- Control Plane: nơi ra quyết định (VD tính toán routing table, chạy thuật toán OSPF)",
+              "- Data Plane: nơi thực thi, forward gói tin thực tế dựa trên quyết định đã có"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Northbound API vs Southbound API:",
+            "details": [
+              "- Northbound API: giao tiếp giữa Controller và các ứng dụng quản lý phía trên (VD dashboard, hệ thống tự động hóa) — thường dùng REST API",
+              "- Southbound API: giao tiếp giữa Controller và các thiết bị mạng phía dưới (VD giao thức OpenFlow, NETCONF)"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "REST API cơ bản:",
+            "details": [
+              "- GET: lấy dữ liệu (VD lấy danh sách VLAN hiện có)",
+              "- POST: tạo mới (VD tạo VLAN mới)",
+              "- PUT: cập nhật toàn bộ resource",
+              "- DELETE: xóa resource",
+              "- JSON (JavaScript Object Notation): định dạng dữ liệu phổ biến để trao đổi qua REST API, dạng key-value dễ đọc"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Nền tảng quản lý tập trung của Cisco (giới thiệu khái niệm):",
+            "details": [
+              "- Cisco DNA Center: nền tảng quản lý mạng doanh nghiệp tập trung, tự động hóa cấu hình, giám sát qua giao diện đồ họa",
+              "- Cisco Meraki: nền tảng quản lý qua cloud, phù hợp mô hình nhiều chi nhánh"
+            ]
+          },
+          {
+            "index": "6.",
+            "title": "Công cụ Automation:",
+            "details": [
+              "- Ansible: agentless (không cần cài phần mềm trên thiết bị đích), dùng SSH kết nối, viết cấu hình bằng file YAML (Playbook) — phổ biến nhất trong network automation vì đơn giản",
+              "- Puppet/Chef: cần cài agent trên thiết bị đích, phức tạp hơn, thường dùng cho quản lý server nhiều hơn là thiết bị mạng",
+              "- Python + Netmiko: thư viện Python chuyên dùng để SSH kết nối và gửi lệnh CLI tới thiết bị mạng (hỗ trợ nhiều hãng: Cisco, Juniper, Arista...), phù hợp viết script tự động hóa các tác vụ lặp lại (backup config, đổi cấu hình hàng loạt)"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "Ôn tập tổng hợp",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Ôn theo đúng 6 nhóm trọng số đề thi CCNA 200-301:",
+            "details": [
+              "- Network Fundamentals (20%): OSI/TCP-IP, cáp, IPv4/IPv6, subnetting",
+              "- Network Access (20%): VLAN, Trunk, STP, EtherChannel, Wireless",
+              "- IP Connectivity (25%): Routing table, Static route, OSPF, FHRP",
+              "- IP Services (10%): NAT, DHCP, NTP, SNMP, Syslog, QoS",
+              "- Security Fundamentals (15%): ACL, Port Security, AAA, VPN cơ bản",
+              "- Automation & Programmability (10%): SDN, REST API, Ansible, Python"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Luyện đề:",
+            "details": [
+              "- Làm tối thiểu 2 bộ đề thi thử CCNA 200-301 đầy đủ (thời gian giới hạn giống thi thật để quen áp lực)",
+              "- Với mỗi câu sai, quay lại đúng phần kiến thức tương ứng ở các tuần trước để học lại, không chỉ học thuộc đáp án"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Ôn tốc độ Subnetting:",
+            "details": [
+              "- Luyện lại tối thiểu 15-20 bài subnetting ngẫu nhiên, mục tiêu duy trì tốc độ dưới 30 giây/bài vì đây là kỹ năng nền chi phối toàn bộ các câu hỏi Routing/DHCP khác trong đề thi"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 3",
+        "name": "Dự án lab cuối khóa (bắt buộc làm tay, không dùng template có sẵn)",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Tổng quan & Kiến thức cốt lõi",
+            "details": [
+              "Dựng 1 hệ thống mạng doanh nghiệp nhỏ hoàn chỉnh, tích hợp toàn bộ kiến thức đã học:"
+            ]
+          },
+          {
+            "index": "1.",
+            "title": "Thiết kế 3 VLAN (Sales, IT, Management) trên 2 switch, cấu hình Trunk giữa 2 switch, đảm bảo STP hoạt động đúng khi có redundant link",
+            "details": []
+          },
+          {
+            "index": "2.",
+            "title": "2 Router chạy OSPF single-area, 1 router đóng vai trò Edge kết nối ra \"Internet\" (giả lập bằng 1 router/cloud khác)",
+            "details": []
+          },
+          {
+            "index": "3.",
+            "title": "Chọn và cấu hình Inter-VLAN Routing bằng Router-on-a-stick hoặc Layer 3 Switch (SVI), giải thích lý do chọn phương án đó",
+            "details": []
+          },
+          {
+            "index": "4.",
+            "title": "DHCP server cấp IP tự động riêng cho từng VLAN, đúng dải subnet đã thiết kế",
+            "details": []
+          },
+          {
+            "index": "5.",
+            "title": "NAT/PAT cho toàn bộ LAN ra Internet qua IP Public của router Edge",
+            "details": []
+          },
+          {
+            "index": "6.",
+            "title": "Extended ACL chặn VLAN Sales không truy cập được vào VLAN Management, nhưng vẫn cho các VLAN khác hoạt động bình thường",
+            "details": []
+          },
+          {
+            "index": "7.",
+            "title": "HSRP dự phòng default gateway cho ít nhất 1 VLAN quan trọng, test failover thực tế",
+            "details": []
+          },
+          {
+            "index": "8.",
+            "title": "Viết báo cáo thiết kế đầy đủ: sơ đồ topology, bảng IP addressing plan (VLSM) cho từng VLAN, giải thích từng quyết định kỹ thuật đã chọn và lý do",
+            "details": [
+              "---",
+              "BẢNG LỆNH CISCO IOS CẦN THUỘC (Tổng hợp toàn khóa)",
+              "• Vào chế độ cấu hình: `enable` → `configure terminal`",
+              "• Đặt hostname: `hostname [tên]`",
+              "• Cấu hình IP interface: `interface [tên]` → `ip address [ip] [mask]` → `no shutdown`",
+              "• Xem routing table: `show ip route`",
+              "• Xem interface: `show ip interface brief`",
+              "• Tạo VLAN: `vlan [id]` → `name [tên]`",
+              "• Gán port vào VLAN: `switchport mode access` → `switchport access vlan [id]`",
+              "• Cấu hình Trunk: `switchport mode trunk` → `switchport trunk allowed vlan [ds]`",
+              "• Xem MAC table: `show mac address-table`",
+              "• Xem STP: `show spanning-tree`",
+              "• Cấu hình EtherChannel: `channel-group [số] mode active`",
+              "• Cấu hình static route: `ip route [network] [mask] [next-hop]`",
+              "• Bật OSPF: `router ospf [id]` → `network [ip] [wildcard] area [n]`",
+              "• Xem OSPF neighbor: `show ip ospf neighbor`",
+              "• Cấu hình HSRP: `standby [group] ip [virtual-ip]`",
+              "• Cấu hình DHCP pool: `ip dhcp pool [tên]` → `network`, `default-router`, `dns-server`",
+              "• Cấu hình PAT: `ip nat inside source list [ACL] interface [if] overload`",
+              "• Viết Extended ACL: `ip access-list extended [tên]` → `permit/deny [protocol] [nguồn] [đích] [port]`",
+              "• Port Security: `switchport port-security maximum [n]` → `switchport port-security violation [mode]`",
+              "• Lưu cấu hình: `copy running-config startup-config`"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": null
+  },
+  {
+    "weekId": 9,
+    "hasData": true,
+    "title": "Toán nền tảng + Quy trình ML + Tiền xử lý dữ liệu",
+    "fullTitle": "Tuần 9: Toán nền tảng + Quy trình ML + Tiền xử lý dữ liệu",
+    "domain": "ML/DL",
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "Đại số tuyến tính cho ML/DL",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Vector & Ma trận:",
+            "details": [
+              "- Vector: mảng 1 chiều các số, biểu diễn 1 điểm dữ liệu (feature vector) hoặc 1 trọng số",
+              "- Ma trận: mảng 2 chiều, dùng biểu diễn tập dữ liệu (mỗi hàng là 1 sample, mỗi cột là 1 feature) hoặc weight của 1 layer trong neural network",
+              "- Phép cộng/trừ ma trận (element-wise), phép nhân vô hướng (scalar multiplication)",
+              "- Phép nhân ma trận (Matrix multiplication): quy tắc hàng nhân cột, điều kiện số cột ma trận A = số hàng ma trận B — đây là phép toán cốt lõi trong forward propagation của neural network",
+              "- Ma trận chuyển vị (Transpose), ma trận đơn vị (Identity matrix), ma trận nghịch đảo (Inverse matrix)",
+              "- Dot product (tích vô hướng): nền tảng của phép tính trong 1 neuron (weighted sum = dot product giữa input và weight)"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Norm & Khoảng cách:",
+            "details": [
+              "- L1 Norm (Manhattan distance): tổng trị tuyệt đối các phần tử — dùng trong L1 Regularization",
+              "- L2 Norm (Euclidean distance): căn bậc 2 tổng bình phương các phần tử — dùng trong L2 Regularization, tính khoảng cách trong KNN, K-Means",
+              "- Cosine similarity: đo góc giữa 2 vector, dùng nhiều trong NLP/Recommendation system"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Eigenvalue & Eigenvector (mức cơ bản):",
+            "details": [
+              "- Khái niệm: vector không đổi hướng khi nhân với ma trận, chỉ scale theo giá trị eigenvalue",
+              "- Ứng dụng trực tiếp: nền tảng của thuật toán PCA (Principal Component Analysis) ở Tuần 2"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "Xác suất - Thống kê cho ML",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Khái niệm cơ bản:",
+            "details": [
+              "- Biến ngẫu nhiên (Random variable), không gian mẫu (Sample space)",
+              "- Phân phối xác suất: Phân phối chuẩn (Normal/Gaussian distribution), Phân phối Bernoulli, Phân phối Binomial",
+              "- Kỳ vọng (Expectation/Mean), Phương sai (Variance), Độ lệch chuẩn (Standard deviation)",
+              "- Hiệp phương sai (Covariance), Hệ số tương quan (Correlation coefficient)"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Định lý Bayes:",
+            "details": [
+              "- Công thức: P(A|B) = P(B|A) × P(A) / P(B)",
+              "- Ứng dụng trực tiếp: nền tảng của thuật toán Naive Bayes Classifier (Tuần 2)",
+              "- Prior probability, Likelihood, Posterior probability — 3 thành phần cốt lõi cần phân biệt"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Thống kê mô tả:",
+            "details": [
+              "- Median, Mode, Percentile, Quartile (dùng phát hiện outlier bằng IQR - Interquartile Range)",
+              "- Phân phối lệch (Skewness), độ nhọn (Kurtosis) — ảnh hưởng tới việc chọn kỹ thuật scale dữ liệu"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 3",
+        "name": "Giải tích & Tối ưu hóa",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Đạo hàm (Derivative):",
+            "details": [
+              "- Ý nghĩa: đo tốc độ thay đổi của hàm số — trong ML dùng để biết hướng và mức độ cần điều chỉnh tham số để giảm loss",
+              "- Đạo hàm riêng (Partial derivative): khi hàm có nhiều biến (như hàm loss phụ thuộc nhiều trọng số)",
+              "- Chain Rule (quy tắc chuỗi): CỰC KỲ QUAN TRỌNG — là nền tảng toán học của thuật toán Backpropagation trong Deep Learning (Tuần 3)",
+              "- Gradient: vector chứa tất cả đạo hàm riêng, chỉ ra hướng tăng nhanh nhất của hàm số"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Gradient Descent (thuật toán tối ưu cốt lõi của toàn bộ ML/DL):",
+            "details": [
+              "- Ý tưởng: cập nhật tham số ngược hướng gradient để giảm dần giá trị hàm loss",
+              "- Công thức cập nhật: `θ = θ - α × ∇J(θ)` (θ là tham số, α là learning rate, ∇J là gradient của hàm loss)",
+              "- Learning rate (α): siêu tham số quan trọng nhất — quá lớn sẽ bị \"nhảy qua\" điểm tối ưu (không hội tụ), quá nhỏ sẽ hội tụ rất chậm",
+              "- 3 biến thể của Gradient Descent:",
+              "- Batch Gradient Descent: dùng toàn bộ tập dữ liệu để tính gradient mỗi lần cập nhật — ổn định nhưng chậm với dữ liệu lớn",
+              "- Stochastic Gradient Descent (SGD): dùng 1 sample duy nhất mỗi lần cập nhật — nhanh nhưng nhiễu (noisy), có thể giúp thoát local minimum",
+              "- Mini-batch Gradient Descent: dùng 1 batch nhỏ (VD 32, 64, 128 sample) — cân bằng giữa 2 loại trên, được dùng phổ biến nhất trong thực tế"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Local Minimum vs Global Minimum:",
+            "details": [
+              "- Local minimum: điểm thấp cục bộ nhưng chưa phải thấp nhất toàn hàm",
+              "- Global minimum: điểm thấp nhất thực sự của hàm loss",
+              "- Saddle point: điểm mà gradient = 0 nhưng không phải điểm cực trị thực sự — vấn đề thường gặp hơn local minimum trong không gian nhiều chiều của Deep Learning"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 4",
+        "name": "Quy trình làm việc ML & Công cụ dữ liệu",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Phân loại bài toán ML:",
+            "details": [
+              "- Supervised Learning: học từ dữ liệu có nhãn (label) — gồm Regression (dự đoán giá trị liên tục) và Classification (dự đoán nhãn phân loại)",
+              "- Unsupervised Learning: học từ dữ liệu không nhãn — gồm Clustering, Dimensionality Reduction, Association Rule",
+              "- Reinforcement Learning: agent học qua tương tác với môi trường, tối ưu hóa phần thưởng (reward) tích lũy — giới thiệu khái niệm, không đi sâu trong 4 tuần này"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Quy trình ML chuẩn (ML Pipeline) — cần thuộc thứ tự:",
+            "details": []
+          },
+          {
+            "index": "1.",
+            "title": "Thu thập dữ liệu (Data Collection)",
+            "details": []
+          },
+          {
+            "index": "2.",
+            "title": "Khám phá dữ liệu (EDA - Exploratory Data Analysis)",
+            "details": []
+          },
+          {
+            "index": "3.",
+            "title": "Tiền xử lý dữ liệu (Data Preprocessing)",
+            "details": []
+          },
+          {
+            "index": "4.",
+            "title": "Chia tập dữ liệu (Train/Validation/Test split)",
+            "details": []
+          },
+          {
+            "index": "5.",
+            "title": "Chọn và huấn luyện mô hình (Model Training)",
+            "details": []
+          },
+          {
+            "index": "6.",
+            "title": "Đánh giá mô hình (Model Evaluation)",
+            "details": []
+          },
+          {
+            "index": "7.",
+            "title": "Tinh chỉnh siêu tham số (Hyperparameter Tuning)",
+            "details": []
+          },
+          {
+            "index": "8.",
+            "title": "Triển khai (Deployment)",
+            "details": []
+          },
+          {
+            "index": "3.",
+            "title": "NumPy:",
+            "details": [
+              "- Array (ndarray), broadcasting, vectorization (thay vì dùng vòng lặp Python thuần, giúp tăng tốc tính toán đáng kể)",
+              "- Các phép toán ma trận: `np.dot()`, `np.matmul()`, reshape, transpose"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Pandas:",
+            "details": [
+              "- DataFrame, Series",
+              "- Đọc dữ liệu: `read_csv()`, `read_excel()`",
+              "- Lọc dữ liệu, `groupby()`, `merge()`/`join()`, xử lý dữ liệu thiếu (`isnull()`, `fillna()`, `dropna()`)"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Trực quan hóa dữ liệu:",
+            "details": [
+              "- Matplotlib: line chart, scatter plot, histogram, bar chart",
+              "- Seaborn: heatmap (dùng cho ma trận tương quan - Correlation matrix), boxplot (phát hiện outlier), pairplot"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 5",
+        "name": "Tiền xử lý dữ liệu (Data Preprocessing)",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Xử lý Missing Value:",
+            "details": [
+              "- Xóa dòng/cột có quá nhiều giá trị thiếu",
+              "- Điền giá trị thiếu (Imputation): dùng Mean/Median (cho dữ liệu số), Mode (cho dữ liệu phân loại), hoặc thuật toán phức tạp hơn (KNN Imputer)"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Xử lý Outlier:",
+            "details": [
+              "- Phát hiện bằng Z-score (giá trị cách trung bình bao nhiêu độ lệch chuẩn, thường ngưỡng |Z| > 3)",
+              "- Phát hiện bằng IQR: outlier nếu nằm ngoài khoảng [Q1 - 1.5×IQR, Q3 + 1.5×IQR]",
+              "- Xử lý: xóa, giới hạn (capping/winsorizing), hoặc giữ nguyên nếu outlier có ý nghĩa thực tế"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Feature Scaling:",
+            "details": [
+              "- Normalization (Min-Max Scaling): đưa giá trị về khoảng [0,1], công thức: (x - min)/(max - min) — nhạy cảm với outlier",
+              "- Standardization (Z-score Scaling): đưa về phân phối có mean=0, std=1, công thức: (x - mean)/std — ít nhạy cảm outlier hơn, phù hợp khi dữ liệu gần phân phối chuẩn",
+              "- Khi nào cần scale: bắt buộc với các thuật toán dựa trên khoảng cách (KNN, K-Means, SVM) và Neural Network; không bắt buộc với Tree-based models (Decision Tree, Random Forest)"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Encoding biến phân loại (Categorical Encoding):",
+            "details": [
+              "- Label Encoding: gán mỗi category 1 số nguyên — chỉ phù hợp với biến có thứ tự (ordinal, VD: Thấp/Trung bình/Cao)",
+              "- One-Hot Encoding: tạo cột nhị phân riêng cho mỗi category — phù hợp biến không thứ tự (nominal), nhưng làm tăng số chiều dữ liệu nếu category quá nhiều",
+              "- Vấn đề Dummy Variable Trap khi dùng One-hot (cần bỏ 1 cột để tránh đa cộng tuyến)"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Cài đặt phép nhân ma trận và tính gradient bằng tay bằng NumPy (không dùng thư viện có sẵn) để hiểu bản chất",
+      "Vẽ đồ thị minh họa learning rate quá lớn/quá nhỏ ảnh hưởng tới Gradient Descent",
+      "Làm sạch toàn bộ 1 bộ dữ liệu thô: xử lý missing value, outlier, scale dữ liệu, encode biến phân loại — dùng bộ dữ liệu Titanic hoặc tương đương"
+    ]
+  },
+  {
+    "weekId": 10,
+    "hasData": true,
+    "title": "Các thuật toán Machine Learning cốt lõi",
+    "fullTitle": "Tuần 10: Các thuật toán Machine Learning cốt lõi",
+    "domain": "ML/DL",
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "Hồi quy (Regression)",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Linear Regression:",
+            "details": [
+              "- Mô hình: y = w1x1 + w2x2 + ... + wnxn + b (b là bias/intercept)",
+              "- Hàm mất mát MSE (Mean Squared Error): trung bình bình phương sai số giữa giá trị dự đoán và thực tế — công thức MSE = (1/n)Σ(y_thực - y_dự_đoán)²",
+              "- Cách tìm nghiệm: dùng Gradient Descent (lặp dần) hoặc Normal Equation (giải trực tiếp bằng đại số tuyến tính, chỉ khả thi khi số feature không quá lớn)",
+              "- Giả định của Linear Regression: quan hệ tuyến tính, các sai số độc lập, phương sai sai số đồng nhất (Homoscedasticity), không đa cộng tuyến (Multicollinearity) giữa các feature"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Polynomial Regression:",
+            "details": [
+              "- Mở rộng Linear Regression bằng cách thêm các bậc cao của feature (x², x³...) để mô hình hóa quan hệ phi tuyến",
+              "- Rủi ro: bậc càng cao càng dễ Overfitting"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Đánh giá mô hình Regression:",
+            "details": [
+              "- MAE (Mean Absolute Error): trung bình trị tuyệt đối sai số, ít nhạy cảm outlier hơn MSE",
+              "- RMSE (Root Mean Squared Error): căn bậc 2 của MSE, cùng đơn vị với biến mục tiêu nên dễ diễn giải",
+              "- R² (R-squared/Hệ số xác định): tỷ lệ phương sai của biến mục tiêu được mô hình giải thích, giá trị từ 0 đến 1 (càng gần 1 càng tốt)"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "Phân loại (Classification) cơ bản",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Logistic Regression:",
+            "details": [
+              "- Dùng cho bài toán phân loại nhị phân (binary classification), dù tên có \"Regression\" nhưng đây là thuật toán classification",
+              "- Hàm Sigmoid: σ(z) = 1/(1+e^-z), biến đổi giá trị bất kỳ về khoảng (0,1) để diễn giải như xác suất",
+              "- Ngưỡng quyết định (Decision threshold) mặc định 0.5: nếu xác suất > 0.5 → class 1, ngược lại → class 0",
+              "- Hàm mất mát Cross-Entropy (Log Loss) thay vì MSE — vì MSE kết hợp Sigmoid tạo ra hàm loss không lồi (non-convex), khó tối ưu bằng Gradient Descent"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "K-Nearest Neighbors (KNN):",
+            "details": [
+              "- Nguyên lý: phân loại 1 điểm dữ liệu mới dựa trên \"đa số phiếu\" của K điểm gần nhất trong tập training",
+              "- Siêu tham số K: K nhỏ → nhạy với nhiễu (dễ overfitting), K lớn → mô hình quá đơn giản (dễ underfitting), thường chọn K là số lẻ để tránh hòa phiếu",
+              "- Cần Feature Scaling bắt buộc vì thuật toán dựa hoàn toàn vào khoảng cách",
+              "- Nhược điểm: chậm khi dữ liệu lớn (phải tính khoảng cách tới toàn bộ điểm training mỗi lần dự đoán — gọi là \"lazy learning\")"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Naive Bayes:",
+            "details": [
+              "- Dựa trên định lý Bayes, giả định \"ngây thơ\" (naive) rằng các feature độc lập với nhau (giả định này thường không đúng thực tế nhưng thuật toán vẫn hoạt động tốt)",
+              "- Các biến thể: Gaussian Naive Bayes (dữ liệu liên tục), Multinomial Naive Bayes (dữ liệu đếm, phổ biến trong phân loại văn bản/spam)",
+              "- Ưu điểm: huấn luyện cực nhanh, hoạt động tốt với dữ liệu chiều cao (như văn bản)"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Đánh giá mô hình Classification:",
+            "details": [
+              "- Confusion Matrix: ma trận 2x2 (với binary classification) gồm True Positive (TP), True Negative (TN), False Positive (FP), False Negative (FN)",
+              "- Accuracy: (TP+TN)/(TP+TN+FP+FN) — không đáng tin cậy khi dữ liệu mất cân bằng (imbalanced)",
+              "- Precision: TP/(TP+FP) — trong số dự đoán Positive, bao nhiêu % đúng thực sự — quan trọng khi False Positive gây hậu quả nặng (VD lọc spam chặn nhầm email quan trọng)",
+              "- Recall (Sensitivity): TP/(TP+FN) — trong số Positive thực tế, bao nhiêu % được phát hiện đúng — quan trọng khi False Negative gây hậu quả nặng (VD bỏ sót tấn công mạng, bỏ sót bệnh nhân ung thư)",
+              "- F1-score: trung bình điều hòa (harmonic mean) của Precision và Recall = 2×(P×R)/(P+R) — dùng khi cần cân bằng cả 2",
+              "- ROC Curve & AUC: biểu diễn tradeoff giữa True Positive Rate và False Positive Rate ở các ngưỡng khác nhau, AUC càng gần 1 mô hình càng tốt"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 3",
+        "name": "Cây quyết định & Ensemble Learning",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Decision Tree:",
+            "details": [
+              "- Cấu trúc cây: Root node, Internal node (điều kiện chia), Leaf node (kết quả dự đoán)",
+              "- Tiêu chí chia nhánh: Gini Impurity (đo độ \"lẫn tạp\" của node) hoặc Entropy/Information Gain (đo độ hỗn loạn thông tin, dựa trên lý thuyết thông tin Shannon)",
+              "- Công thức Gini: 1 - Σ(pi²), với pi là tỷ lệ mỗi class trong node",
+              "- Vấn đề Overfitting mạnh nếu để cây phát triển tự do (không giới hạn độ sâu) — cần Pruning (cắt tỉa) hoặc giới hạn `max_depth`, `min_samples_split`"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Random Forest:",
+            "details": [
+              "- Kỹ thuật Bagging (Bootstrap Aggregating): tạo nhiều Decision Tree độc lập, mỗi cây huấn luyện trên 1 tập con dữ liệu lấy mẫu có hoàn lại (bootstrap sample) + tập con feature ngẫu nhiên, kết quả cuối lấy trung bình/đa số phiếu các cây",
+              "- Giảm variance đáng kể so với 1 Decision Tree đơn lẻ, giảm overfitting",
+              "- Feature Importance: Random Forest cho biết feature nào ảnh hưởng nhiều nhất tới kết quả dự đoán"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Gradient Boosting:",
+            "details": [
+              "- Khác biệt cơ bản với Bagging: Boosting xây dựng các cây tuần tự, mỗi cây sau cố gắng sửa lỗi (sai số/residual) của các cây trước đó, kết hợp lại có trọng số",
+              "- XGBoost, LightGBM: phiên bản Gradient Boosting tối ưu hóa tốc độ và hiệu năng, được dùng rất phổ biến trong các cuộc thi ML thực tế",
+              "- Siêu tham số quan trọng: số lượng cây (n_estimators), tốc độ học (learning_rate), độ sâu cây (max_depth) — cần cân bằng để tránh overfitting"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 4",
+        "name": "Support Vector Machine & Clustering",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Support Vector Machine (SVM):",
+            "details": [
+              "- Ý tưởng: tìm siêu phẳng (hyperplane) phân tách 2 class sao cho margin (khoảng cách từ siêu phẳng tới điểm gần nhất của mỗi class) lớn nhất",
+              "- Support Vectors: các điểm dữ liệu nằm gần biên nhất, quyết định trực tiếp vị trí siêu phẳng",
+              "- Kernel Trick: khi dữ liệu không phân tách tuyến tính được trong không gian gốc, kernel ánh xạ dữ liệu sang không gian chiều cao hơn để tìm được siêu phẳng phân tách — các kernel phổ biến: Linear, Polynomial, RBF (Radial Basis Function/Gaussian)",
+              "- Siêu tham số C: kiểm soát tradeoff giữa margin rộng và số điểm bị phân loại sai (C lớn → ít sai nhưng margin hẹp, dễ overfitting)"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "K-Means Clustering:",
+            "details": [
+              "- Thuật toán unsupervised, phân chia dữ liệu thành K cụm (cluster)",
+              "- Quy trình lặp: (1) khởi tạo K điểm tâm cụm (centroid) ngẫu nhiên → (2) gán mỗi điểm dữ liệu vào cụm có centroid gần nhất → (3) cập nhật lại centroid = trung bình các điểm trong cụm → lặp lại bước 2-3 tới khi hội tụ",
+              "- Chọn K bằng Elbow Method: vẽ đồ thị inertia (tổng khoảng cách bình phương trong cụm) theo K, chọn điểm \"khuỷu tay\" nơi độ giảm bắt đầu chậm lại",
+              "- Nhược điểm: cần xác định trước K, nhạy với vị trí khởi tạo centroid ban đầu, giả định cụm có hình cầu"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Hierarchical Clustering:",
+            "details": [
+              "- Agglomerative (từ dưới lên): mỗi điểm là 1 cụm riêng, gộp dần các cụm gần nhau tới khi còn 1 cụm",
+              "- Dendrogram: biểu đồ cây thể hiện quá trình gộp cụm, có thể cắt ở mức bất kỳ để lấy số cụm mong muốn"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "DBSCAN (giới thiệu):",
+            "details": [
+              "- Clustering dựa trên mật độ (density-based), tự động phát hiện số cụm, xử lý tốt cụm hình dạng bất kỳ (không chỉ hình cầu như K-Means), tự động phát hiện outlier (noise point)"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 5",
+        "name": "Feature Engineering & Đánh giá mô hình nâng cao",
+        "items": [
+          {
+            "index": "1.",
+            "title": "PCA (Principal Component Analysis):",
+            "details": [
+              "- Kỹ thuật giảm chiều dữ liệu (Dimensionality Reduction), tìm các trục (Principal Component) mới sao cho giữ lại nhiều phương sai (thông tin) nhất từ dữ liệu gốc",
+              "- Dựa trên eigenvalue/eigenvector của ma trận hiệp phương sai (Covariance matrix)",
+              "- Explained variance ratio: cho biết mỗi Principal Component giữ lại bao nhiêu % thông tin gốc",
+              "- Ứng dụng: giảm chiều trước khi train (tăng tốc, giảm overfitting), trực quan hóa dữ liệu nhiều chiều xuống 2D/3D"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Xử lý dữ liệu mất cân bằng (Imbalanced Data) — quan trọng cho bài toán phát hiện gian lận/tấn công sau này:",
+            "details": [
+              "- Vấn đề: khi 1 class chiếm đa số áp đảo (VD 99% traffic bình thường, 1% tấn công), mô hình có thể đạt Accuracy cao nhưng vô dụng thực tế (chỉ đoán toàn \"bình thường\")",
+              "- SMOTE (Synthetic Minority Oversampling Technique): tạo thêm sample tổng hợp cho class thiểu số dựa trên nội suy giữa các điểm gần nhau",
+              "- Class weighting: gán trọng số cao hơn cho class thiểu số trong hàm loss, để mô hình \"chú ý\" hơn tới các sample đó",
+              "- Undersampling: giảm bớt sample của class đa số (rủi ro mất thông tin nếu cắt quá nhiều)"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Cross-Validation:",
+            "details": [
+              "- K-Fold Cross-Validation: chia dữ liệu thành K phần, lần lượt dùng K-1 phần để train và 1 phần để validate, lặp lại K lần rồi lấy trung bình kết quả — giúp đánh giá mô hình ổn định hơn, giảm phụ thuộc vào cách chia dữ liệu ngẫu nhiên 1 lần",
+              "- Stratified K-Fold: đảm bảo tỷ lệ class trong mỗi fold giống tỷ lệ gốc — quan trọng với dữ liệu mất cân bằng"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Hyperparameter Tuning:",
+            "details": [
+              "- Grid Search: thử tất cả tổ hợp giá trị siêu tham số trong 1 lưới cho trước — chắc chắn tìm được tổ hợp tốt nhất trong lưới nhưng tốn thời gian tính toán nếu lưới lớn",
+              "- Random Search: thử ngẫu nhiên 1 số tổ hợp trong không gian siêu tham số — hiệu quả hơn Grid Search khi không gian tìm kiếm lớn"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Overfitting vs Underfitting:",
+            "details": [
+              "- Overfitting: mô hình học quá chi tiết cả nhiễu trong tập training, hiệu năng train cao nhưng test thấp",
+              "- Underfitting: mô hình quá đơn giản, không học được cả pattern cơ bản, hiệu năng train và test đều thấp",
+              "- Bias-Variance Tradeoff: Bias cao (underfitting) vs Variance cao (overfitting) — mục tiêu là tìm điểm cân bằng",
+              "- Regularization:",
+              "- L1 Regularization (Lasso): thêm tổng trị tuyệt đối trọng số vào hàm loss, có xu hướng đưa 1 số trọng số về đúng 0 (tự động chọn feature)",
+              "- L2 Regularization (Ridge): thêm tổng bình phương trọng số vào hàm loss, làm trọng số nhỏ lại đều nhưng không về hẳn 0"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Cài đặt Linear Regression + Logistic Regression bằng Scikit-learn, so sánh với cài đặt tay bằng Gradient Descent",
+      "Xây mô hình phân loại spam email bằng Naive Bayes, đánh giá đầy đủ Precision/Recall/F1/Confusion Matrix",
+      "Xây Random Forest + XGBoost dự đoán churn khách hàng, so sánh Feature Importance giữa 2 mô hình",
+      "Áp dụng PCA trực quan hóa 1 bộ dữ liệu nhiều chiều xuống 2D",
+      "Thực hành SMOTE trên 1 bộ dữ liệu mất cân bằng, so sánh Recall trước/sau khi xử lý"
+    ]
+  },
+  {
+    "weekId": 11,
+    "hasData": true,
+    "title": "Nền tảng Deep Learning - Neural Network & CNN",
+    "fullTitle": "Tuần 11: Nền tảng Deep Learning - Neural Network & CNN",
+    "domain": "ML/DL",
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "Kiến trúc mạng nơ-ron cơ bản",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Perceptron (đơn vị nhỏ nhất):",
+            "details": [
+              "- Cấu trúc: nhận nhiều input, nhân với trọng số (weight), cộng bias, đưa qua activation function để ra output",
+              "- Công thức: output = f(Σ(wi×xi) + b), với f là activation function",
+              "- Giới hạn của Perceptron đơn: chỉ giải quyết được bài toán phân tách tuyến tính (không giải được bài toán XOR) — lý do cần Multi-layer network"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Multi-Layer Perceptron (MLP):",
+            "details": [
+              "- Cấu trúc: Input layer → 1 hoặc nhiều Hidden layer → Output layer",
+              "- Mỗi layer gồm nhiều neuron, mỗi neuron trong layer này nối đầy đủ (fully connected/dense) với mọi neuron layer trước",
+              "- Độ sâu (số hidden layer) và độ rộng (số neuron mỗi layer) là 2 siêu tham số kiến trúc quan trọng"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Activation Function (hàm kích hoạt) — cần thuộc công thức và đặc điểm:",
+            "details": [
+              "- Sigmoid: σ(z)=1/(1+e^-z), output trong (0,1) — nhược điểm: vanishing gradient khi z quá lớn/nhỏ (đạo hàm gần 0)",
+              "- Tanh: output trong (-1,1), zero-centered hơn Sigmoid nhưng vẫn bị vanishing gradient",
+              "- ReLU (Rectified Linear Unit): f(z) = max(0,z) — phổ biến nhất hiện nay vì tính toán đơn giản, giảm vanishing gradient, nhưng có vấn đề \"Dying ReLU\" (neuron chết nếu weight cập nhật khiến output luôn âm)",
+              "- Leaky ReLU: cải tiến ReLU, cho phép giá trị âm 1 hệ số nhỏ thay vì = 0 hoàn toàn, khắc phục Dying ReLU",
+              "- Softmax: dùng ở output layer cho bài toán phân loại đa lớp (multi-class), biến đổi vector thành phân phối xác suất có tổng = 1"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Forward Propagation:",
+            "details": [
+              "- Quy trình tính toán từ Input layer qua các Hidden layer tới Output layer, mỗi layer thực hiện: nhân ma trận weight, cộng bias, áp activation function",
+              "- Công thức tổng quát cho 1 layer: a^(l) = f(W^(l) × a^(l-1) + b^(l))"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "Backpropagation & Huấn luyện mạng nơ-ron",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Hàm mất mát (Loss function) cho Deep Learning:",
+            "details": [
+              "- Cross-Entropy Loss: dùng cho bài toán classification, đo sự khác biệt giữa phân phối xác suất dự đoán và phân phối thực tế (one-hot encoded label)",
+              "- Binary Cross-Entropy (2 class) vs Categorical Cross-Entropy (nhiều class)",
+              "- MSE vẫn dùng cho bài toán Regression trong DL"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Backpropagation (thuật toán cốt lõi để huấn luyện Neural Network):",
+            "details": [
+              "- Ý tưởng: tính gradient của hàm loss theo từng trọng số, bằng cách lan truyền lỗi (error) ngược từ Output layer về Input layer, áp dụng Chain Rule liên tiếp qua từng layer",
+              "- Quy trình: (1) Forward Propagation tính output và loss → (2) tính gradient loss theo output layer → (3) lan truyền ngược gradient qua từng layer trước đó bằng Chain Rule → (4) dùng gradient để cập nhật từng trọng số bằng Gradient Descent",
+              "- Vanishing Gradient Problem: khi mạng quá sâu, gradient bị nhân dồn qua nhiều layer (đặc biệt với Sigmoid/Tanh) khiến gradient ở các layer đầu gần như = 0, mạng không học được — lý do ReLU và các kỹ thuật khác ra đời",
+              "- Exploding Gradient Problem: ngược lại, gradient tăng dồn quá lớn qua nhiều layer, khiến trọng số cập nhật mất kiểm soát — khắc phục bằng Gradient Clipping"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Optimizer (thuật toán tối ưu, cải tiến từ Gradient Descent cơ bản):",
+            "details": [
+              "- SGD với Momentum: thêm \"quán tính\" từ hướng cập nhật trước đó, giúp vượt qua local minimum/saddle point nhanh hơn và giảm dao động",
+              "- Adam (Adaptive Moment Estimation): kết hợp Momentum + tự động điều chỉnh learning rate riêng cho từng tham số dựa trên lịch sử gradient — optimizer phổ biến nhất hiện nay vì hội tụ nhanh và ổn định",
+              "- Các siêu tham số của Adam cần biết: beta1, beta2 (hệ số suy giảm cho các moment), epsilon (số nhỏ tránh chia cho 0)"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Siêu tham số huấn luyện thực tế:",
+            "details": [
+              "- Batch size: số sample xử lý trước khi cập nhật trọng số 1 lần — batch nhỏ cập nhật thường xuyên hơn nhưng nhiễu hơn, batch lớn ổn định hơn nhưng cần nhiều bộ nhớ (VRAM/RAM)",
+              "- Epoch: 1 epoch = duyệt qua toàn bộ tập training 1 lần — cần nhiều epoch để mô hình hội tụ, nhưng quá nhiều dễ overfitting",
+              "- Learning rate schedule: giảm dần learning rate theo thời gian huấn luyện (VD Step Decay, Exponential Decay) để hội tụ ổn định hơn ở giai đoạn cuối"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Kỹ thuật chống Overfitting trong DL:",
+            "details": [
+              "- Dropout: ngẫu nhiên \"tắt\" 1 tỷ lệ neuron (VD 20-50%) trong mỗi lần huấn luyện, buộc mạng không phụ thuộc quá mức vào 1 số neuron cụ thể, tăng khả năng tổng quát hóa",
+              "- Batch Normalization: chuẩn hóa output của mỗi layer (đưa về mean=0, std=1) trước khi đưa vào activation function tiếp theo — giúp huấn luyện ổn định hơn, cho phép dùng learning rate cao hơn, giảm phụ thuộc vào cách khởi tạo trọng số",
+              "- Early Stopping: theo dõi loss trên tập validation, dừng huấn luyện khi loss validation không cải thiện sau 1 số epoch liên tiếp (dù loss training vẫn giảm) — dấu hiệu bắt đầu overfitting",
+              "- Data Augmentation (đặc biệt với ảnh): tạo thêm dữ liệu training bằng cách biến đổi ảnh gốc (xoay, lật, crop, thay đổi độ sáng...) để tăng tính đa dạng dữ liệu mà không cần thu thập thêm"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 3",
+        "name": "Convolutional Neural Network (CNN)",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Tại sao cần CNN thay vì MLP cho ảnh:",
+            "details": [
+              "- MLP xử lý ảnh bằng cách làm phẳng (flatten) thành vector 1 chiều → mất hoàn toàn thông tin không gian (spatial information), số lượng tham số quá lớn với ảnh có độ phân giải cao",
+              "- CNN giữ được cấu trúc không gian 2D, dùng chung bộ trọng số (weight sharing) qua toàn ảnh → giảm mạnh số tham số cần học"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Convolution Operation (phép tích chập):",
+            "details": [
+              "- Kernel/Filter: ma trận nhỏ (VD 3x3, 5x5) trượt qua toàn bộ ảnh, thực hiện phép nhân từng phần tử rồi cộng lại để tạo ra 1 giá trị trong Feature Map",
+              "- Stride: bước nhảy của kernel khi trượt qua ảnh — stride lớn hơn làm giảm kích thước output nhanh hơn",
+              "- Padding: thêm viền (thường là 0) quanh ảnh gốc để kiểm soát kích thước output — \"Same\" padding giữ nguyên kích thước, \"Valid\" padding không thêm viền (output nhỏ hơn input)",
+              "- Feature Map: kết quả sau khi áp 1 kernel lên toàn ảnh, mỗi kernel học phát hiện 1 loại đặc trưng khác nhau (cạnh, góc, texture...)",
+              "- Công thức tính kích thước output: Output_size = (Input_size - Kernel_size + 2×Padding)/Stride + 1"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Pooling Layer:",
+            "details": [
+              "- Mục đích: giảm kích thước không gian của Feature Map, giảm số tham số, tăng tính bất biến với dịch chuyển nhỏ (translation invariance)",
+              "- Max Pooling: lấy giá trị lớn nhất trong mỗi vùng — phổ biến nhất",
+              "- Average Pooling: lấy giá trị trung bình trong mỗi vùng"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Kiến trúc CNN cơ bản (LeNet-style):",
+            "details": [
+              "- Chuỗi lặp: [Convolution → Activation (ReLU) → Pooling] × nhiều lần → Flatten → Fully Connected layer → Output layer (Softmax cho classification)",
+              "- Các layer Convolution đầu học đặc trưng cấp thấp (cạnh, màu sắc), các layer sau học đặc trưng cấp cao hơn (hình dạng, đối tượng)"
+            ]
+          },
+          {
+            "index": "5.",
+            "title": "Kiến trúc CNN nổi tiếng (mức khái niệm, không cần cài đặt từ đầu):",
+            "details": [
+              "- VGG: dùng nhiều lớp convolution kernel nhỏ (3x3) xếp chồng sâu, kiến trúc đơn giản nhưng rất sâu",
+              "- ResNet (Residual Network): giới thiệu Skip Connection/Residual Connection — cho phép gradient \"đi tắt\" qua các layer, giải quyết vấn đề Vanishing Gradient khi mạng cực sâu (hàng trăm layer), là bước đột phá quan trọng trong lịch sử CNN"
+            ]
+          },
+          {
+            "index": "6.",
+            "title": "Transfer Learning:",
+            "details": [
+              "- Ý tưởng: dùng lại 1 mô hình đã được huấn luyện trước (pretrained) trên bộ dữ liệu lớn (VD ImageNet), sau đó fine-tune (huấn luyện tiếp) trên bài toán/dữ liệu riêng của mình",
+              "- 2 chiến lược: Feature Extraction (đóng băng - freeze toàn bộ trọng số pretrained, chỉ huấn luyện layer cuối mới thêm vào) vs Fine-tuning (mở khóa và huấn luyện tiếp 1 số layer cuối cùng của mô hình pretrained cùng với layer mới)",
+              "- Lợi ích: tiết kiệm thời gian huấn luyện, hoạt động tốt ngay cả khi dữ liệu riêng của mình không nhiều"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Cài đặt 1 mạng nơ-ron MLP từ đầu bằng NumPy thuần (bao gồm forward propagation và backpropagation bằng tay) để hiểu rõ cơ chế trước khi dùng framework",
+      "Huấn luyện MLP phân loại ảnh MNIST bằng Keras/PyTorch, thử nghiệm thay đổi activation function và quan sát ảnh hưởng",
+      "Xây CNN từ đầu phân loại ảnh CIFAR-10, thử điều chỉnh số lượng Convolution layer, kernel size, thêm Dropout và Batch Normalization, so sánh kết quả",
+      "Thực hành Transfer Learning: tải 1 mô hình pretrained (VD ResNet), fine-tune cho 1 bài toán phân loại ảnh riêng"
+    ]
+  },
+  {
+    "weekId": 12,
+    "hasData": true,
+    "title": "RNN/LSTM, NLP cơ bản, Autoencoder & Generative Models",
+    "fullTitle": "Tuần 12: RNN/LSTM, NLP cơ bản, Autoencoder & Generative Models",
+    "domain": "ML/DL",
+    "groups": [
+      {
+        "badge": "Nhóm 1",
+        "name": "Recurrent Neural Network (RNN) & LSTM",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Vấn đề dữ liệu tuần tự (Sequential Data):",
+            "details": [
+              "- MLP và CNN xử lý mỗi input độc lập, không có khái niệm \"thứ tự\" hay \"trí nhớ\" giữa các bước — không phù hợp với dữ liệu có tính tuần tự như văn bản, chuỗi thời gian, âm thanh"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "RNN (Recurrent Neural Network):",
+            "details": [
+              "- Cấu trúc: có 1 hidden state được truyền từ bước thời gian này sang bước tiếp theo, cho phép mạng \"nhớ\" thông tin từ các bước trước",
+              "- Công thức: h_t = f(W_h × h_(t-1) + W_x × x_t + b) — hidden state tại bước t phụ thuộc cả input hiện tại và hidden state bước trước",
+              "- Vanishing Gradient trong RNN: vấn đề nghiêm trọng hơn cả MLP/CNN sâu, vì backpropagation qua nhiều bước thời gian (Backpropagation Through Time - BPTT) khiến gradient suy giảm rất nhanh, RNN thuần khó học được phụ thuộc xa (long-term dependency)"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "LSTM (Long Short-Term Memory):",
+            "details": [
+              "- Giải pháp cho vấn đề Vanishing Gradient của RNN thuần, giới thiệu Cell State riêng biệt với Hidden State, đóng vai trò \"băng chuyền thông tin\" xuyên suốt chuỗi",
+              "- 3 cổng (Gates) điều khiển luồng thông tin — cần hiểu chức năng từng cổng:",
+              "- Forget Gate: quyết định thông tin nào từ Cell State trước cần \"quên\" đi",
+              "- Input Gate: quyết định thông tin mới nào từ input hiện tại cần được thêm vào Cell State",
+              "- Output Gate: quyết định phần nào của Cell State được dùng để tạo Hidden State đầu ra tại bước hiện tại",
+              "- Mỗi cổng đều dùng Sigmoid activation (output 0-1) để quyết định \"mở\" bao nhiêu phần trăm thông tin"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "GRU (Gated Recurrent Unit):",
+            "details": [
+              "- Phiên bản đơn giản hóa của LSTM, gộp Forget Gate và Input Gate thành 1 \"Update Gate\" duy nhất, không có Cell State riêng",
+              "- Ít tham số hơn LSTM → huấn luyện nhanh hơn, hiệu năng thường tương đương LSTM trong nhiều bài toán thực tế"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 2",
+        "name": "Xử lý ngôn ngữ tự nhiên (NLP) cơ bản",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Tiền xử lý văn bản:",
+            "details": [
+              "- Tokenization: tách văn bản thành các đơn vị nhỏ hơn (từ, subword, hoặc ký tự)",
+              "- Loại bỏ Stop words (từ phổ biến ít mang ý nghĩa như \"the\", \"là\", \"và\"), Stemming/Lemmatization (đưa từ về dạng gốc)"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Word Embedding (biểu diễn từ dưới dạng vector số):",
+            "details": [
+              "- Vấn đề với One-hot Encoding cho từ vựng: vector cực kỳ thưa (sparse) và không thể hiện được quan hệ ngữ nghĩa giữa các từ",
+              "- Word2Vec: học vector dày đặc (dense vector) cho mỗi từ sao cho các từ có ngữ nghĩa gần nhau thì vector gần nhau trong không gian — 2 kiến trúc con: CBOW (dự đoán từ từ ngữ cảnh xung quanh) và Skip-gram (dự đoán ngữ cảnh xung quanh từ 1 từ cho trước)",
+              "- GloVe: phương pháp khác để học word embedding, dựa trên thống kê đồng xuất hiện (co-occurrence) của từ trong toàn bộ corpus",
+              "- Đặc tính thú vị của Word Embedding: các phép toán vector thể hiện quan hệ ngữ nghĩa (VD vector(\"King\") - vector(\"Man\") + vector(\"Woman\") ≈ vector(\"Queen\"))"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Text Classification với LSTM:",
+            "details": [
+              "- Pipeline: Tokenize → chuyển thành sequence số → Embedding layer (chuyển số thành vector) → LSTM layer(s) → Fully Connected → Output (Sigmoid cho binary, Softmax cho multi-class)",
+              "- Padding sequence: các câu có độ dài khác nhau cần được đệm (pad) về cùng độ dài để xử lý theo batch"
+            ]
+          },
+          {
+            "index": "4.",
+            "title": "Giới thiệu Attention Mechanism & Transformer:",
+            "details": [
+              "- Vấn đề của RNN/LSTM: xử lý tuần tự từng bước (không song song hóa được), vẫn khó với chuỗi rất dài",
+              "- Attention Mechanism: cho phép mô hình \"chú ý\" trực tiếp tới các phần liên quan của input, bất kể khoảng cách xa gần trong chuỗi, không cần đi qua từng bước tuần tự như RNN",
+              "- Self-Attention: mỗi từ trong câu tính điểm liên quan (attention score) với tất cả các từ khác trong cùng câu đó, giúp mô hình hiểu ngữ cảnh 2 chiều",
+              "- Transformer: kiến trúc bỏ hoàn toàn RNN, chỉ dùng Attention (đặc biệt Self-Attention) + xử lý song song toàn bộ chuỗi cùng lúc — nền tảng của các mô hình ngôn ngữ hiện đại (chỉ cần nắm khái niệm tổng quan, kiến trúc chi tiết thuộc phạm vi nâng cao hơn)"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 3",
+        "name": "Autoencoder & Anomaly Detection",
+        "items": [
+          {
+            "index": "1.",
+            "title": "Autoencoder:",
+            "details": [
+              "- Kiến trúc gồm 2 phần: Encoder (nén input về 1 biểu diễn chiều thấp hơn, gọi là latent space/bottleneck) và Decoder (khôi phục lại input gốc từ biểu diễn nén đó)",
+              "- Huấn luyện theo kiểu unsupervised: input = output mục tiêu (mô hình tự học tái tạo lại chính input của nó)",
+              "- Hàm loss: Reconstruction Error (thường dùng MSE) — đo sự khác biệt giữa input gốc và output tái tạo"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Ứng dụng Autoencoder trong Anomaly Detection:",
+            "details": [
+              "- Nguyên lý: huấn luyện Autoencoder chỉ trên dữ liệu \"bình thường\" → mô hình học cách tái tạo tốt các pattern bình thường",
+              "- Khi gặp dữ liệu bất thường (chưa từng thấy dạng pattern này) → Reconstruction Error sẽ cao bất thường so với ngưỡng đã xác định trên tập bình thường → gắn cờ là anomaly",
+              "- Ứng dụng thực tế: phát hiện gian lận giao dịch, phát hiện traffic mạng bất thường (kết nối trực tiếp với bài toán IDS ở phần Cybersecurity)"
+            ]
+          },
+          {
+            "index": "3.",
+            "title": "Denoising Autoencoder & Variational Autoencoder (giới thiệu):",
+            "details": [
+              "- Denoising Autoencoder: cố ý thêm nhiễu vào input, huấn luyện mô hình khôi phục lại input sạch — giúp học biểu diễn mạnh mẽ hơn",
+              "- Variational Autoencoder (VAE): thay vì nén về 1 điểm cố định, nén về 1 phân phối xác suất (mean, variance) trong latent space — cho phép sinh (generate) dữ liệu mới bằng cách sample từ phân phối đó"
+            ]
+          }
+        ]
+      },
+      {
+        "badge": "Nhóm 4",
+        "name": "Generative Models & Adversarial Examples",
+        "items": [
+          {
+            "index": "1.",
+            "title": "GAN (Generative Adversarial Network) - khái niệm:",
+            "details": [
+              "- Gồm 2 mạng cạnh tranh nhau: Generator (cố gắng tạo ra dữ liệu giả trông giống thật) và Discriminator (cố gắng phân biệt dữ liệu thật và giả)",
+              "- Quá trình huấn luyện: 2 mạng cải thiện lẫn nhau qua từng vòng (Generator ngày càng tạo giả tốt hơn để \"lừa\" Discriminator, Discriminator ngày càng giỏi phát hiện hơn) — lý tưởng đạt trạng thái cân bằng khi Generator tạo dữ liệu không thể phân biệt được với thật"
+            ]
+          },
+          {
+            "index": "2.",
+            "title": "Adversarial Examples (rất quan trọng khi học AI Security sau này):",
+            "details": [
+              "- Khái niệm: những input được chỉnh sửa cực nhỏ (thường mắt người không nhận ra được) nhưng khiến mô hình Deep Learning dự đoán sai hoàn toàn",
+              "- FGSM (Fast Gradient Sign Method): kỹ thuật tấn công adversarial cơ bản, dùng chính gradient của hàm loss theo input (thay vì theo trọng số như khi huấn luyện) để tính ra hướng nhiễu (perturbation) nhỏ nhất khiến mô hình dự đoán sai nhiều nhất",
+              "- Công thức FGSM: x_adv = x + ε × sign(∇x J(θ,x,y)) — ε kiểm soát độ lớn nhiễu thêm vào",
+              "- Ý nghĩa: cho thấy Deep Learning model dù chính xác cao vẫn có thể bị khai thác/tấn công có chủ đích — nền tảng quan trọng khi làm việc với AI trong môi trường bảo mật"
+            ]
+          }
+        ]
+      }
+    ],
+    "lab": [
+      "Xây dựng LSTM dự đoán chuỗi thời gian (time series forecasting) trên dữ liệu mẫu",
+      "Xây LSTM phân loại văn bản (VD phân loại email phishing) sử dụng Word Embedding",
+      "Xây Autoencoder phát hiện anomaly trên 1 bộ dữ liệu traffic mạng hoặc giao dịch tài chính, xác định ngưỡng Reconstruction Error phù hợp",
+      "Thực hành tấn công FGSM vào 1 mô hình CNN đã huấn luyện ở Tuần 3, quan sát mô hình bị đánh lừa dự đoán sai dù ảnh gần như không đổi bằng mắt thường"
+    ]
+  },
+  {
+    "weekId": 13,
+    "hasData": false,
+    "title": "Tuần 13",
+    "fullTitle": "Tuần 13",
+    "domain": "ML/DL",
+    "groups": [],
+    "lab": null
+  },
+  {
+    "weekId": 14,
+    "hasData": false,
+    "title": "Tuần 14",
+    "fullTitle": "Tuần 14",
+    "domain": "ML/DL",
+    "groups": [],
+    "lab": null
+  },
+  {
+    "weekId": 15,
+    "hasData": false,
+    "title": "Tuần 15",
+    "fullTitle": "Tuần 15",
+    "domain": "ML/DL",
+    "groups": [],
+    "lab": null
+  }
+]

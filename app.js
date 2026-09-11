@@ -1772,6 +1772,13 @@ function updateAuthUI() {
   const navAvatar = document.getElementById("nav-user-avatar");
   const navName = document.getElementById("nav-user-name");
   const navClass = document.getElementById("nav-user-class");
+
+  const roadmapUserNavArea = document.getElementById("roadmap-user-nav-area");
+  const roadmapProfileChip = document.getElementById("roadmap-user-profile-chip");
+  const roadmapNavAvatar = document.getElementById("roadmap-nav-avatar");
+  const roadmapNavName = document.getElementById("roadmap-nav-name");
+  const roadmapNavClass = document.getElementById("roadmap-nav-class");
+
   const authHintBanner = document.getElementById("auth-hint-banner");
   const authHintText = document.getElementById("auth-hint-text");
   const nameInput = document.getElementById("student-name");
@@ -1786,6 +1793,9 @@ function updateAuthUI() {
     if (userNavArea) {
       userNavArea.classList.add("logged-in");
     }
+    if (roadmapUserNavArea) {
+      roadmapUserNavArea.classList.add("logged-in");
+    }
     if (btnOpenAuth) {
       btnOpenAuth.style.display = "none";
     }
@@ -1797,6 +1807,14 @@ function updateAuthUI() {
         userProfileChip.classList.remove("is-admin");
       }
     }
+    if (roadmapProfileChip) {
+      roadmapProfileChip.style.display = "inline-flex";
+      if (isAdmin) {
+        roadmapProfileChip.classList.add("is-admin");
+      } else {
+        roadmapProfileChip.classList.remove("is-admin");
+      }
+    }
 
     if (isAdmin) {
       if (navAvatar) navAvatar.textContent = "AD";
@@ -1805,6 +1823,12 @@ function updateAuthUI() {
         navClass.textContent = "QUẢN TRỊ VIÊN 🛡️";
         navClass.style.color = "#e11d48";
       }
+      if (roadmapNavAvatar) roadmapNavAvatar.textContent = "AD";
+      if (roadmapNavName) roadmapNavName.textContent = AuthState.currentUser.fullName || "Quản Trị Viên";
+      if (roadmapNavClass) {
+        roadmapNavClass.textContent = "QUẢN TRỊ VIÊN 🛡️";
+        roadmapNavClass.style.color = "#e11d48";
+      }
     } else {
       const initial = AuthState.currentUser.fullName ? AuthState.currentUser.fullName.trim().charAt(0).toUpperCase() : "H";
       if (navAvatar) navAvatar.textContent = initial;
@@ -1812,6 +1836,12 @@ function updateAuthUI() {
       if (navClass) {
         navClass.textContent = AuthState.currentUser.className || "Học sinh";
         navClass.style.color = "";
+      }
+      if (roadmapNavAvatar) roadmapNavAvatar.textContent = initial;
+      if (roadmapNavName) roadmapNavName.textContent = AuthState.currentUser.fullName;
+      if (roadmapNavClass) {
+        roadmapNavClass.textContent = AuthState.currentUser.className || "Học sinh";
+        roadmapNavClass.style.color = "";
       }
     }
 
@@ -1865,12 +1895,19 @@ function updateAuthUI() {
     if (userNavArea) {
       userNavArea.classList.remove("logged-in");
     }
+    if (roadmapUserNavArea) {
+      roadmapUserNavArea.classList.remove("logged-in");
+    }
     if (btnOpenAuth) {
       btnOpenAuth.style.display = "inline-flex";
     }
     if (userProfileChip) {
       userProfileChip.style.display = "none";
       userProfileChip.classList.remove("is-admin");
+    }
+    if (roadmapProfileChip) {
+      roadmapProfileChip.style.display = "none";
+      roadmapProfileChip.classList.remove("is-admin");
     }
     if (authHintBanner) authHintBanner.className = "auth-hint-banner";
     if (nameInput) {
@@ -2203,6 +2240,10 @@ function initAuth() {
   if (btnLogout) {
     btnLogout.addEventListener("click", handleLogout);
   }
+  const btnRoadmapLogout = document.getElementById("roadmap-btn-logout");
+  if (btnRoadmapLogout) {
+    btnRoadmapLogout.addEventListener("click", handleLogout);
+  }
 
   // 5b. Nút mở màn hình đăng nhập từ thanh điều hướng (khi chưa đăng nhập)
   const btnOpenAuth = document.getElementById("btn-open-auth");
@@ -2399,6 +2440,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // 9. Khởi tạo tính năng 2 Tab: Bài Kiểm Tra & Lộ Trình (Mindmap 15 Tuần)
+  initRoadmapFeature();
 });
 
 // ==============================================================================
@@ -2483,3 +2527,829 @@ window.addEventListener("storage", (e) => {
     }
   }
 });
+
+// ==============================================================================
+// TRẠNG THÁI VÀ LOGIC LỘ TRÌNH ĐÀO TẠO & SƠ ĐỒ TƯ DUY (MINDMAP SYSTEM)
+// ==============================================================================
+
+const RoadmapState = {
+  weeks: [],
+  selectedWeekId: 1,
+  activeTopic: null,
+  domainFilter: "all", // "all", "Networking", "ML/DL"
+  searchQuery: "",
+  flatTopics: [],
+  isLoading: false
+};
+
+/**
+ * Tải dữ liệu 15 tuần học từ file JSON (roadmap_data.json)
+ */
+async function loadRoadmapData() {
+  if (RoadmapState.weeks && RoadmapState.weeks.length > 0) {
+    return RoadmapState.weeks;
+  }
+  if (RoadmapState.isLoading) return [];
+  RoadmapState.isLoading = true;
+
+  try {
+    const res = await fetch("roadmap_data.json");
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    const data = await res.json();
+    RoadmapState.weeks = data;
+    RoadmapState.isLoading = false;
+    return data;
+  } catch (err) {
+    console.error("Lỗi khi nạp roadmap_data.json:", err);
+    RoadmapState.isLoading = false;
+    return [];
+  }
+}
+
+/**
+ * Chuyển sang Tab Bài Kiểm Tra
+ */
+function switchToQuizTab(targetWeekId) {
+  // Đồng bộ trạng thái active của thanh Tab ở cả 2 màn hình
+  document.querySelectorAll("#tab-btn-quiz, #roadmap-tab-btn-quiz").forEach(btn => {
+    btn.classList.add("active");
+  });
+  document.querySelectorAll("#tab-btn-roadmap, #roadmap-tab-btn-roadmap").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  showScreen("start-screen");
+
+  if (targetWeekId) {
+    selectWeek(targetWeekId);
+  }
+}
+
+/**
+ * Chuyển sang Tab Lộ Trình (Mindmap)
+ */
+async function switchToRoadmapTab(targetWeekId) {
+  document.querySelectorAll("#tab-btn-quiz, #roadmap-tab-btn-quiz").forEach(btn => {
+    btn.classList.remove("active");
+  });
+  document.querySelectorAll("#tab-btn-roadmap, #roadmap-tab-btn-roadmap").forEach(btn => {
+    btn.classList.add("active");
+  });
+
+  showScreen("roadmap-screen");
+
+  if (!RoadmapState.weeks || RoadmapState.weeks.length === 0) {
+    await loadRoadmapData();
+  }
+
+  const weekToSelect = targetWeekId || RoadmapState.selectedWeekId || QuizState.selectedWeekId || 1;
+  renderRoadmapWeeksList();
+  selectRoadmapWeek(weekToSelect);
+}
+
+/**
+ * Render thanh cuộn chọn 15 tuần theo bộ lọc Chuyên đề
+ */
+function renderRoadmapWeeksList() {
+  const container = document.getElementById("roadmap-weeks-list");
+  if (!container) return;
+
+  container.innerHTML = "";
+  const weeks = RoadmapState.weeks || [];
+
+  weeks.forEach(week => {
+    // Lọc theo domain nếu không phải "all"
+    if (RoadmapState.domainFilter !== "all" && week.domain !== RoadmapState.domainFilter) {
+      return;
+    }
+
+    const pill = document.createElement("button");
+    pill.type = "button";
+    pill.className = `roadmap-week-pill ${week.weekId === RoadmapState.selectedWeekId ? 'active' : ''}`;
+    pill.dataset.weekId = week.weekId;
+
+    const isNet = week.domain === "Networking";
+    const domainClass = isNet ? "net" : "ai";
+    const domainText = isNet ? "NET" : "AI";
+
+    pill.innerHTML = `
+      <div class="roadmap-week-pill-top">
+        <span class="pill-week-name">Tuần ${week.weekId}</span>
+        <span class="pill-domain-badge ${domainClass}">${domainText}</span>
+      </div>
+      <div class="pill-week-title" title="${escapeHtml(week.title)}">${escapeHtml(week.title)}</div>
+    `;
+
+    pill.addEventListener("click", () => {
+      selectRoadmapWeek(week.weekId);
+    });
+
+    container.appendChild(pill);
+  });
+}
+
+/**
+ * Chọn tuần trong giao diện Mindmap
+ */
+function selectRoadmapWeek(weekId) {
+  RoadmapState.selectedWeekId = weekId;
+
+  // Cập nhật trạng thái active trên danh sách tuần
+  document.querySelectorAll(".roadmap-week-pill").forEach(pill => {
+    if (Number(pill.dataset.weekId) === weekId) {
+      pill.classList.add("active");
+      // Cuộn nhẹ để tuần được chọn nằm trong tầm nhìn
+      pill.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    } else {
+      pill.classList.remove("active");
+    }
+  });
+
+  const week = (RoadmapState.weeks || []).find(w => w.weekId === weekId);
+  if (!week) return;
+
+  // Cập nhật thông tin Header của tuần
+  const badgeEl = document.getElementById("mindmap-current-week-badge");
+  const domainEl = document.getElementById("mindmap-current-domain-tag");
+  const titleEl = document.getElementById("mindmap-current-week-title");
+  const metaEl = document.getElementById("mindmap-current-week-meta");
+
+  if (badgeEl) badgeEl.textContent = `Tuần ${week.weekId}`;
+  if (domainEl) {
+    const isNet = week.domain === "Networking";
+    domainEl.textContent = isNet ? "🌐 Mạng Máy Tính" : "🤖 Trí Tuệ Nhân Tạo (AI/ML)";
+    domainEl.style.background = isNet ? "#e0f2fe" : "#f3e8ff";
+    domainEl.style.color = isNet ? "#0369a1" : "#7e22ce";
+  }
+  if (titleEl) titleEl.textContent = week.title;
+
+  const totalTopics = (week.groups || []).reduce((acc, g) => acc + (g.items || []).length, 0);
+  const totalLabs = (week.lab || []).length;
+  if (metaEl) {
+    metaEl.textContent = `${(week.groups || []).length} Nhóm kiến thức • ${totalTopics} Chủ đề cốt lõi • ${totalLabs} Bài Lab thực hành`;
+  }
+
+  // Render cây Mindmap cho tuần này
+  renderMindmap();
+}
+
+/**
+ * Render cây Mindmap trực quan (Root Node + Branches Grid + Topic Nodes)
+ */
+function renderMindmap() {
+  const treeContainer = document.getElementById("mindmap-tree");
+  const svgLines = document.getElementById("mindmap-svg-lines");
+  if (!treeContainer) return;
+
+  treeContainer.innerHTML = "";
+  if (svgLines) svgLines.innerHTML = "";
+
+  const week = (RoadmapState.weeks || []).find(w => w.weekId === RoadmapState.selectedWeekId);
+  if (!week) return;
+
+  // Tạo danh sách phẳng flatTopics để chuyển bài dễ dàng trong Drawer
+  RoadmapState.flatTopics = [];
+  (week.groups || []).forEach((group, gIdx) => {
+    (group.items || []).forEach((item, iIdx) => {
+      RoadmapState.flatTopics.push({
+        groupIndex: gIdx,
+        itemIndex: iIdx,
+        groupBadge: group.badge,
+        groupName: group.name,
+        item: item
+      });
+    });
+  });
+
+  // Kiểm tra nếu tuần chưa có dữ liệu (ví dụ tuần 13-15)
+  if (!week.groups || week.groups.length === 0) {
+    const emptyBox = document.createElement("div");
+    emptyBox.className = "mindmap-empty-week";
+    emptyBox.style.cssText = "padding: 50px 20px; text-align: center; background: #f8fafc; border-radius: 16px; border: 2px dashed #cbd5e1; width: 100%; max-width: 600px;";
+    emptyBox.innerHTML = `
+      <div style="font-size: 3rem; margin-bottom: 12px;">🚀</div>
+      <h3 style="color: var(--text-main); font-size: 1.25rem; font-weight: 800; margin-bottom: 8px;">Tuần ${week.weekId}: Đồ Án & Nghiên Cứu Chuyên Sâu</h3>
+      <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; max-width: 460px; margin: 0 auto 18px;">
+        Chương trình đang hoàn thiện tài liệu chuyên đề nâng cao và đồ án thực tế tốt nghiệp cho tuần học này.
+      </p>
+      <button type="button" class="btn-primary" id="btn-empty-jump-week1" style="padding: 9px 18px; font-size: 0.88rem;">
+        <span>Quay lại Tuần 1</span>
+      </button>
+    `;
+    treeContainer.appendChild(emptyBox);
+
+    const btnBack1 = emptyBox.querySelector("#btn-empty-jump-week1");
+    if (btnBack1) {
+      btnBack1.addEventListener("click", () => selectRoadmapWeek(1));
+    }
+    return;
+  }
+
+  // 1. Root Node (Gốc trung tâm của Mindmap)
+  const rootNode = document.createElement("div");
+  rootNode.className = "mindmap-root-node";
+  rootNode.id = "mindmap-root-node";
+  const domainLabel = week.domain === "Networking" ? "🌐 NETWORKING" : "🤖 MACHINE LEARNING & AI";
+  rootNode.innerHTML = `
+    <span class="mindmap-root-badge">${domainLabel} • TUẦN ${week.weekId}</span>
+    <div class="mindmap-root-title">${escapeHtml(week.title)}</div>
+  `;
+  treeContainer.appendChild(rootNode);
+
+  // 2. Branches Grid (Các nhánh chủ đề của tuần)
+  const branchesGrid = document.createElement("div");
+  branchesGrid.className = "mindmap-branches-grid";
+  branchesGrid.id = "mindmap-branches-grid";
+
+  // Render các nhóm chủ đề
+  week.groups.forEach((group, gIdx) => {
+    const branch = document.createElement("div");
+    branch.className = "mindmap-group-branch";
+    branch.dataset.groupIndex = gIdx;
+
+    const countText = `${(group.items || []).length} chủ đề`;
+
+    branch.innerHTML = `
+      <div class="mindmap-group-header">
+        <div class="mindmap-group-title-box">
+          <span class="mindmap-group-badge">${escapeHtml(group.badge || `Nhóm ${gIdx + 1}`)}</span>
+          <span class="mindmap-group-name">${escapeHtml(group.name)}</span>
+        </div>
+        <span class="mindmap-group-count">${countText}</span>
+      </div>
+      <div class="mindmap-topics-list"></div>
+    `;
+
+    const topicsList = branch.querySelector(".mindmap-topics-list");
+
+    (group.items || []).forEach((item, iIdx) => {
+      const topicNode = document.createElement("div");
+      topicNode.className = "mindmap-topic-node";
+      topicNode.dataset.groupIndex = gIdx;
+      topicNode.dataset.itemIndex = iIdx;
+
+      // Làm sạch tiêu đề hiển thị
+      let cleanTitle = (item.title || "").trim();
+      if (cleanTitle.endsWith(":")) cleanTitle = cleanTitle.slice(0, -1);
+      const displayTitle = item.index ? `${item.index} ${cleanTitle}` : cleanTitle;
+
+      // Lấy câu tóm tắt đầu tiên để làm snippet
+      let snippet = "";
+      if (item.details && item.details.length > 0) {
+        const firstLine = item.details[0].trim().replace(/^[-*]\s*/, "");
+        snippet = firstLine.length > 75 ? firstLine.substring(0, 75) + "..." : firstLine;
+      }
+
+      topicNode.innerHTML = `
+        <span class="topic-node-icon">📌</span>
+        <div class="topic-node-body">
+          <div class="topic-node-title">${escapeHtml(displayTitle)}</div>
+          ${snippet ? `<div class="topic-node-snippet">${escapeHtml(snippet)}</div>` : ''}
+        </div>
+        <span class="topic-node-arrow">›</span>
+      `;
+
+      topicNode.addEventListener("click", () => {
+        openTopicDrawer(gIdx, iIdx);
+      });
+
+      topicsList.appendChild(topicNode);
+    });
+
+    branchesGrid.appendChild(branch);
+  });
+
+  // Render nhánh Lab Thực hành nếu tuần có Lab
+  if (week.lab && week.lab.length > 0) {
+    const labBranch = document.createElement("div");
+    labBranch.className = "mindmap-group-branch is-lab";
+
+    labBranch.innerHTML = `
+      <div class="mindmap-group-header">
+        <div class="mindmap-group-title-box">
+          <span class="mindmap-group-badge">THỰC HÀNH</span>
+          <span class="mindmap-group-name">Lab & Mô Phỏng Thực Tế</span>
+        </div>
+        <span class="mindmap-group-count">${week.lab.length} bài lab</span>
+      </div>
+      <div class="mindmap-topics-list"></div>
+    `;
+
+    const labList = labBranch.querySelector(".mindmap-topics-list");
+
+    week.lab.forEach((labItem, lIdx) => {
+      const labNode = document.createElement("div");
+      labNode.className = "mindmap-topic-node";
+      labNode.dataset.labIndex = lIdx;
+
+      const snippet = labItem.length > 80 ? labItem.substring(0, 80) + "..." : labItem;
+
+      labNode.innerHTML = `
+        <span class="topic-node-icon">🧪</span>
+        <div class="topic-node-body">
+          <div class="topic-node-title">Bài Lab #${lIdx + 1}: Kỹ năng thực chiến</div>
+          <div class="topic-node-snippet">${escapeHtml(snippet)}</div>
+        </div>
+        <span class="topic-node-arrow">›</span>
+      `;
+
+      labNode.addEventListener("click", () => {
+        openLabDrawer(lIdx);
+      });
+
+      labList.appendChild(labNode);
+    });
+
+    branchesGrid.appendChild(labBranch);
+  }
+
+  treeContainer.appendChild(branchesGrid);
+
+  // Áp dụng bộ lọc tìm kiếm nếu đang có từ khóa
+  if (RoadmapState.searchQuery) {
+    applyMindmapSearch(RoadmapState.searchQuery);
+  }
+
+  // Vẽ các đường nối SVG mềm mại giữa Gốc và các Nhánh
+  requestAnimationFrame(() => {
+    drawMindmapConnections();
+  });
+}
+
+/**
+ * Vẽ các đường nối SVG mềm mại (Cubic Bezier Curves) kết nối Root Node với các Nhánh
+ */
+function drawMindmapConnections() {
+  const container = document.getElementById("mindmap-canvas-container");
+  const svg = document.getElementById("mindmap-svg-lines");
+  const rootNode = document.getElementById("mindmap-root-node");
+  const branches = document.querySelectorAll(".mindmap-group-branch");
+
+  if (!container || !svg || !rootNode || branches.length === 0) {
+    if (svg) svg.innerHTML = "";
+    return;
+  }
+
+  const containerRect = container.getBoundingClientRect();
+  const rootRect = rootNode.getBoundingClientRect();
+
+  const width = containerRect.width;
+  const height = container.scrollHeight || containerRect.height;
+
+  svg.setAttribute("width", width);
+  svg.setAttribute("height", height);
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+  const rootX = (rootRect.left + rootRect.right) / 2 - containerRect.left;
+  const rootY = rootRect.bottom - containerRect.top;
+
+  let svgContent = `
+    <defs>
+      <linearGradient id="mindmapLineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.75"/>
+        <stop offset="100%" stop-color="#818cf8" stop-opacity="0.3"/>
+      </linearGradient>
+    </defs>
+  `;
+
+  branches.forEach(branch => {
+    const branchRect = branch.getBoundingClientRect();
+    const branchX = (branchRect.left + branchRect.right) / 2 - containerRect.left;
+    const branchY = branchRect.top - containerRect.top;
+
+    const deltaY = Math.max(35, branchY - rootY);
+    const cp1x = rootX;
+    const cp1y = rootY + deltaY * 0.55;
+    const cp2x = branchX;
+    const cp2y = rootY + deltaY * 0.55;
+
+    svgContent += `
+      <path d="M ${rootX} ${rootY} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${branchX} ${branchY}"
+            fill="none"
+            stroke="url(#mindmapLineGrad)"
+            stroke-width="2.5"
+            stroke-dasharray="4 3"
+            stroke-linecap="round"/>
+      <circle cx="${branchX}" cy="${branchY}" r="4.5" fill="#6366f1"/>
+    `;
+  });
+
+  // Điểm chốt tại đáy của Node Gốc
+  svgContent += `<circle cx="${rootX}" cy="${rootY}" r="5" fill="#312e81"/>`;
+
+  svg.innerHTML = svgContent;
+}
+
+/**
+ * Format chuỗi có chứa code `...` thành thẻ code có style nổi bật
+ */
+function formatInlineCode(str) {
+  let escaped = escapeHtml(str);
+  return escaped.replace(/`([^`]+)`/g, '<code class="inline-code" style="background: rgba(99, 102, 241, 0.12); color: #4338ca; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-weight: 700; font-size: 0.9em;">$1</code>');
+}
+
+/**
+ * Mở Drawer hiển thị chi tiết kiến thức của một chủ đề trong nhánh
+ */
+function openTopicDrawer(groupIndex, itemIndex) {
+  const week = (RoadmapState.weeks || []).find(w => w.weekId === RoadmapState.selectedWeekId);
+  if (!week || !week.groups || !week.groups[groupIndex]) return;
+
+  const group = week.groups[groupIndex];
+  const item = (group.items || [])[itemIndex];
+  if (!item) return;
+
+  RoadmapState.activeTopic = { groupIndex, itemIndex };
+
+  const overlay = document.getElementById("mindmap-drawer-overlay");
+  if (!overlay) return;
+
+  // 1. Breadcrumbs
+  const breadcrumb = document.getElementById("drawer-breadcrumb");
+  if (breadcrumb) {
+    breadcrumb.innerHTML = `
+      <span class="crumb-week">Tuần ${week.weekId}</span>
+      <span class="crumb-sep">›</span>
+      <span class="crumb-group">${escapeHtml(group.badge || `Nhóm ${groupIndex + 1}`)}: ${escapeHtml(group.name)}</span>
+    `;
+  }
+
+  // 2. Badge & Title
+  const badgeEl = document.getElementById("drawer-badge");
+  if (badgeEl) {
+    badgeEl.className = "drawer-badge";
+    badgeEl.textContent = `Chủ đề cốt lõi #${item.index || (itemIndex + 1)}`;
+  }
+
+  let cleanTitle = (item.title || "").trim();
+  if (cleanTitle.endsWith(":")) cleanTitle = cleanTitle.slice(0, -1);
+  const titleEl = document.getElementById("drawer-topic-title");
+  if (titleEl) {
+    titleEl.textContent = item.index ? `${item.index} ${cleanTitle}` : cleanTitle;
+  }
+
+  // 3. Nội dung kiến thức chi tiết (Content Body)
+  const bodyEl = document.getElementById("drawer-content-body");
+  if (bodyEl) {
+    bodyEl.innerHTML = "";
+
+    const details = item.details || [];
+    if (details.length === 0) {
+      const emptyNote = document.createElement("div");
+      emptyNote.className = "concept-card";
+      emptyNote.innerHTML = `
+        <div style="font-size: 1.5rem; margin-bottom: 8px;">📖</div>
+        <div style="font-weight: 800; color: var(--text-main); margin-bottom: 6px;">${escapeHtml(cleanTitle)}</div>
+        <div class="concept-text" style="color: var(--text-muted);">
+          Đây là kiến thức trọng tâm của tuần học. Hãy xem thêm các câu hỏi trắc nghiệm liên quan trong bài thi.
+        </div>
+      `;
+      bodyEl.appendChild(emptyNote);
+    } else {
+      details.forEach(rawLine => {
+        let line = rawLine.trim();
+        if (line.startsWith("- ") || line.startsWith("* ")) {
+          line = line.substring(2).trim();
+        }
+
+        const colonIdx = line.indexOf(":");
+        // Nếu là cấu trúc "Thuật ngữ: Giải thích bản chất"
+        if (colonIdx > 0 && colonIdx < 50 && !line.startsWith("http")) {
+          const term = line.substring(0, colonIdx).trim();
+          const definition = line.substring(colonIdx + 1).trim();
+
+          if (definition.length > 0) {
+            const card = document.createElement("div");
+            card.className = "concept-card";
+            card.innerHTML = `
+              <div style="margin-bottom: 4px;">
+                <span class="concept-term">${escapeHtml(term)}</span>
+              </div>
+              <div class="concept-text">${formatInlineCode(definition)}</div>
+            `;
+            bodyEl.appendChild(card);
+          } else {
+            // Tiêu đề nhóm con
+            const subTitle = document.createElement("div");
+            subTitle.style.cssText = "font-weight: 800; color: #1e1b4b; margin-top: 8px; margin-bottom: 2px; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;";
+            subTitle.innerHTML = `<span>🔹</span> <span>${escapeHtml(term)}</span>`;
+            bodyEl.appendChild(subTitle);
+          }
+        } else {
+          // Gạch đầu dòng thông thường
+          const bullet = document.createElement("div");
+          bullet.className = "concept-bullet-point";
+          bullet.innerHTML = `<div class="concept-text">${formatInlineCode(line)}</div>`;
+          bodyEl.appendChild(bullet);
+        }
+      });
+    }
+
+    // Hộp mẹo thi & ghi nhớ
+    const tipBox = document.createElement("div");
+    tipBox.className = "drawer-takeaway-box exam-tip";
+    tipBox.innerHTML = `
+      <div class="takeaway-title">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+        <span>Mẹo Ôn Thi & Ghi Nhớ Nhanh</span>
+      </div>
+      <div style="font-size: 0.88rem; color: #78350f; line-height: 1.55;">
+        Hãy chú ý các từ khóa in đậm và cơ chế hoạt động của <strong>${escapeHtml(cleanTitle)}</strong>. Nhấn nút <strong>Làm Bài Thi Tuần Này</strong> bên dưới để kiểm tra mức độ nắm vững kiến thức!
+      </div>
+    `;
+    bodyEl.appendChild(tipBox);
+  }
+
+  // 4. Điều hướng Prev / Next
+  const flatIdx = (RoadmapState.flatTopics || []).findIndex(
+    t => t.groupIndex === groupIndex && t.itemIndex === itemIndex
+  );
+  const btnPrev = document.getElementById("btn-drawer-prev");
+  const btnNext = document.getElementById("btn-drawer-next");
+
+  if (btnPrev) btnPrev.disabled = flatIdx <= 0;
+  if (btnNext) btnNext.disabled = flatIdx < 0 || flatIdx >= (RoadmapState.flatTopics || []).length - 1;
+
+  // Đánh dấu active trên cây
+  document.querySelectorAll(".mindmap-topic-node").forEach(node => {
+    if (Number(node.dataset.groupIndex) === groupIndex && Number(node.dataset.itemIndex) === itemIndex) {
+      node.classList.add("active-selected");
+    } else {
+      node.classList.remove("active-selected");
+    }
+  });
+
+  overlay.style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+/**
+ * Mở Drawer hiển thị chi tiết bài Lab thực hành
+ */
+function openLabDrawer(labIndex) {
+  const week = (RoadmapState.weeks || []).find(w => w.weekId === RoadmapState.selectedWeekId);
+  if (!week || !week.lab || !week.lab[labIndex]) return;
+
+  const labText = week.lab[labIndex];
+  const overlay = document.getElementById("mindmap-drawer-overlay");
+  if (!overlay) return;
+
+  const breadcrumb = document.getElementById("drawer-breadcrumb");
+  if (breadcrumb) {
+    breadcrumb.innerHTML = `
+      <span class="crumb-week">Tuần ${week.weekId}</span>
+      <span class="crumb-sep">›</span>
+      <span class="crumb-group" style="color: #15803d; font-weight: 800;">🧪 Thực Hành & Lab Mô Phỏng</span>
+    `;
+  }
+
+  const badge = document.getElementById("drawer-badge");
+  if (badge) {
+    badge.className = "drawer-badge lab-badge";
+    badge.textContent = `Bài Lab Thực Chiến #${labIndex + 1}`;
+  }
+
+  const titleEl = document.getElementById("drawer-topic-title");
+  if (titleEl) {
+    titleEl.textContent = `Lab #${labIndex + 1}: ${week.title}`;
+  }
+
+  const bodyEl = document.getElementById("drawer-content-body");
+  if (bodyEl) {
+    bodyEl.innerHTML = "";
+
+    const card = document.createElement("div");
+    card.className = "concept-card";
+    card.style.cssText = "background: #f0fdf4; border: 1.5px solid #86efac; padding: 18px;";
+    card.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 8px; font-weight: 800; color: #15803d; margin-bottom: 12px; font-size: 1rem;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 2v7.31L4.89 19.5A2 2 0 0 0 6.64 22h10.72a2 2 0 0 0 1.75-2.5L14 9.31V2"/>
+        </svg>
+        <span>Mục Tiêu & Thao Tác Thực Hành:</span>
+      </div>
+      <div style="font-size: 0.95rem; line-height: 1.75; color: #14532d;">
+        ${formatInlineCode(labText)}
+      </div>
+    `;
+    bodyEl.appendChild(card);
+
+    const tip = document.createElement("div");
+    tip.className = "drawer-takeaway-box";
+    tip.innerHTML = `
+      <div class="takeaway-title">
+        <span>💡 Phương Pháp Học Lab Tốt Nhất</span>
+      </div>
+      <div style="font-size: 0.88rem; color: #166534; line-height: 1.55;">
+        Thực hành trực tiếp trên các công cụ chuyên ngành (Packet Tracer, Wireshark, GNS3, hoặc Jupyter Notebook / Google Colab) sẽ giúp bạn hiểu sâu sắc nguyên lý hoạt động của các tầng giao thức và mô hình AI.
+      </div>
+    `;
+    bodyEl.appendChild(tip);
+  }
+
+  const btnPrev = document.getElementById("btn-drawer-prev");
+  const btnNext = document.getElementById("btn-drawer-next");
+  if (btnPrev) btnPrev.disabled = true;
+  if (btnNext) btnNext.disabled = true;
+
+  overlay.style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
+
+/**
+ * Đóng Drawer kiến thức
+ */
+function closeTopicDrawer() {
+  const overlay = document.getElementById("mindmap-drawer-overlay");
+  if (overlay) {
+    overlay.style.display = "none";
+  }
+  document.body.style.overflow = "";
+  document.querySelectorAll(".mindmap-topic-node.active-selected").forEach(n => {
+    n.classList.remove("active-selected");
+  });
+}
+
+/**
+ * Di chuyển chủ đề trước/tiếp trong Drawer
+ */
+function navigateTopicDrawer(delta) {
+  if (!RoadmapState.activeTopic || !RoadmapState.flatTopics || RoadmapState.flatTopics.length === 0) return;
+
+  const currentIdx = RoadmapState.flatTopics.findIndex(
+    t => t.groupIndex === RoadmapState.activeTopic.groupIndex && t.itemIndex === RoadmapState.activeTopic.itemIndex
+  );
+  if (currentIdx === -1) return;
+
+  const nextIdx = currentIdx + delta;
+  if (nextIdx >= 0 && nextIdx < RoadmapState.flatTopics.length) {
+    const nextTopic = RoadmapState.flatTopics[nextIdx];
+    openTopicDrawer(nextTopic.groupIndex, nextTopic.itemIndex);
+  }
+}
+
+/**
+ * Tìm kiếm nhanh kiến thức trong sơ đồ Mindmap
+ */
+function applyMindmapSearch(query) {
+  RoadmapState.searchQuery = (query || "").trim().toLowerCase();
+  const btnClear = document.getElementById("btn-clear-mindmap-search");
+  if (btnClear) {
+    btnClear.style.display = RoadmapState.searchQuery ? "inline-block" : "none";
+  }
+
+  const topicNodes = document.querySelectorAll(".mindmap-topic-node");
+  let firstMatch = null;
+
+  topicNodes.forEach(node => {
+    if (!RoadmapState.searchQuery) {
+      node.classList.remove("highlight-search");
+      node.style.opacity = "";
+      return;
+    }
+
+    const gIdx = Number(node.dataset.groupIndex);
+    const iIdx = Number(node.dataset.itemIndex);
+    const labIdx = node.dataset.labIndex;
+
+    let matches = false;
+
+    if (labIdx !== undefined) {
+      const week = (RoadmapState.weeks || []).find(w => w.weekId === RoadmapState.selectedWeekId);
+      const labText = (week && week.lab && week.lab[Number(labIdx)]) || "";
+      if (labText.toLowerCase().includes(RoadmapState.searchQuery)) {
+        matches = true;
+      }
+    } else {
+      const week = (RoadmapState.weeks || []).find(w => w.weekId === RoadmapState.selectedWeekId);
+      if (week && week.groups && week.groups[gIdx]) {
+        const group = week.groups[gIdx];
+        const item = (group.items || [])[iIdx];
+        if (item) {
+          const titleMatch = (item.title || "").toLowerCase().includes(RoadmapState.searchQuery);
+          const detailMatch = (item.details || []).some(d => d.toLowerCase().includes(RoadmapState.searchQuery));
+          if (titleMatch || detailMatch) {
+            matches = true;
+          }
+        }
+      }
+    }
+
+    if (matches) {
+      node.classList.add("highlight-search");
+      node.style.opacity = "1";
+      if (!firstMatch) firstMatch = node;
+    } else {
+      node.classList.remove("highlight-search");
+      node.style.opacity = "0.35";
+    }
+  });
+
+  if (firstMatch && RoadmapState.searchQuery.length >= 2) {
+    firstMatch.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+}
+
+/**
+ * Khởi tạo toàn bộ sự kiện và tính năng của Lộ trình Mindmap
+ */
+function initRoadmapFeature() {
+  // 1. Chuyển đổi giữa 2 Tab chính: Bài Kiểm Tra <-> Lộ Trình Mindmap
+  const btnTabQuiz1 = document.getElementById("tab-btn-quiz");
+  const btnTabQuiz2 = document.getElementById("roadmap-tab-btn-quiz");
+  const btnTabRoadmap1 = document.getElementById("tab-btn-roadmap");
+  const btnTabRoadmap2 = document.getElementById("roadmap-tab-btn-roadmap");
+
+  if (btnTabQuiz1) btnTabQuiz1.addEventListener("click", () => switchToQuizTab());
+  if (btnTabQuiz2) btnTabQuiz2.addEventListener("click", () => switchToQuizTab());
+  if (btnTabRoadmap1) btnTabRoadmap1.addEventListener("click", () => switchToRoadmapTab());
+  if (btnTabRoadmap2) btnTabRoadmap2.addEventListener("click", () => switchToRoadmapTab());
+
+  // 2. Bộ lọc chuyên đề (Networking / AI / Tất cả)
+  document.querySelectorAll(".domain-filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".domain-filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      RoadmapState.domainFilter = btn.dataset.domain || "all";
+      renderRoadmapWeeksList();
+    });
+  });
+
+  // 3. Nút "Thi Trắc Nghiệm Tuần Này" ở Header Mindmap
+  const btnJumpQuiz = document.getElementById("btn-mindmap-jump-quiz");
+  if (btnJumpQuiz) {
+    btnJumpQuiz.addEventListener("click", () => {
+      switchToQuizTab(RoadmapState.selectedWeekId);
+    });
+  }
+
+  // 4. Các nút thao tác trong Knowledge Drawer
+  const btnCloseDrawer = document.getElementById("btn-close-drawer");
+  if (btnCloseDrawer) btnCloseDrawer.addEventListener("click", closeTopicDrawer);
+
+  const backdrop = document.getElementById("mindmap-drawer-backdrop");
+  if (backdrop) backdrop.addEventListener("click", closeTopicDrawer);
+
+  const btnPrevTopic = document.getElementById("btn-drawer-prev");
+  if (btnPrevTopic) btnPrevTopic.addEventListener("click", () => navigateTopicDrawer(-1));
+
+  const btnNextTopic = document.getElementById("btn-drawer-next");
+  if (btnNextTopic) btnNextTopic.addEventListener("click", () => navigateTopicDrawer(1));
+
+  const btnDrawerQuiz = document.getElementById("btn-drawer-quiz");
+  if (btnDrawerQuiz) {
+    btnDrawerQuiz.addEventListener("click", () => {
+      closeTopicDrawer();
+      switchToQuizTab(RoadmapState.selectedWeekId);
+    });
+  }
+
+  // 5. Ô tìm kiếm Mindmap
+  const searchInput = document.getElementById("mindmap-search-input");
+  const btnClearSearch = document.getElementById("btn-clear-mindmap-search");
+
+  if (searchInput) {
+    let searchDebounce = null;
+    searchInput.addEventListener("input", (e) => {
+      clearTimeout(searchDebounce);
+      searchDebounce = setTimeout(() => {
+        applyMindmapSearch(e.target.value);
+      }, 120);
+    });
+  }
+
+  if (btnClearSearch) {
+    btnClearSearch.addEventListener("click", () => {
+      if (searchInput) {
+        searchInput.value = "";
+        applyMindmapSearch("");
+        searchInput.focus();
+      }
+    });
+  }
+
+  // 6. Phím tắt Esc để đóng drawer
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeTopicDrawer();
+    }
+  });
+
+  // 7. Tự động vẽ lại đường nối SVG khi thay đổi kích thước cửa sổ
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const roadmapScreen = document.getElementById("roadmap-screen");
+      if (roadmapScreen && roadmapScreen.classList.contains("active")) {
+        drawMindmapConnections();
+      }
+    }, 120);
+  });
+
+  // 8. Tải trước dữ liệu ngầm để sẵn sàng ngay khi người dùng bấm tab
+  loadRoadmapData();
+}
+
